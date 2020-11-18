@@ -1,0 +1,127 @@
+        daterangepicker_locale_config = {
+            direction: 'ltr',
+            format: date_format,
+            separator: ' - ',
+            applyLabel: '";
+            // line 276
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "t", array(0 => "common", 1 => "Apply"), "method"), "html", null, true));
+            echo "',
+            cancelLabel: '";
+            // line 277
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "t", array(0 => "common", 1 => "Cancel"), "method"), "html", null, true));
+            echo "',
+            weekLabel: 'W',
+            customRangeLabel: '";
+            // line 279
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "t", array(0 => "common", 1 => "Custom Range"), "method"), "html", null, true));
+            echo "',
+            daysOfWeek: moment.weekdaysMin(),
+            monthNames: moment.monthsShort(),
+            firstDay: parseInt('";
+            // line 282
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "firstDayOfWeek", array(), "method"), "html", null, true));
+            echo "')
+        };
+
+        daterangepicker_default_config = {
+            autoApply: false,
+            opens: 'center',
+            ranges: daterangepicker_default_ranges,
+            alwaysShowCalendars: true,
+            locale: daterangepicker_locale_config
+        };
+
+        daterangepicker_single_default_config = {
+            singleDatePicker: true,
+            showDropdowns: true,
+            autoUpdateInput: false,
+            locale: daterangepicker_locale_config,
+            maxDate: '";
+            // line 298
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "getFormattedDateFromString", array(0 => "+40 year"), "method"), "html", null, true));
+            echo "',
+        };
+
+        daterangepicker_datetime_locale_config = {
+            direction: 'ltr',
+            format: datetime_format,
+            separator: ' - ',
+            applyLabel: '";
+            // line 305
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "t", array(0 => "common", 1 => "Apply"), "method"), "html", null, true));
+            echo "',
+            cancelLabel: '";
+            // line 306
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "t", array(0 => "common", 1 => "Cancel"), "method"), "html", null, true));
+            echo "',
+            weekLabel: 'W',
+            customRangeLabel: '";
+            // line 308
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "t", array(0 => "common", 1 => "Custom Range"), "method"), "html", null, true));
+            echo "',
+            daysOfWeek: moment.weekdaysMin(),
+            monthNames: moment.monthsShort(),
+            firstDay: parseInt('";
+            // line 311
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "firstDayOfWeek", array(), "method"), "html", null, true));
+            echo "')
+        };
+
+        daterangepicker_single_datetime_default_config = {
+            singleDatePicker: true,
+            showDropdowns: true,
+            timePicker: true,
+            autoUpdateInput: false,
+            timePicker24Hour: \$.parseJSON('";
+            // line 319
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "is24Hour", array(), "method"), "html", null, true));
+            echo "'),
+            timePickerSeconds: \$.parseJSON('";
+            // line 320
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "withSeconds", array(), "method"), "html", null, true));
+            echo "'),
+            locale: daterangepicker_datetime_locale_config,
+            maxDate: '";
+            // line 322
+            echo $this->env->getExtension('sandbox')->ensureToStringAllowed(twig_escape_filter($this->env, $this->getAttribute((isset($context["App"]) ? $context["App"] : null), "getFormattedDateFromString", array(0 => "+40 year"), "method"), "html", null, true));
+            echo "',
+        };
+
+
+        ****************************************
+
+
+
+                            'daterangepicker_config': {
+                                'autoUpdateInput': false,
+                                'ranges': {
+                                    (App.t('common', 'Today')): [
+                                        App.getFormattedDateFromString('today'),
+                                        App.getFormattedDateFromString('today')
+                                    ],
+                                    (App.t('common', 'Yesterday')): [
+                                        App.getFormattedDateFromString('yesterday'),
+                                        App.getFormattedDateFromString('yesterday')
+                                    ],
+                                    (App.t('common', 'Last 7 Days')): [
+                                        App.getFormattedDateFromString('6 days ago'),
+                                        App.getFormattedDateFromString('today')
+                                    ],
+                                    (App.t('common', 'Last 30 Days')): [
+                                        App.getFormattedDateFromString('29 days ago'),
+                                        App.getFormattedDateFromString('today')
+                                    ],
+                                    (App.t('common', 'This Month')): [
+                                        App.getFormattedDateFromString('first day of this month'),
+                                        App.getFormattedDateFromString('last day of this month')
+                                    ],
+                                    (App.t('common', 'Last Month')): [
+                                        App.getFormattedDateFromString('first day of last month'),
+                                        App.getFormattedDateFromString('last day of last month')
+                                    ],
+                                    (App.t('common', 'Last 3 Month')): [
+                                        App.getFormattedDateFromString('3 month ago'),
+                                        App.getFormattedDateFromString('today')
+                                    ]
+                                }
+                            }

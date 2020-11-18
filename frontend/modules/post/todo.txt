@@ -1,0 +1,43 @@
+Yii::t('app', '')
+
+
+Новый модуль администрирования adminXX
+
+0. Создать на гите резервную ветку develop_backup
+
+1. Переключениться на сервере на ветку new_admin_190917
+
+2. Сделать пулл
+
+3 Исправить на сервере config/web.php, config/params, config/console
+    (скопирповать подготовленную папку configs_190926/new_admin, в папке server копии старых настроек)
+
+4 php yii migrate:
+    - создать новые таблицы menu_xx (меню), configs, u_control (активность всех пользователей - зарегистрированных и гостей),
+    - в user добавить поле refresh_permissions
+    - в user, user_data  и user_department добавить поля creation_time creation_user update_time update_user
+
+
+5. Добавить недостающие разрешения и роли (из консоли)
+   php yii adminxx/common-roles-init
+
+6. Инициализировать новое меню (из консоли), старое - останется.
+   php yii adminxx/menu-init
+
+6.1 Сщздание администраторов (по выбору)
+   php yii adminxx/make-admin
+
+6.2 Создание суперадмина
+   php yii adminxx/make-super-admin
+
+7. Протестировать, подождать пару дней возможных жалоб юсеров
+
+8. если все будер ок
+   - на сервере
+   git checkout develop
+   git merge  adminXX
+
+
+Откат:
+переключиться на сервере на ветку девелоп
+

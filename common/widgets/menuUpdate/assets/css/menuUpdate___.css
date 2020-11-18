@@ -1,0 +1,59 @@
+.xtree {
+    cursor: pointer;
+    position: relative; /* absolute | fixed | relative | static | inherit */
+    left: 1%;
+    top: 1%;
+    width: 100%;
+    height: 82vh;
+    /* table-layout:  fixed;*/
+    overflow: auto ; /* полосы прокрутки | hidden | scroll | visible | inherit*/
+    float: left;
+    /*  background-color: aliceblue;*/
+    padding: 10px;
+}
+.item_css{
+    color: darkslategray;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.item_css_selected{
+    color: darkslategray;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.icon_css{
+    color: darkslategray;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.node{
+    font-weight: bold;
+    font-size: medium;
+    color: black;
+    cursor: pointer;
+}
+
+.route {
+    cursor: pointer;
+    color: black;
+    font-size: medium;
+
+}
+

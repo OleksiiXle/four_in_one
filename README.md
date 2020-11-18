@@ -1,3 +1,11 @@
+Заготовка
+Админка
+Посты - редактирование без АПИ
+Посты - сервер АПИ
+Клиент АПИ:
+    - админка клиента
+    - доступ к постам по АПИ
+
 
 .htaccess настроены так, что:
 -hostName/ - (frontend) фронтенд, работа с контентом сервера без АПИ
@@ -73,3 +81,34 @@ sudo a2ensite xle-api-client.conf
 
 sudo service apache2 restart
 *****************************************************************************************
+Административная часть
+
+1. Создание и настройка БД
+mysql -u root -p
+CREATE DATABASE four_in_one;
+EXIT;
+
+добавить в common/config/main.php
+
+php yii migrate
+
+1. Добавить недостающие разрешения и роли (из консоли)
+   php yii adminxx/common-roles-init
+
+2. Инициализировать новое меню (из консоли), старое - останется.
+   php yii adminxx/menu-init
+
+3. Инициализировать дефолтных пользователей.
+   php yii adminxx/users-init
+
+4 Сщздание администраторов (по выбору)
+   php yii adminxx/make-admin
+
+5 Создание суперадмина
+   php yii adminxx/make-super-admin
+   
+6. Инициализация словаря
+   php yii translate/init
+
+7. Добавление тестовых постов
+   php yii post/init
