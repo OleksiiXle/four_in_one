@@ -3,7 +3,7 @@
 namespace common\widgets\xlegrid\models;
 
 use Yii;
-use console\backgroundTasks\models\TaskWorker;
+use console\controllers\backgroundTasks\models\TaskWorker;
 use common\models\behaviors\Result;
 
 class GridUploadWorker extends TaskWorker
