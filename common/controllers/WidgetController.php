@@ -92,7 +92,7 @@ class WidgetController extends MainController
         if (isset($model)){
             $model->menu_id = $menu_id;
             $model->nodeAction = $nodeAction;
-            return $this->renderAjax('@app/widgets/menuUpdate/views/_form_menu', [
+            return $this->renderAjax('@common/widgets/menuUpdate/views/_form_menu', [
                 'model' => $model,
                 'routes' => $routes,
                 'permissions' => $permissions,
@@ -109,7 +109,7 @@ class WidgetController extends MainController
     public function actionMenuxMenuUpdate()
     {
         $r=2;
-        if ($menuData = \Yii::$app->request->post('MenuX')){
+        if ($menuData = \Yii::$app->request->post('MenuXX')){
             switch ($menuData['nodeAction']){
                 case 'update':
                     $model = MenuXX::findOne($menuData['id']);

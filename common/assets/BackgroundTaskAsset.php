@@ -7,7 +7,7 @@ class BackgroundTaskAsset extends AssetBundle
 {
 
     public $basePath = '@webroot/assets';
-    public $sourcePath = '@app/assets';
+    public $sourcePath = '@common/assets';
     public $publishOptions = ['forceCopy' => true];
     public $css = [
         'css/backgroundTask.css',

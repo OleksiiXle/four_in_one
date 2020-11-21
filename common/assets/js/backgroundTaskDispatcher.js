@@ -8,7 +8,7 @@ var defaultParams = {
     'resultArea' : '#resultArea',
     'errorsArea' : '#errorsArea',
     'showPreloader' : function () {},
-    'hidePreloader' : function () {},
+    'hidePreloader' : function () {}
 };
 var urlGetTasksPool = '/background-tasks/get-background-tasks-pool';
 var _csrf = $('meta[name="csrf-token"]').attr("content");

@@ -112,3 +112,6 @@ php yii migrate
 
 7. Добавление тестовых постов
    php yii post/init
+
+8. Создание симлинков для фоновых задач
+    php yii init

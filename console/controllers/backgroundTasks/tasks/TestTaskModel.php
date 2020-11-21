@@ -1,6 +1,6 @@
 <?php
 
-namespace console\backgroundTasks\tasks;
+namespace console\controllers\backgroundTasks\tasks;
 
 use yii\base\BaseObject;
 
@@ -10,7 +10,7 @@ class TestTaskModel extends BaseObject
 
     const PORTION_TO_LOG_SIZE = 6; // какими кусками писать в файл результата
     const PROGERSS_STEP = 2; // %
-    const TOTAL_COUNT = 50; // %
+    const TOTAL_COUNT = 10; // %
     const SLEEP_SECONDS = 1;
 
     public $id;
@@ -18,14 +18,14 @@ class TestTaskModel extends BaseObject
     public $task;
 
     // -- данные для логирования процесса
-    private $portionToProgress;
-    private $progressPercentCount;
-    private $done;
-    public $reportPortion = [];
+ //   private $portionToProgress;
+ //   private $progressPercentCount;
+ //   private $done;
+ //   public $reportPortion = [];
 
     public function init()
     {
-        $this->resultTask = $this->task;
+      //  $this->resultTask = $this->task;
     }
 
     private function doSleep()
@@ -87,7 +87,7 @@ class TestTaskModel extends BaseObject
 
 
                     //-- обработка некритической ошибки
-                    if (1 == 1) {
+                    if (1 == 0) {
                         //-- запись в лог незаписанной порции
                         $this->setResultSuccess($this->reportPortion);
                         $this->resetResult();

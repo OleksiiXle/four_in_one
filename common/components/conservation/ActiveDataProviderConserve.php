@@ -38,7 +38,7 @@ class ActiveDataProviderConserve extends ActiveDataProvider
             $this->getConserves();
         }
         $this->pagination = [
-            'class'            => 'app\components\conservation\PaginationConserve',
+            'class'            => 'common\components\conservation\PaginationConserve',
             'conserveName' => $this->conserveName,
             'pageSize' => $this->pageSize,
             'startPage' => $this->conserves['startPage'],

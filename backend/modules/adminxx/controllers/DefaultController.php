@@ -1,9 +1,9 @@
 <?php
 namespace backend\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
 use Yii;
 use common\components\AccessControl;
+use backend\controllers\MainController;
 
 class DefaultController extends MainController
 {

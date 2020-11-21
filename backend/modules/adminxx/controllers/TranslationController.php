@@ -2,15 +2,14 @@
 
 namespace backend\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
+use yii\db\Query;
+use yii\filters\VerbFilter;
+use yii\helpers\FileHelper;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\models\Translation;
 use common\components\AccessControl;
-use yii\helpers\FileHelper;
+use backend\controllers\MainController;
 use backend\modules\adminxx\models\filters\TranslationFilter;
-use yii\data\ActiveDataProvider;
-use yii\db\Query;
-use yii\filters\VerbFilter;
 
 class TranslationController extends MainController
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\adminxx\controllers;
+namespace backend\modules\adminxx\controllers;
 
 use backend\controllers\MainController;
 use common\components\AccessControl;

@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\adminxx\controllers;
+namespace backend\modules\adminxx\controllers;
 
 use backend\controllers\MainController;
 use common\components\AccessControl;
-use app\modules\adminxx\models\MenuXX;
-use app\modules\adminxx\models\Route;
+use backend\modules\adminxx\models\MenuXX;
+use common\models\Route;
 
 /**
  * Class MenuxController

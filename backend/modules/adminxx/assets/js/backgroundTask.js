@@ -1,6 +1,8 @@
-const REFRESH_INTERVAL=5000;
+const REFRESH_INTERVAL=10000;
+let noReload = false;
 
 function modalOpenBackgroundTask(id, mode) {
+    noReload = true;
     var url = '/adminxx/background-tasks/modal-open-background-task?id=' + id  + '&mode=' + mode;
     var title;
     switch (mode) {
@@ -21,11 +23,12 @@ function modalOpenBackgroundTask(id, mode) {
            // $('#xModalContent').html(response);
         },
         error: function (jqXHR, error, errorThrown) {
+            noReload = false;
             errorHandler(jqXHR, error, errorThrown)            }
     });
 }
 
-function modalOpenBackgroundTaskDelete(id) {
+function modalOpenBackgroundTaskDelete___(id) {
     var url = '/adminxx/background-tasks/modal-open-background-task-delete-confirm?id=' + id + '&mode=delete';
     var title = 'Підтвердження видалення';
 
@@ -53,14 +56,17 @@ function deleteBackgroundTask(id) {
         complete: function(){
             preloader('hide', 'mainContainer', 0);
             hideModal();
+            noReload = false;
         },
         error: function (jqXHR, error, errorThrown) {
             errorHandler(jqXHR, error, errorThrown);
+            noReload = false;
         },
         success: function (response) {
-            console.log(response);
+            //console.log(response);
             if (response['status']){
-                $.pjax.reload({container:"#gridBackgroundTasks"});
+                //$.pjax.reload({container:"#gridBackgroundTasks"});
+                useFilter();
             } else {
                 objDump(response['data']);
                 console.log(response['data']);
@@ -97,16 +103,20 @@ function showLog(mode) {
     });
 }
 
+function hideModalBt() {
+    noReload = false;
+    hideModal();
+}
 
 setInterval(function() {
-   // if ($('#yii-debug-toolbar').is('div')) return;
-    if ($('#filterZone').css('display') !== 'none') return;
+    // if ($('#yii-debug-toolbar').is('div')) return;
+    if ($('#filterZone').css('display') !== 'none' || noReload) return;
     try {
-        if ($("#gridBackgroundTasks").length > 0) {
-            $.pjax.reload({container:"#gridBackgroundTasks"});
-        }
+      //  console.log('reload');
+        useFilter();
     } catch (err) {
         console.error(err);
     }
 }, REFRESH_INTERVAL);
+
 

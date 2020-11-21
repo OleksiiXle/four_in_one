@@ -1,9 +1,9 @@
 <?php
 
-namespace console\backgroundTasks\tasks;
+namespace console\controllers\backgroundTasks\tasks;
 
-use console\backgroundTasks\models\TaskWorker;
-use console\backgroundTasks\models\BackgroundTask;
+use console\controllers\backgroundTasks\models\TaskWorker;
+use console\controllers\backgroundTasks\models\BackgroundTask;
 
 class TestTaskWorker extends TaskWorker
 {

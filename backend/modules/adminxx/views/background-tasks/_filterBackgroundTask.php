@@ -2,12 +2,9 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use console\backgroundTasks\models\BackgroundTask;
-
-//\app\modules\adminxx\assets\AdminxxUserFilterAsset::register($this);
+use backend\modules\adminxx\models\filters\BackgroundTaskFilter;
 
 ?>
-
 
 <div class="container-fluid">
     <div class="xCard">
@@ -27,18 +24,25 @@ use console\backgroundTasks\models\BackgroundTask;
                             <?php
                             echo $form->field($filter, 'status', ['inputOptions' =>
                                 ['class' => 'form-control', 'tabindex' => '4']])
-                                ->dropDownList(BackgroundTask::getStatusesArray(),
+                                ->dropDownList(BackgroundTaskFilter::getStatusesArray(),
                                     ['options' => [ $filter->status => ['Selected' => true]],]);
 
                             ?>
                         </div>
                         <div class="row">
                             <div class="form-group" align="center" style="padding: 20px">
-                                <?= Html::submitButton('Шукати', ['class' => 'btn btn-primary', 'id' => 'subBtn']) ?>
+                                <?php
+                                //  echo  Html::submitButton('Шукати', ['class' => 'btn btn-primary', 'id' => 'subBtn']);
+                                echo  Html::button('Шукати', [
+                                    'class' => 'btn btn-primary',
+                                    'id' => 'subBtn',
+                                    'onclick' => 'useFilter();'
+                                ]);
+                                ?>
                                 <?= Html::button('Очистити фільтр', [
                                     'class' => 'btn btn-danger',
                                     'id' => 'cleanBtn',
-                                    'onclick' => 'cleanFilter();',
+                                    'onclick' => 'cleanFilter(true);',
                                 ]) ?>
                             </div>
                         </div>

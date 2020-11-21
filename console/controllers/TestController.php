@@ -8,6 +8,6 @@ class TestController extends \yii\console\Controller
 {
     public function actionIndex()
     {
-        echo 1 . PHP_EOL;
+        echo Yii::$app->id . PHP_EOL;
     }
 }

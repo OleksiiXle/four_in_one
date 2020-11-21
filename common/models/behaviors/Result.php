@@ -2,7 +2,7 @@
 
 namespace common\models\behaviors;
 
-use app\commands\backgroundTasks\models\BackgroundTask;
+use console\controllers\backgroundTasks\models\BackgroundTask;
 
 /**
  * Trait Result

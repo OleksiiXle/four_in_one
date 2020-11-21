@@ -40,6 +40,7 @@ class MainController extends Controller
     {
         $tmp = Yii::$app->language = Yii::$app->userProfile->language;
 
+
         if (defined('YII_DEBUG') && YII_DEBUG) {
             Yii::$app->getAssetManager()->forceCopy = true;
         }

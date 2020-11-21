@@ -1,8 +1,8 @@
 <?php
 
-namespace console\backgroundTasks;
+namespace console\controllers\backgroundTasks;
 
-use console\backgroundTasks\models\BackgroundTask;
+use console\controllers\backgroundTasks\models\BackgroundTask;
 use yii\console\Controller;
 
 class RunTaskController extends Controller

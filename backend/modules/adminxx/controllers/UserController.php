@@ -2,13 +2,14 @@
 
 namespace backend\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
 use Yii;
+use yii\db\Query;
+use yii\filters\VerbFilter;
 use common\helpers\Functions;
-use common\components\UserProfile;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\conservation\models\Conservation;
 use common\components\AccessControl;
+use backend\controllers\MainController;
 use backend\modules\adminxx\models\Assignment;
 use backend\modules\adminxx\models\filters\UserFilter;
 use backend\modules\adminxx\models\form\ChangePassword;
@@ -17,8 +18,6 @@ use backend\modules\adminxx\models\form\Login;
 use backend\modules\adminxx\models\form\PasswordResetRequestForm;
 use backend\modules\adminxx\models\form\Update;
 use backend\modules\adminxx\models\UserM;
-use yii\db\Query;
-use yii\filters\VerbFilter;
 
 /**
  * Class UserController

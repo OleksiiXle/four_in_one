@@ -1,7 +1,7 @@
 <?php
 namespace backend\modules\adminxx\models\filters;
 
-use console\backgroundTasks\models\BackgroundTask;
+use console\controllers\backgroundTasks\models\BackgroundTask;
 use common\widgets\xlegrid\models\GridFilter;
 
 class BackgroundTaskFilter extends GridFilter
@@ -21,7 +21,7 @@ class BackgroundTaskFilter extends GridFilter
     public $datetime_create;
     public $datetime_update;
 
-    private $_filterContent;
+   // private $_filterContent;
 
 
     public function rules()
@@ -55,6 +55,13 @@ class BackgroundTaskFilter extends GridFilter
             'datetime_create' => 'Datetime Create',
             'datetime_update' => 'Datetime Update',
         ];
+    }
+
+    public static function getStatusesArray()
+    {
+        return array_merge([
+            '' => \Yii::t('app', 'Все')
+        ], BackgroundTask::getStatusesArray());
     }
 
     public function getQuery($params = null)

@@ -1,5 +1,8 @@
 <?php
-echo \yii\widgets\DetailView::widget([
+use yii\widgets\DetailView;
+use backend\modules\adminxx\models\MenuXX;
+
+echo DetailView::widget([
     'model' => $model,
     'attributes' => [
         'id',
@@ -18,7 +21,7 @@ echo \yii\widgets\DetailView::widget([
         [
             'label' => \Yii::t('app', 'Уровень пользователя'),
             'value' => function () use ($model){
-                return \app\modules\adminxx\models\MenuXX::ACCESS_LEVEL_DICT[$model->access_level];
+                return MenuXX::ACCESS_LEVEL_DICT[$model->access_level];
             },
             'format' => 'html',
         ],

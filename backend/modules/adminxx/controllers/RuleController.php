@@ -2,11 +2,11 @@
 
 namespace backend\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
 use Yii;
-use common\components\AccessControl;
-use backend\modules\adminxx\models\RuleX;
 use yii\data\ActiveDataProvider;
+use common\components\AccessControl;
+use backend\controllers\MainController;
+use backend\modules\adminxx\models\RuleX;
 
 /**
  * Class RuleController

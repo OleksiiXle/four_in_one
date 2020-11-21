@@ -2,9 +2,9 @@
 
 namespace backend\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
+use backend\controllers\MainController;
 use backend\modules\adminxx\models\filters\UControlFilter;
 use backend\modules\adminxx\models\filters\UserActivityFilter;
 use backend\modules\adminxx\models\UControl;

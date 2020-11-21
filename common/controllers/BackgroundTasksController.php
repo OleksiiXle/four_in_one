@@ -3,7 +3,7 @@ namespace common\controllers;
 
 use yii\web\Controller;
 use common\components\AccessControl;
-use console\backgroundTasks\models\BackgroundTask;
+use console\controllers\backgroundTasks\models\BackgroundTask;
 
 /**
  * Class BackgroundTasksController

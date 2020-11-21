@@ -1,6 +1,6 @@
 <?php
 
-namespace console\backgroundTasks\models;
+namespace console\controllers\backgroundTasks\models;
 
 class TaskWorker
 {

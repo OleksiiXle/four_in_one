@@ -575,4 +575,26 @@ class MenuXX extends MainModel
         }
         return $ret;
     }
+
+    public static function getPermissionsDict() {
+        $manager = \Yii::$app->getAuthManager();
+        $result['']='';
+        $avaliableAll = array_keys($manager->getPermissions());
+        foreach ($avaliableAll as $name) {
+            if (substr($name, 0, 4) == 'menu') {
+                $result[$name] = $name;
+            }
+        }
+        return $result;
+    }
+
+    public static function getRoutesDict()
+    {
+        $rout = new Route();
+        $routes = $rout->getAppRoutes();
+        return $routes;
+
+    }
+
+
 }

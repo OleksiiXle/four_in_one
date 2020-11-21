@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use common\widgets\menuUpdate\models\MenuXX;
+use common\models\MenuXX;
 
 ?>
 <?//**********************************************************************************************?>
@@ -22,7 +22,7 @@ use common\widgets\menuUpdate\models\MenuXX;
                 ->dropDownList($permissions,
                     ['options' => [ $model->role => ['Selected' => true]],]);
             echo $form->field($model, 'access_level')
-                ->dropDownList(MenuX::ACCESS_LEVEL_DICT,
+                ->dropDownList(MenuXX::ACCESS_LEVEL_DICT,
                     ['options' => [ $model->access_level => ['Selected' => true]],]);
             ?>
         </div>

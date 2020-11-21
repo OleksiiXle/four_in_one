@@ -25,6 +25,6 @@ function addTranslations(messages) {
 }
 
 $(document).ready(function(){
-    console.log(translations);
+  //  console.log(translations);
 });
 

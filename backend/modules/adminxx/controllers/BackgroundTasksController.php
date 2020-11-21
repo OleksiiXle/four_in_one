@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\adminxx\controllers;
+namespace backend\modules\adminxx\controllers;
 
-use app\commands\backgroundTasks\models\BackgroundTask;
-use app\commands\backgroundTasks\tasks\TestTaskWorker;
-use app\modules\adminxx\models\filters\BackgroundTaskFilter;
+use console\controllers\backgroundTasks\models\BackgroundTask;
+use console\controllers\backgroundTasks\tasks\TestTaskWorker;
+use backend\modules\adminxx\models\filters\BackgroundTaskFilter;
 use backend\controllers\MainController;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
@@ -50,12 +50,9 @@ class BackgroundTasksController extends MainController
            // 'searchId' => $id,
             'filterModelClass' => BackgroundTaskFilter::class,
             'conserveName' => 'backgroundTasksGrid',
-            'pageSize' => 15,
+            'pageSize' => 5,
         ]);
         $r=1;
-        if (\Yii::$app->request->isPost){
-            return $this->redirect('index');
-        }
         return $this->render('index',[
             'dataProvider' => $dataProvider,
         ]);
@@ -153,7 +150,7 @@ class BackgroundTasksController extends MainController
 
     public function actionStartBackgroundTask()
     {
-        return $this->render('test');
+     //   return $this->render('test');
         $model = TestTaskWorker::class;
         $arguments = [
             'id' => 777,
@@ -220,6 +217,9 @@ class BackgroundTasksController extends MainController
             'mode' => 'Run background task processing with waiting without AJAX',
             'id' => $arguments['id'],
             'result' => $result,
+            'arguments' => $arguments,
+            'model' => $model,
+
         ]);
 
 

@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use common\widgets\xlegrid\Xlegrid;
 use backend\modules\adminxx\assets\AdminxxBackgroundTaskAsset;
@@ -17,14 +16,21 @@ $this->title =  'Фонові завдання';
 </div>
 <div class="row xContent">
         <div class="tasksGrid xCard">
-            <?php Pjax::begin([
-                //   'id' => 'gridUsers',
-                'id' => 'gridBackgroundTasks',
-            ]);
-            ?>
             <div id="background-tasks-grid" >
                 <?php
                 echo Xlegrid::widget([
+                    'useCheckForRows' => true,
+                    'checkActionList' => [
+                        'actions' => [
+                            'action1' => 'action1***',
+                            'action2' => 'action2***',
+                            'action3' => 'action3***',
+                        ],
+                        'options' => [
+                            'class' => 'checkActionsSelect',
+                            'onchange' => 'actionWithChecked(this);',
+                        ],
+                    ],
                     'pager' => [
                         'firstPageLabel' => '<<<',
                         'lastPageLabel'  => '>>>'
@@ -32,6 +38,8 @@ $this->title =  'Фонові завдання';
                     'dataProvider' => $dataProvider,
                     'gridTitle' => '',
                     'additionalTitle' => 'qq',
+                    'usePjax' => true,
+                    'pjaxContainerId' => 'background-tasks-grid',
                     'filterView' => '@app/modules/adminxx/views/background-tasks/_filterBackgroundTask',
                     //-------------------------------------------
                     'tableOptions' => [
@@ -40,6 +48,13 @@ $this->title =  'Фонові завдання';
                     ],
                     //-------------------------------------------
                     'columns' => [
+                        [
+                            'label' => '',
+                            'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
+                            'contentOptions' => ['style' => 'width: 2%; white-space: nowrap; overflow: hidden;'],
+                            'options' => ['class' => 'row-check'],
+                            //'content' => '',
+                        ],
                         [
                             'attribute' => 'id',
                             'headerOptions' => ['style' => 'width: 3%;overflow: hidden; '],
@@ -130,6 +145,7 @@ $this->title =  'Фонові завдання';
                                 return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', null,
                                     [
                                         'title' => 'Переглянути',
+                                        'class' => 'no-pjax',
                                         'onClick' => "modalOpenBackgroundTask($data->id, 'view');"
                                     ]);
                             },
@@ -142,6 +158,7 @@ $this->title =  'Фонові завдання';
                                 return Html::a('<span class="glyphicon glyphicon-trash"></span>', null,
                                     [
                                         'title' => 'Видалити',
+                                        'class' => 'no-pjax',
                                         'onClick' => "modalOpenBackgroundTask($data->id, 'delete');"
                                     ]);
                             },
@@ -185,7 +202,7 @@ $this->title =  'Фонові завдання';
                     ],
 
                 ]);
-                Pjax::end() ?>
+                ?>
             </div>
         </div>
 </div>
