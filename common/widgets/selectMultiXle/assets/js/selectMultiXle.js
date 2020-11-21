@@ -3,11 +3,21 @@ $(document).ready ( function(){
 });
 */
 (function ($) {
-    $.fn.selectMultiXle = function (selectId, textAreaAttributeId) {
-        let selectedItems = [];
+    $.fn.selectMultiXle = function (selectId, textAreaAttributeId, itemsArrayOwn) {
+      //  console.log(itemsArrayOwn);
         let key;
+        let selectedItems = [];
         let item;
-        console.log(translate('Показать список выбора'));
+        let ownItems = JSON.parse(itemsArrayOwn);
+      //  console.log(ownItems);
+      //  console.log(Object.keys(ownItems).length);
+        if (Object.keys(ownItems).length > 0) {
+            for (key in ownItems) {
+                selectedItems.push(key);
+            }
+            $("#" + textAreaAttributeId).val(JSON.stringify(selectedItems));
+        }
+      //  console.log(translate('Показать список выбора'));
 
         //--выбор
         $(".choise-row-" + selectId).on('click', function () {
@@ -39,7 +49,7 @@ $(document).ready ( function(){
                 $("#no-selected-message-"+ selectId).removeClass('no-active').addClass('active');
             }
             let i = selectedItems.indexOf(key);
-            if (i > 0) {
+            if (i >= 0) {
                 selectedItems.splice(i, 1);
             }
          //   console.log(selectedItems);

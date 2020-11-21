@@ -8,8 +8,6 @@ use \backend\modules\adminxx\assets\AdminxxUserAsset;
 JuiAsset::register($this);
 AdminxxUserAsset::register($this);
 
-
-
 $this->title = 'Профіль користувача';
 
 ?>
@@ -59,8 +57,7 @@ $this->title = 'Профіль користувача';
         <div class="userFIOArea">
              <div class="col-md-12 col-lg-10">
                 <h3><?= Html::encode($userProfile['last_name'] . ' ' . $userProfile['first_name'] . ' ' . $userProfile['middle_name'])  ?></h3>
-                <h4><?= (!empty($userProfile['position'])) ? Html::encode($userProfile['position']) : Html::encode($userProfile['job_name'])  ?></h4>
-                <h4><?= UserM::STATUS_DICT[$userProfile['status']]  ?></h4>
+                <h4><?= UserM::getStatusDict()[$userProfile['status']]  ?></h4>
             </div>
             <div class="col-md-12 col-lg-2">
                 <h4><?= Html::a('До списку користувачів', 'index', ['style' => 'color:red']);?></h4>
@@ -93,27 +90,11 @@ $this->title = 'Профіль користувача';
                             }
                         ],
                         [
-                            'attribute' => 'spec_document',
-                            'label' => 'Жетон',
-                            'format' => 'raw',
-                            'value' => function($data){
-                                return $data['spec_document'];
-                            }
-                        ],
-                        [
                             'attribute' => 'phone',
                             'label' => 'Телефон',
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['phone'];
-                            }
-                        ],
-                        [
-                            'attribute' => 'direction',
-                            'label' => 'Напрямок',
-                            'format' => 'raw',
-                            'value' => function($data){
-                                return $data['direction'];
                             }
                         ],
                         [
@@ -164,14 +145,6 @@ $this->title = 'Профіль користувача';
                                 return $data['lastRoute'];
                             }
                         ],
-                        [
-                            'attribute' => 'personal_id',
-                            'label' => 'ID Працівника',
-                            'format' => 'raw',
-                            'value' => function($data){
-                                return $data['personal_id'];
-                            }
-                        ],
                     ],
                 ]);
                 ?>
@@ -183,37 +156,10 @@ $this->title = 'Профіль користувача';
             <div id="tabsl" class="userRightSide ">
                 <!--*************************************************************************** МЕНЮ -->
                 <ul>
-                    <li><a href="#tabsl-1">Підрозділи</a></li>
                     <li><a href="#tabsl-2">Ролі</a></li>
                     <li><a href="#tabsl-3">Дозвіли</a></li>
                     <li><a href="#tabsl-4">Роути</a></li>
                 </ul>
-                <div id="tabsl-1" >
-                    <?php if (!empty($userProfile['departments'])): ?>
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <td>Підрозділ</td>
-                            <td>Редагування підрозділів</td>
-                            <td>Редагування посад</td>
-                            <td>Редагування працівників</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($userProfile['departments'] as $department):?>
-                            <tr>
-                                <td><?= $department['name'];?></td>
-                                <td><?= (!empty($department['can_department'])) ? 'Так' : 'Ні';?></td>
-                                <td><?= (!empty($department['can_position'])) ? 'Так' : 'Ні';?></td>
-                                <td><?= (!empty($department['can_personal'])) ? 'Так' : 'Ні';?></td>
-                            </tr>
-
-                        <?php endforeach;?>
-                        </tbody>
-                    </table>
-
-                    <?php endif;?>
-                </div>
                 <div id="tabsl-2">
                     <div>
                         <?php if (!empty($userProfile['userRoles'])): ?>

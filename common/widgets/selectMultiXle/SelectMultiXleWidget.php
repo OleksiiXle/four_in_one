@@ -2,6 +2,8 @@
 namespace common\widgets\selectMultiXle;
 
 use yii\base\Widget;
+use yii\helpers\Json;
+
 
 /**
  * Class SelectMultiXleWidget
@@ -19,7 +21,12 @@ class SelectMultiXleWidget extends Widget
      * Ассоциативный массив значений для выбора [key =-> value]
      * @var
      */
-    public $itemsArray;
+    public $itemsArrayToSelect;
+    /**
+     * Уже имеющиеся значения [key =-> value]
+     * @var
+     */
+    public $itemsArrayOwn = [];
     /**
      * Имя класса модели без неймспейса
      * @var
@@ -55,14 +62,16 @@ class SelectMultiXleWidget extends Widget
         $textAreaAttributeId = strtolower($this->modelName . '-' . $this->textAreaAttribute);
         $textAreaAttributeName = $this->modelName . '[' . $this->textAreaAttribute . ']';
         $view = $this->getView();
+        $itemsArrayOwn = (!empty($this->itemsArrayOwn)) ? Json::htmlEncode($this->itemsArrayOwn) : '{}';
         SelectMultiXleAssets::register($view);
         $view->registerJs("jQuery('#$this->selectId')
-            .selectMultiXle('$this->selectId', '$textAreaAttributeId');");
+            .selectMultiXle('$this->selectId', '$textAreaAttributeId', '$itemsArrayOwn');");
 
         return $this->render('selectMultiXle',
             [
                 'selectId' => $this->selectId,
-                'itemsArray' => $this->itemsArray,
+                'itemsArrayToSelect' => $this->itemsArrayToSelect,
+                'itemsArrayOwn' => $this->itemsArrayOwn,
                 'textAreaAttributeId' => $textAreaAttributeId,
                 'textAreaAttributeName' => $textAreaAttributeName,
                 'label' => $this->label,

@@ -2,8 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \yii\helpers\Url;
-use \app\widgets\changePosDep\ChangePosDepWidget;
-use \app\modules\adminxx\assets\AdminxxUpdateUserAsset;
+use backend\modules\adminxx\assets\AdminxxUpdateUserAsset;
 
 AdminxxUpdateUserAsset::register($this);
 //\app\modules\adminxx\assets\AdminxxMdlAsset::register($this);
@@ -19,10 +18,8 @@ if ($model->isNewRecord){
 }
 
 
-$_userDepartments = \yii\helpers\Json::htmlEncode($userDepartments);
 $_userRoles = \yii\helpers\Json::htmlEncode($userRoles);
 $this->registerJs("
-    var _userDepartments = {$_userDepartments};
     var _userRoles = {$_userRoles};
 ",\yii\web\View::POS_HEAD);
 //$this->registerJs($this->render('signup.js'));

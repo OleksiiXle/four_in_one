@@ -1,5 +1,5 @@
-<!--*************** форма регистрации пользователя администратором -->
-<!--*************** рендерится из UserController -> actionSignupByAdmin($invitation = false) -->
+<!--*************** форма создания/изменения пользователя администратором-->
+<!--*************** рендерится из UserController -> actionUpdateByAdmin($mode, $id = 0, $invitation = false) -->
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
@@ -46,6 +46,7 @@ if ($model->isNewRecord){
                     'modelName' => 'UserM',
                     'textAreaAttribute' => 'userRolesToSet',
                     'label' => Yii::t('app', 'Роли'),
+                    'itemsArrayOwn' => $userRoles,
                     'itemsArrayToSelect' => $defaultRoles,
                 ]);?>
                 <?= $form->field($model, 'username')->textInput([]); ?>

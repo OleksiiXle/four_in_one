@@ -153,7 +153,8 @@ $this->title = Yii::t('app', 'Пользователи');
                                             ],
                                             'Змінити данні' => [
                                                 'icon' => 'glyphicon glyphicon-pencil',
-                                                'route' => Url::to(['/adminxx/user/update-by-admin', 'id' => $data['id']]),
+                                                'route' => Url::to(['/adminxx/user/update-by-admin',
+                                                    'mode' => 'update', 'id' => $data['id'],]),
                                             ],
                                             'Змінити дозвіли та ролі' => [
                                                 'icon' => 'glyphicon glyphicon-lock',

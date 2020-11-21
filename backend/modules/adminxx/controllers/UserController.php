@@ -177,6 +177,7 @@ class UserController extends MainController
         $model = new UserM();
         $model->scenario = UserM::SCENARIO_SIGNUP_BY_ADMIN;
         $defaultRoles = $model->defaultRoles;
+        $userRoles = $model->userRolesToSet;
         if ($model->load(Yii::$app->request->post())) {
             $tmp = json_decode($model->userRolesToSet, true);
             if ($model->updateUser()) {
@@ -194,7 +195,6 @@ class UserController extends MainController
         return $this->render('signupByAdmin', [
             'model' => $model,
             'defaultRoles' => $defaultRoles,
-            'userDepartments' => [],
             'userRoles' => [],
         ]);
     }
@@ -209,7 +209,7 @@ class UserController extends MainController
      * +++ Редактирование профиля пользователя администратором update-by-admin
      * @return string
      */
-    public function actionUpdateByAdmin($id)
+    public function actionUpdateByAdmin($mode, $id = 0, $invitation = false)
     {
         $model = UserM::findOne($id);
         $model->scenario = UserM::SCENARIO_UPDATE;
@@ -218,11 +218,8 @@ class UserController extends MainController
         $roles = $auth->getRolesByUser($id);
         $userRoles = [];
         if (!empty($roles)){
-            foreach ($roles as $key => $role){
-                $userRoles[] = [
-                    'id' => $key,
-                    'name' => $role->description,
-                ];
+            foreach ($roles as $key => $role) {
+                $userRoles[$key] = $role->description;
             }
         }
         $defaultRoles = $model->defaultRoles;
@@ -233,7 +230,7 @@ class UserController extends MainController
             }
         }
 
-        return $this->render('updateUser', [
+        return $this->render('update', [
             'model' => $model,
             'userRoles' => $userRoles,
             'defaultRoles' => $defaultRoles,
