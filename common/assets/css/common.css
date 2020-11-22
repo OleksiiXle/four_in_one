@@ -1,79 +1,160 @@
-.departmentsTree{
-    cursor: pointer;
-    position: relative; /* absolute | fixed | relative | static | inherit */
+/*********************************************************************************** лайаут */
+.xLayoutHeader{
+    background-color: #bdbdbd;
+    position: fixed; /* absolute | fixed | relative | static | inherit */
     left: 0;
     top: 0;
     width: 100%;
-    height: 80vh;
-    /* table-layout:  fixed;*/
-    overflow: hidden ; /* полосы прокрутки | hidden | scroll | visible | inherit*/
-    float: left;
-    background-color: #f7f2f2;
-    padding: 20px;
-
+    /* height: 6%;*/
+    height: 54.9531px;;
+    overflow: hidden  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+    margin: 0;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
-.simpleBlock{
-    cursor: pointer;
-    background-color: #f7f2f2;
-    padding: 10px;
-    position: relative; /* absolute | fixed | relative | static | inherit */
-    overflow: hidden ; /* полосы прокрутки | hidden | scroll | visible | inherit*/
+.xLayoutContent{
+    position: fixed; /* absolute | fixed | relative | static | inherit */
+    background-color: #d8d8e1b8;
 
+    left: 0;
+    /*  top: 6%;*/
+    top: 54.9531px;;
+    width: 100%;
+    height: 94%;
+    overflow: auto  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+    margin: 0;
+    padding: 0;
 }
 
+.xFooter{
+    background-color: #ccc8cd;
+    overflow: hidden  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+    margin: 0;
+    padding: 5px 15px 0 15px;
+}
 
-.preloader {
-    position: absolute;
+/*********************************************************************************** меню лайаута (модальное окно)*/
+#xCover {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.6;
+    z-index: 100;
+}
+
+#xMenu {
+    display: none;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 999999;
+
+    /* text-align: center;*/
+    overflow-x: auto;
+    overflow-y: scroll;
+    /*   padding: 20px;*/
+    z-index: 9999;
+
+
+}
+
+.xMenuBtn{
+    border: none;
+    background: none;
+    padding-top: 15px;
+}
+
+.xMenuCloseBtn{
+    border: none;
+    background: none;
+    padding: 5px;
+    margin: 0;
+}
+
+#xMenuContent {
     display: none;
-    /*  background: rgba(255,255,255,0.6);*/
+    width: 300px;
+    height: auto;
+    position: relative;
+    background-color: #FAFAFA;
+    z-index: 300;
+    padding: 0 20px 20px 20px;
 }
 
-.page-loader-circle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 86px;
-    height: 86px;
-    margin: -18px 0 0 -18px;
-    border-radius: 50%;
-    border: 2px solid;
-    border-top-color: rgba(34, 34, 34, 1);
-    border-bottom-color: rgba(0, 0, 0, 0.15);
-    border-left-color: rgba(34, 34, 34, 1);
-    border-right-color: rgba(0, 0, 0, 0.15);
-    -webkit-animation: page-loader-circle 0.8s linear infinite;
-    animation: page-loader-circle 0.8s linear infinite;
+/*********************************************************************************** заготовка для модального окна */
+#xModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    /* text-align: center;*/
+    overflow-x: auto;
+    overflow-y: scroll;
+    /*   padding: 20px;*/
+    z-index: 9999;
+
+
 }
 
-@keyframes page-loader-circle {
-    from {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    to {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
+#xModalWindow {
+    display: none;
+    width: 600px;
+    height: auto;
+    position: relative;
+    z-index: 400;
+    background-color: #FAFAFA;
+
 }
 
-@-webkit-keyframes page-loader-circle {
-    from {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    to {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
+.xModalHeader{
+    font-size: 25px;
+    background-color: lightgrey;
 }
 
+#xModalCloseBtn{
+    /*font-size: 60px;*/
+    /* position: relative;*/
+    border: none;
+    background: none;
+    padding: 5px;
+    margin: 0;
+    /* z-index: 99999;*/
+}
 
+/*********************************************************************************** стили для вьюх и форм    */
+.xCard{
+    background-color: lightgrey;
+    padding: 10px;
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+
+}
+
+.xHeader{
+    background-color: #d8d8e1b8;
+    overflow: hidden  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+    margin: 0;
+    padding: 5px 15px 0 15px;
+}
+
+.xContent{
+    background-color: #d8d8e1b8;
+    overflow: auto  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+    margin: 0;
+    /*  min-height: 700px ;*/
+    padding: 5px 15px 15px 15px;
+}
+
+/*************************************************************************************** прелоадер*/
 .loaderXle {
     position: absolute ; /*relative;*/
     top: 50%;
@@ -88,8 +169,7 @@
     height: 120px;
     animation: spin 2s linear infinite;
     background: #fff;
-    z-index: 9999;
-
+    z-index: 99999;
 }
 
 @keyframes spin {
@@ -107,10 +187,29 @@
     opacity: 0.5;
 }
 
+#loaderText {
+    position: absolute ; /*relative;*/
+    top: 20%;
+    left: 30%;
+    width: 40%;
+    /*display: none;*/
+    /* background: none;*/
+    text-align: center;
+    color: red;
+    font-size: x-large;
+    z-index: 9999;
+}
+
+
+/****************************************************************************************/
+/*************************************************************************************** ВСПОМАГАТЕЛЬНІЕ*/
+
+/*********************************************************************************** мерцающий текст*/
 .blink-text {
     -webkit-animation: blink-text 2s linear infinite;
     animation: blink-text 2s linear infinite;
 }
+
 @-webkit-keyframes blink-text {
     0% { color: #F00; }
     50% { color: #FBB; }
@@ -120,67 +219,61 @@
     0% { color: #F00; }
     50% { color: #FBB; }
     100% { color: #F00; } }
+/****************************************************************************************/
 
-/* Активно, очікує зміни чисельності*/
-.blink_text_active_waiting_for_recalc {
-    -webkit-animation: blink_text_active_waiting_for_recalc 2s linear infinite;
-    animation: blink_text_active_waiting_for_recalc 2s linear infinite;
+
+.departmentsTree {
+    cursor: pointer;
+    width: 95%;
+    height: 45vh;
+    /* table-layout:  fixed;*/
+    overflow: auto ; /* полосы прокрутки | hidden | scroll | visible | inherit*/
+    float: left;
+    background-color: aliceblue;
+    margin: 20px;
+    padding: 10px;
 }
-@-webkit-keyframes blink_text_active_waiting_for_recalc {
-    0% { color: maroon; }
-    50% { color: #FBB; }
-    100% { color: maroon; } }
 
-@keyframes blink_text_active_waiting_for_recalc {
-    0% { color: maroon; }
-    50% { color: #FBB; }
-    100% { color: maroon; } }
+.simpleBlock{
+    cursor: pointer;
+    background-color: #f7f2f2;
+    padding: 10px;
+    position: relative; /* absolute | fixed | relative | static | inherit */
+    overflow: hidden ; /* полосы прокрутки | hidden | scroll | visible | inherit*/
 
-/* Активно, очікує скорочення*/
-.blink_text_active_waiting_for_delete {
-    -webkit-animation: blink_text_active_waiting_for_delete 2s linear infinite;
-    animation: blink_text_active_waiting_for_delete 2s linear infinite;
 }
-@-webkit-keyframes blink_text_active_waiting_for_delete {
-    0% { color: #F00; }
-    50% { color: #FBB; }
-    100% { color: #F00; } }
 
-@keyframes blink_text_active_waiting_for_delete {
-    0% { color: #F00; }
-    50% { color: #FBB; }
-    100% { color: #F00; } }
+.assignedItemsList{
+    font-weight: 600;
+    color: darkred;
 
-/* Не активно, очікує введення*/
-.blink_text_no_active_waiting_to_active {
-    -webkit-animation: blink_text_no_active_waiting_to_active 2s linear infinite;
-    animation: blink_text_no_active_waiting_to_active 2s linear infinite;
 }
-@-webkit-keyframes blink_text_no_active_waiting_to_active {
-    0% { color: seagreen; }
-    50% { color: #FBB; }
-    100% { color: seagreen; } }
 
-@keyframes blink_text_no_active_waiting_to_active {
-    0% { color: seagreen; }
-    50% { color: #FBB; }
-    100% { color: seagreen; } }
-
-/* Не активно, скорочено*/
-.blink_text_no_active_deleted {
+.userDepartmentGrid {
+    width: 100%;
+    height: 30vh;
+    /* table-layout:  fixed;*/
+    overflow: auto ; /* полосы прокрутки | hidden | scroll | visible | inherit*/
+    float: left;
+    background-color: aliceblue;
+    padding: 10px;
 }
-/* Не активно, скорочено, на посадах немає працівників*/
-.blink_text_no_active_deleted_with_personal {
-    -webkit-animation: blink_text_no_active_deleted_with_personal 2s linear infinite;
-    animation: blink_text_no_active_deleted_with_personal 2s linear infinite;
-}
-@-webkit-keyframes blink_text_no_active_deleted_with_personal {
-    0% { color: black; }
-    50% { color: #FBB; }
-    100% { color: black; } }
 
-@keyframes blink_text_no_active_deleted_with_personal {
-    0% { color: black; }
-    50% { color: #FBB; }
-    100% { color: black; } }
+.userAssigments {
+    width: 100%;
+    height: 60vh;
+    overflow: auto ; /* полосы прокрутки | hidden | scroll | visible | inherit*/
+    float: left;
+    background-color: aliceblue;
+    padding: 10px;
+}
+
+.userSelect{
+    padding: 1px;
+}
+
+.activeGridRow{
+    color: red;
+    font-weight: 600;
+}
 

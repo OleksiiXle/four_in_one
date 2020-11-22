@@ -1,14 +1,9 @@
 <?php
 
-namespace frontend\modules\post\controllers;
+namespace frontend\controllers;
 
-use Yii;
 use common\controllers\MainController as Controller;
 
-/**
- * Class MainController
- * @package app\modules\post\controllers
- */
 class MainController extends Controller
 {
     /**

@@ -9,7 +9,8 @@ class ChangeLanguageWidget extends Widget
 {
     public $languagesList;
     public $selectedLanguage;
-    public $changeLanguageRoute = '/adminxx/translation/change-language';
+  //  public $changeLanguageRoute = '/adminxx/translation/change-language';
+    public $changeLanguageRoute = '/widget/change-language';
 
     public function init()
     {

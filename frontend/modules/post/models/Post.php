@@ -2,9 +2,9 @@
 
 namespace frontend\modules\post\models;
 
+use Yii;
 use common\models\MainModel;
 use common\models\UserM;
-use Yii;
 
 /**
  * This is the model class for table "post".

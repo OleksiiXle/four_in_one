@@ -68,7 +68,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoI
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="center" style="padding-left: 1px">
             <?php
             if (!Yii::$app->user->isGuest){
-                echo Html::beginForm(['/adminxx/user/logout'], 'post');
+                echo Html::beginForm(['/site/logout'], 'post');
                 echo Html::submitButton(
                     '<span> <img  src="' . $exitLogo . '" height="30px" width="30px;">' . Yii::$app->user->getIdentity()->username .  '</span>',
                     ['class' => 'btn btn-link ']

@@ -5,7 +5,6 @@ use yii\web\AssetBundle;
 
 class BackgroundTaskAsset extends AssetBundle
 {
-
     public $basePath = '@webroot/assets';
     public $sourcePath = '@common/assets';
     public $publishOptions = ['forceCopy' => true];

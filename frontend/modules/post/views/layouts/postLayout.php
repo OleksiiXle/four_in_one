@@ -3,13 +3,15 @@ use yii\helpers\Html;
 use common\widgets\menuX\MenuXWidget;
 use common\widgets\changeLanguage\ChangeLanguageWidget;
 use frontend\modules\post\assets\PostLayoutAsset;
-use common\assets\AppAsset;
+use yii\helpers\Url;
+
+//use common\assets\AppAsset;
 //use app\assets\BackgroundTaskAsset;
 use yii\jui\JuiAsset;
 use common\helpers\DateHelper;
 
 
-AppAsset::register($this);
+//AppAsset::register($this);
 PostLayoutAsset::register($this);
 
 //BackgroundTaskAsset::register($this);
@@ -20,10 +22,14 @@ if (Yii::$app->session->getAllFlashes()){
          $_fms = \yii\helpers\Json::htmlEncode($fms);
          $this->registerJs("var _fms = {$_fms};",\yii\web\View::POS_HEAD);
 }
+//$logoImg = Url::to(['/images/sun_61831.png']);
+
+$logoImg = Url::to(['/images/np_logo.png']);
+$exitLogo = Url::to('@web/images/log_logout_door_1563.png');
 
 ?>
 <?php
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\helpers\Url::to(['/images/sun_61831.png'])]);?>
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoImg]);?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -48,7 +54,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
             <!--  <button id="open-menu-btn" onclick="showModal(500,600, 'lokoko the best');" class="xMenuBtn" >-->
             <a href="/adminxx" title="На гоговну сторінку">
                  <span class ="img-rounded">
-                        <img  src="<?=\yii\helpers\Url::to('@web/images/sun_61831.png');?>" height="40px" width="40px;">
+                        <img  src="<?=$logoImg;?>" height="40px" width="40px;">
                  </span>
             </a>
             <button id="open-menu-btn" onclick="showMenu();" class="xMenuBtn" >
@@ -69,10 +75,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="center" style="padding-left: 1px">
             <?php
             if (!Yii::$app->user->isGuest){
-                $icon = \yii\helpers\Url::to('@web/images/log_logout_door_1563.png');
-                echo Html::beginForm(['/adminxx/user/logout'], 'post');
+                echo Html::beginForm(['/site/logout'], 'post');
                 echo Html::submitButton(
-                    '<span> <img  src="' . $icon . '" height="30px" width="30px;">' . Yii::$app->user->getIdentity()->username .  '</span>',
+                    '<span> <img  src="' . $exitLogo . '" height="30px" width="30px;">' . Yii::$app->user->getIdentity()->username .  '</span>',
                     ['class' => 'btn btn-link ']
                 );
                 echo Html::endForm();
@@ -116,7 +121,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
         <div id="xMenuContent" >
         <button class="xMenuCloseBtn" onclick="hideMenu();">
             <span class ="img-rounded">
-                <img  src="<?=\yii\helpers\Url::to('@web/images/sun_61831.png');?>" height="50px" width="50px;">
+                <img  src="<?=$logoImg;?>" height="50px" width="50px;">
             </span>
 
         </button>
@@ -166,119 +171,5 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
 </body>
 </html>
 <?php $this->endPage() ?>
-<script>
-    moment.locale('ru');
-
-    date_format = '<?= DateHelper::SYSTEM_DATE_FORMAT_JS;?>';
-  //  date_format = 'MM/DD/YYYY';
-    datetime_format = '<?= DateHelper::SYSTEM_DATETIME_FORMAT_JS;?>';
-
-    daterangepicker_default_ranges = {
-        'Сегодня': [moment(), moment()],
-        'Вчера': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-        'За последние 7 дней': [moment().subtract(6, 'days'), moment()],
-        'За последние  30 дней': [moment().subtract(29, 'days'), moment()],
-        'В этом месяце': [moment().startOf('month'), moment().endOf('month')],
-        'В прошлом месяце': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-        /*
-        'Today': [moment(), moment()],
-        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-        'This Month': [moment().startOf('month'), moment().endOf('month')],
-        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        */
-    };
-
-    daterangepicker_locale_config = {
-        direction: 'ltr',
-        format: datetime_format,
-        separator: ' - ',
-        applyLabel: 'Применить',
-        cancelLabel: 'Отмена',
-        weekLabel: 'Нед.',
-        customRangeLabel: 'Произвольный диапазон',
-        daysOfWeek: moment.weekdaysMin(),
-        monthNames: moment.monthsShort(),
-        firstDay: moment.localeData().firstDayOfWeek()
-    };
-
-    daterangepicker_default_config = {
-        startDate : moment().startOf('day'),
-        endDate : moment().endOf('day'),
-        minDate : false,
-        maxDate : false,
-        maxSpan : false,
-        autoApply : false,
-        singleDatePicker : false,
-        showDropdowns : false,
-        minYear : moment().subtract(100, 'year').format('YYYY'),
-        maxYear : moment().add(100, 'year').format('YYYY'),
-        showWeekNumbers : false,
-        showISOWeekNumbers : false,
-        showCustomRangeLabel : true,
-        timePicker : false,
-        timePicker24Hour : false,
-        timePickerIncrement : 1,
-        timePickerSeconds : false,
-        linkedCalendars : true,
-        autoUpdateInput : true,
-        alwaysShowCalendars : true,
-        ranges : daterangepicker_default_ranges,
-        opens: 'center',
-        locale: daterangepicker_locale_config
-    };
-
-    daterangepicker_single_default_config = {
-        startDate : moment().startOf('day'),
-        endDate : moment().endOf('day'),
-        minDate : false,
-        maxDate : false,
-        maxSpan : false,
-        autoApply : false,
-        singleDatePicker : true,
-        showDropdowns : false,
-        minYear : moment().subtract(100, 'year').format('YYYY'),
-        maxYear : moment().add(100, 'year').format('YYYY'),
-        showWeekNumbers : false,
-        showISOWeekNumbers : false,
-        showCustomRangeLabel : false,
-        timePicker : false,
-        timePicker24Hour : false,
-        timePickerIncrement : 1,
-        timePickerSeconds : false,
-        linkedCalendars : true,
-        autoUpdateInput : true,
-        alwaysShowCalendars : true,
-        ranges : {},
-        opens: 'center',
-        locale: daterangepicker_locale_config
-    };
-
-    daterangepicker_datetime_locale_config = {
-        direction: 'ltr',
-        format: datetime_format,
-        separator: ' - ',
-        applyLabel: 'Применить',
-        cancelLabel: 'Отмена',
-        weekLabel: 'W',
-        customRangeLabel: 'Произвольный диапазон',
-        daysOfWeek: moment.weekdaysMin(),
-        monthNames: moment.monthsShort(),
-        firstDay: moment.localeData().firstDayOfWeek(),
-    };
-
-    daterangepicker_single_datetime_default_config = {
-        singleDatePicker: true,
-        showDropdowns: true,
-        timePicker: true,
-        autoUpdateInput: false,
-       // timePicker24Hour: $.parseJSON(''),
-      //  timePickerSeconds: $.parseJSON(''),
-        locale: daterangepicker_datetime_locale_config,
-        maxDate: '<?= DateHelper::getFormattedDateFromString(DateHelper::SYSTEM_DATETIME_FORMAT, '+40 year');?>',
-    };
-
-</script>
 
 

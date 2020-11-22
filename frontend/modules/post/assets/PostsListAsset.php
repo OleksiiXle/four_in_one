@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  */
 class PostsListAsset extends AssetBundle
 {
-    public $basePath = '@webroot/modules/post/assets';
+    public $basePath = '@web/modules/post/assets';
     public $sourcePath = '@app/modules/post/assets';
 
     public $css = [

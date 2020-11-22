@@ -1,8 +1,8 @@
 <?php
 namespace frontend\modules\post\controllers;
 
-use frontend\modules\post\models\Post;
 use Yii;
+use frontend\modules\post\models\Post;
 use common\components\AccessControl;
 use yii\data\ActiveDataProvider;
 

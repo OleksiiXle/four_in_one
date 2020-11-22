@@ -38,7 +38,7 @@ class MainController extends Controller
      */
     public function beforeAction($action)
     {
-        $tmp = Yii::$app->language = Yii::$app->userProfile->language;
+        Yii::$app->language = Yii::$app->userProfile->language;
 
 
         if (defined('YII_DEBUG') && YII_DEBUG) {

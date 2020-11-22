@@ -2,15 +2,15 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
+use \common\controllers\MainController;
 use yii\filters\VerbFilter;
 use common\components\AccessControl;
-use common\models\LoginForm;
+use common\models\form\Login;
 
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends MainController
 {
     /**
      * {@inheritdoc}
@@ -75,18 +75,13 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+          $this->layout = '@common/views/layouts/loginLayout.php';
+       //   $this->layout = false;
 
-        $this->layout = 'blank';
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        $model = new Login();
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            $model->password = '';
-
             return $this->render('login', [
                 'model' => $model,
             ]);

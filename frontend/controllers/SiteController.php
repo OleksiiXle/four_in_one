@@ -8,8 +8,8 @@ use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
+use common\components\AccessControl;
+use common\models\form\Login;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -18,7 +18,7 @@ use frontend\models\ContactForm;
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends MainController
 {
     /**
      * {@inheritdoc}
@@ -28,10 +28,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+               // 'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['signup', 'login'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -78,22 +78,19 @@ class SiteController extends Controller
     }
 
     /**
-     * Logs in a user.
+     * Login action.
      *
-     * @return mixed
+     * @return string
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+        $this->layout = '@common/views/layouts/loginLayout.php';
+        //   $this->layout = false;
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        $model = new Login();
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            $model->password = '';
-
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -101,9 +98,9 @@ class SiteController extends Controller
     }
 
     /**
-     * Logs out the current user.
+     * Logout action.
      *
-     * @return mixed
+     * @return string
      */
     public function actionLogout()
     {

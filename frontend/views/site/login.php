@@ -1,41 +1,35 @@
 <?php
-
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \common\models\LoginForm */
-
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
-
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
-
-                <div style="color:#999;margin:1em 0">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-3">
+                <h3><?= Html::encode(Yii::t('app', 'Вход')) ?></h3>
+                <div class="xCard">
+                    <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+                    <?= $form->field($model, 'username') ?>
+                    <?= $form->field($model, 'password')->passwordInput() ?>
+                    <?php
+                    /*
+                    echo $form->field($model, 'reCaptcha')->widget(
+                        \himiklab\yii2\recaptcha\ReCaptcha::className(),
+                        ['siteKey' => '6LfU-p8UAAAAAOSjC2aMujiIuD9K8zw7tP4IJQrp']
+                    )->label(false);
+                    */
+                    ?>
+                    <div class="form-group">
+                        <?= Html::submitButton(Yii::t('app', 'Вход'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    </div>
+                    <div class="form-group">
+                        <?= Html::a(Yii::t('app', 'Забыл пароль'), 'forget-password');?>
+                    </div>
+                    <?php ActiveForm::end(); ?>
                 </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+            </div>
         </div>
-    </div>
+   </div>
 </div>
