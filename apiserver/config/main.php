@@ -8,13 +8,15 @@ $config = [
     'id' => 'app-api-server',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'api-server\controllers',
+    'controllerNamespace' => 'apiserverr\controllers',
+    'defaultRoute' => 'site/index',
+
     'modules' => [
         'v1' => [
-            'class' => 'api-server\modules\v1\V1',
+            'class' => 'apiserver\modules\v1\V1',
         ],
         'oauth2' => [
-            'class' => 'api-server\modules\oauth2\Module',
+            'class' => 'apiserver\modules\oauth2\Module',
         ],
     ],
 
@@ -24,8 +26,9 @@ $config = [
             'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
         ],
         'user' => [
-            'class' => 'api-server\modules\oauth2\models\UserYii',
-            'identityClass' => 'api-server\modules\oauth2\models\UserIdenty',
+            'class' => 'apiserver\modules\oauth2\models\UserYii',
+         //   'class' => 'common\components\UserX',
+            'identityClass' => 'apiserver\modules\oauth2\models\UserIdenty',
             'loginUrl' => ['site/login'],
             'enableAutoLogin' => false,
             'enableSession' => false,
@@ -33,7 +36,7 @@ $config = [
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
-            'name' => 'advanced-frontend',
+            'name' => 'api-server',
         ],
         'log' => [
             //  'traceLevel' => YII_DEBUG ? 3 : 0,

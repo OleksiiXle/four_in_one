@@ -27,7 +27,7 @@ class AuthorizeFilter extends ActionFilter
 
     public function init()
     {
-      //  Functions::dbg();
+       // Functions::dbg();
         if (!$this->allowImplicit) {
             unset($this->responseTypes['token']);
         }

@@ -4,7 +4,7 @@ return [
     'appAliases' => [
         'frontend',
         'backend',
-        'api-server',
+        'apiserver',
         'api-client',
     ],
     'pathToBackgroundTasksLogs' => '/backgroundTasks',

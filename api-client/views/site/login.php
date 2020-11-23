@@ -36,4 +36,7 @@ use app\models\LoginForm;
             <?php ActiveForm::end(); ?>
         </div>
     </div>
+    <div class="row" style="overflow: auto">
+        <?=$model->errorContent?>
+    </div>
 </div>

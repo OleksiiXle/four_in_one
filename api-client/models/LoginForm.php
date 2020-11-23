@@ -7,7 +7,7 @@ use yii\base\Model;
 use yii\di\Instance;
 use yii\httpclient\Client;
 use yii\httpclient\Request;
-use common\models\User;
+use app\models\User;
 //use app\components\ModelSessionStorageBehavior;
 
 
@@ -26,6 +26,7 @@ class LoginForm extends Model
     public $provider;
     public $rememberMe = true;
     public $reCaptcha;
+    public $errorContent = '';
 
     protected $_user = false;
 /*
@@ -97,6 +98,7 @@ class LoginForm extends Model
             }
 
          */
+        $tmp = 1;
         if ($this->validate()) {
             //--- проверить логин + пароль
             if ($this->provider == 'none'){
@@ -114,6 +116,15 @@ class LoginForm extends Model
                             'maxRedirects' => 0,
                         ])
                         ->setUrl($client->buildAuthUrl());
+                    /*
+http://xle-api-server/oauth2/auth/index
+                    ?expand=email
+                    &client_id=xapi
+                    &response_type=code
+                    &redirect_uri=http%3A%2F%2Fxle-api-client%2Fsite%2Flogin
+                    &xoauth_displayname=My%20Application
+                    &state=a1f62fb02f737781c736a4aca4597503ca7651ff72119ea7a87d6b0593a1ea6d
+                     */
                     $response = $request->send();
                     if (200 == $response->headers['http-code']){
                         //-- если форма логина пришла - заполняем ее и отправляем
@@ -138,7 +149,9 @@ class LoginForm extends Model
                             ])
                             ->setUrl($client->buildAuthUrl());
                         $response = $loginRequest->send();
-                        if (200 == $response->headers['http-code'] || 302 == $response->headers['http-code']){
+                        $code200 = (200 == $response->headers['http-code']);
+                        $code302 = (302 == $response->headers['http-code']);
+                        if ( $code200 || $code302){
                             //-- если токен пришел
                             if (isset($response->headers['location'])){
                                 $location = parse_url($response->headers['location']);
@@ -159,20 +172,28 @@ class LoginForm extends Model
                                     Yii::$app->configs->apiProvider = $client->fullClientId;
                                     return Yii::$app->user->login($this->user, $this->rememberMe ? 3600 * 24 * 30 : 0);
                                 } else {
+                                    $this->errorContent = $response->content;
+
                                     $this->addError('username', 'Ошибка обработки токена'); //todo ********
                                     return false;
                                 }
                             } else {
+                                $this->errorContent = $response->content;
+
                                 $this->addError('username', 'Неверная комбинация логина и пароля');
                                 return false;
                             }
                         } else{
                             //-- если токен не пришел
+                            $this->errorContent = $response->content;
+
                             $this->addError('username', 'токен не пришел'); //todo ********
                             return false;
                         }
                     } else {
                         //-- если форма логина не пришла
+                        $this->errorContent = $response->content;
+
                         $this->addError('username', 'АПИ не прислал форму логина'); //todo ********
                         return false;
                     }

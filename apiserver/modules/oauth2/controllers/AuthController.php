@@ -2,6 +2,7 @@
 
 namespace apiserver\modules\oauth2\controllers;
 
+use common\components\AccessControl;
 use yii\web\Controller;
 use common\helpers\Functions;
 use apiserver\modules\oauth2\AuthorizeFilter;
@@ -10,8 +11,15 @@ use apiserver\modules\oauth2\TokenAction;
 
 class AuthController extends Controller
 {
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+
     public function behaviors()
     {
+        $tmp = 1;
         return [
             /**
              * checks oauth2 credentions
@@ -21,6 +29,18 @@ class AuthController extends Controller
                 'class' => AuthorizeFilter::className(),
                 'only' => ['index'],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['?', '@'],
+                    ],
+                ],
+            ],
+
         ];
     }
     public function actions()
@@ -32,20 +52,24 @@ class AuthController extends Controller
             ],
         ];
     }
+
     /**
-     * Display login form to authorize user
+     * @return string|\yii\web\Response
      */
     public function actionIndex()
     {
-      //  Functions::dbg();
+        $this->layout = false;
+        Functions::dbg();
+      //  \yii::trace('************************************************ isOauthRequest OK', "dbg");
+
         $model = new LoginForm();
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
             if ($this->isOauthRequest) {
-             //   \yii::trace('************************************************ isOauthRequest OK', "dbg");
+                \yii::trace('************************************************ isOauthRequest OK', "dbg");
 
                 $this->finishAuthorization();
             } else {
-             //   \yii::trace('************************************************ isOauthRequest NOT', "dbg");
+                \yii::trace('************************************************ isOauthRequest NOT', "dbg");
                 return $this->goBack();
             }
 

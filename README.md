@@ -31,36 +31,36 @@ sudo a2ensite staff-api.conf
 sudo service apache2 restart
 
 **************************************************************** 2-й вариант настройки хостинга (4 хостa)
-sudo gedit /etc/apache2/sites-available/xle-admin.conf
+sudo gedit /etc/apache2/sites-available/xle.admin.conf
 <VirtualHost *:80>
-    ServerName xle-admin
+    ServerName xle.admin
     DocumentRoot /var/www/xle/staff-api/backend/web
     <Directory /var/www/xle/staff-api/backend>
         AllowOverride All
     </Directory>
 </VirtualHost>
 
-sudo gedit /etc/apache2/sites-available/xle-user.conf
+sudo gedit /etc/apache2/sites-available/xle.user.conf
 <VirtualHost *:80>
-    ServerName xle-user
+    ServerName xle.user
     DocumentRoot /var/www/xle/staff-api/frontend/web
     <Directory /var/www/xle/staff-api/frontend>
         AllowOverride All
     </Directory>
 </VirtualHost>
 
-sudo gedit /etc/apache2/sites-available/xle-api-server.conf
+sudo gedit /etc/apache2/sites-available/xle.api.server.conf
 <VirtualHost *:80>
-    ServerName xle-api-server
-    DocumentRoot /var/www/xle/staff-api/api-server/web
-    <Directory /var/www/xle/staff-api/api-server>
+    ServerName xle.api.server
+    DocumentRoot /var/www/xle/staff-api/apiserver/web
+    <Directory /var/www/xle/staff-api/apiserver>
         AllowOverride All
     </Directory>
 </VirtualHost>
 
-sudo gedit /etc/apache2/sites-available/xle-api-client.conf
+sudo gedit /etc/apache2/sites-available/xle.api.client.conf
 <VirtualHost *:80>
-    ServerName xle-api-client
+    ServerName xle.api.client
     DocumentRoot /var/www/xle/staff-api/api-client/web
     <Directory /var/www/xle/staff-api/api-client>
         AllowOverride All
@@ -69,15 +69,25 @@ sudo gedit /etc/apache2/sites-available/xle-api-client.conf
 
 sudo gedit /etc/hosts
 ->  
- 127.0.2.1       xle-admin
- 127.0.2.2       xle-user
- 127.0.2.3       xle-api-server
- 127.0.2.4       xle-api-client
+ 127.0.2.1       xle.admin
+ 127.0.2.2       xle.user
+ 127.0.2.3       xle.api.server
+ 127.0.2.4       xle.api.client
+
+sudo a2ensite xle.admin.conf
+sudo a2ensite xle.user.conf
+sudo a2ensite xle.api.server.conf
+sudo a2ensite xle.api.client.conf
 
 sudo a2ensite xle-admin.conf
 sudo a2ensite xle-user.conf
 sudo a2ensite xle-api-server.conf
 sudo a2ensite xle-api-client.conf
+
+sudo a2dissite xle-admin.conf
+sudo a2dissite xle-user.conf
+sudo a2dissite xle-api-server.conf
+sudo a2dissite xle-api-client.conf
 
 sudo service apache2 restart
 *****************************************************************************************
@@ -154,3 +164,14 @@ php yii migrate-client --migrationPath=@console/migrations/client
    
 6. Инициализация словаря
    php yii translate/init
+
+
+
+
+
+http://xle.api.server/oauth2/auth/index
+?client_id=xapi
+&response_type=code
+&redirect_uri=http%3A%2F%2Fxle.api.client%2Fsite%2Flogin
+&xoauth_displayname=My%20Application
+&state=c1615978fd0a029fa0a00d72265b0a88a4a028cee996b4285bbec7f51f7ffe83

@@ -182,4 +182,21 @@ class Functions
 
         return ($releaseLock == 1);
     }
+
+    public static function dbg()
+    {
+        $rec['METHOD'] = \Yii::$app->request->getMethod();
+        $rec['HEADERS'] = \Yii::$app->request->headers;
+        //  $rec['RAW_BODY'] = \Yii::$app->request->rawBody;
+        //  $rec['BODY_PARAMS'] = \Yii::$app->request->bodyParams;
+        $rec['QUERY_PARAMS'] = \Yii::$app->request->queryParams;
+        $rec['COOCIES'] = \Yii::$app->request->cookies;
+        if (\Yii::$app->request->isPost){
+            $rec['POST'] = \Yii::$app->request->post();
+        }
+        \yii::trace('************************************************ REQUEST', "dbg");
+        \yii::trace(\yii\helpers\VarDumper::dumpAsString($rec), "dbg");
+
+    }
+
 }

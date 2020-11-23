@@ -1,5 +1,4 @@
 <?php
-
 namespace app\controllers;
 
 use app\modules\adminxx\models\UserM;
@@ -23,7 +22,6 @@ use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
 
-
 class SiteController extends Controller
 {
     public function behaviors()
@@ -40,13 +38,6 @@ class SiteController extends Controller
                     'roles'      => [
                         '@', '?'
                     ],
-                ],
-                [
-                    'allow'      => true,
-                    'actions'    => [
-                        'index',
-                    ],
-                    'roles'      => ['menuAdminxMain', ],
                 ],
                 [
                     'allow' => true,
