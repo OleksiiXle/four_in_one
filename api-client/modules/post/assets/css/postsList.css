@@ -1,0 +1,32 @@
+/*!important*/
+.mediaItem{
+    position: static;
+    font-weight: bold;
+   /* font-size: medium;*/
+    font-size: small;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+
+}
+
+.mediasArea{
+    position: absolute;
+    display: block;
+    background: #eeeeee;
+    border: 2px solid #bdbdbd; /* Параметры границы */
+    opacity: 0.5;
+    padding: 0;
+}
+
+.mediaAreaActive, .itemArea{
+    padding: 5px;
+
+}
+.mediaAreaActive{
+    background: grey;
+}
+
+.mediaArea{
+    background: inherit;
+}

@@ -22,11 +22,35 @@ return [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
           ],
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'db' => 'db',
+        ],
+        'migrate-client' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'db' => 'clientDb',
+
+            //  'templateFile' => '@app/views/migrations/migration_db.php',
+            //   'migrationPath' => '@app/migrations/db'
+        ],
+        'adminxx-client' => [
+            'class' => 'console\controllers\AdminxxController',
+            'db' => 'clientDb',
+        ],
+        'translate-client' => [
+            'class' => 'console\controllers\TranslateController',
+            'db' => 'clientDb',
+        ],
     ],
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             'cache' => 'cache'
+        ],
+        'authManagerClient' => [
+            'class' => 'yii\rbac\DbManager',
+            'cache' => 'cache',
+            'db' => 'clientDb',
         ],
         'log' => [
             'targets' => [
@@ -53,6 +77,14 @@ return [
             'password' => '111',
             'charset' => 'utf8',
         ],
+        'clientDb' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=xle_client',
+            'username' => 'root',
+            'password' => '111',
+            'charset' => 'utf8',
+        ],
+
     ],
     'params' => $params,
 ];

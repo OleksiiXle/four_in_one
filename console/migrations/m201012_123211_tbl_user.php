@@ -20,11 +20,11 @@ class m201012_123211_tbl_user extends Migration
         }
         $this->createTable(self::TABLE_NAME, [
             'id' => $this->primaryKey(),
-            'username' => $this->string(32)->notNull()->comment('Login'),
+            'username' => $this->string(32)->notNull()->unique()->comment('Login'),
             'auth_key' => $this->string(32)->notNull()->comment('AuthKey'),
             'password_hash' => $this->string(255)->notNull()->comment('password hash'),
             'password_reset_token' => $this->string(255)->null()->comment('password reset token'),
-            'email' => $this->string(255)->null()->comment('email'),
+            'email' => $this->string(255)->null()->unique()->comment('email'),
             'status' => $this->integer(2)->defaultValue(10)->notNull()->comment('status'),
             'refresh_permissions' => $this->integer(1)->defaultValue(0)->comment('refresh permissions'),
             'created_at' => $this->integer(11)->notNull()->comment('created at'),

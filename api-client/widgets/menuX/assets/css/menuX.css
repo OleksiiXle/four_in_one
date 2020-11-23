@@ -1,0 +1,86 @@
+/* Меню лайаута и контент */
+.menuXle___{
+    display: block;
+    position: fixed; /* absolute | fixed | relative | static | inherit */
+    background-color: #D0D5D8;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 15%;
+    overflow: hidden  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+    padding: 5px;
+}
+
+.menuXleResize{
+    display: none;
+}
+
+.topXle{
+    background: lightyellow;
+
+    position: absolute; /* absolute | fixed | relative | static | inherit */
+    top: 0;
+    left: 15%;
+    height: 7%;
+    width: 85%;
+    overflow: hidden  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+}
+
+.topXleResize{
+    background: lightyellow;
+
+    position: absolute; /* absolute | fixed | relative | static | inherit */
+    top: 0;
+    left: 0;
+    height: 7%;
+    width: 100%;
+    overflow: hidden  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+}
+
+.contentXle__{
+    background: none;
+    position: absolute; /* absolute | fixed | relative | static | inherit */
+    top: 7%;
+    left: 15%;
+    height: 88%;
+    width: 85%;
+    overflow: visible  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+}
+
+.contentXleResize__{
+    background: none;
+    position: absolute; /* absolute | fixed | relative | static | inherit */
+    top: 7%;
+    left: 0;
+    height: 89%;
+    width: 100%;
+    overflow: visible  ; /* полосы прокруткиauto | hidden | scroll | visible | inherit*/
+}
+
+.selectLanguage{
+    background: none;
+    border: none;
+}
+
+.node{
+    font-weight: bold;
+    font-size: medium;
+    color: black;
+    cursor: pointer;
+}
+
+.route {
+    cursor: pointer;
+    color: black;
+    font-size: medium;
+
+}
+.submenu{
+    display: none;
+
+}
+
+
+
+
+

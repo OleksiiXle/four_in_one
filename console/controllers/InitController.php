@@ -62,4 +62,6 @@ class InitController extends \yii\console\Controller
             exec("ln -s $pathToLogs $pathFromFolderLinkToLogs", $output,$exitCode);
         }
     }
+
+
 }

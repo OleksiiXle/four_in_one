@@ -5,18 +5,30 @@ $params = array_merge(
 );
 
 $config = [
-    'id' => 'app-frontend',
+    'id' => 'app-api-server',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'frontend\controllers',
+    'controllerNamespace' => 'api-server\controllers',
+    'modules' => [
+        'v1' => [
+            'class' => 'api-server\modules\v1\V1',
+        ],
+        'oauth2' => [
+            'class' => 'api-server\modules\oauth2\Module',
+        ],
+    ],
+
     'components' => [
         'request' => [
            // 'csrfParam' => '_csrf-frontend',
             'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            'class' => 'api-server\modules\oauth2\models\UserYii',
+            'identityClass' => 'api-server\modules\oauth2\models\UserIdenty',
+            'loginUrl' => ['site/login'],
+            'enableAutoLogin' => false,
+            'enableSession' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
         'session' => [
@@ -24,25 +36,40 @@ $config = [
             'name' => 'advanced-frontend',
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            //  'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => 1,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'trace', 'info'],
+                    'categories' => ['dbg'],
+                    'logFile' => '@runtime/dbg/dbg.log',
+                    'logVars' => [],
+                ],
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction'=>'v1/system/error',
+            'class'=>'yii\web\ErrorHandler',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+        'i18n' => [
+            'translations' => [
+                'conquer/oauth2' => [
+                    'class' => \yii\i18n\PhpMessageSource::class,
+                    'basePath' => '@conquer/oauth2/messages',
+                ],
+            ],
+        ]
     ],
     'params' => $params,
 ];

@@ -1,8 +1,8 @@
 <?php
 
-namespace frontend\tests\functional;
+namespace apiserver\tests\functional;
 
-use frontend\tests\FunctionalTester;
+use apiserver\tests\FunctionalTester;
 use common\fixtures\UserFixture;
 
 class LoginCest

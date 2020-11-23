@@ -1,0 +1,15 @@
+.selectedLanguage{
+    padding: 15px;
+    cursor: pointer;
+}
+.languagesDropdown{
+    position: fixed;
+    padding: 2px;
+    background: none;
+    top:5px;
+    left: 25px;
+}
+.languagesForSelect{
+    cursor: pointer;
+}
+

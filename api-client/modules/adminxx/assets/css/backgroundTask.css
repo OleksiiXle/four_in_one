@@ -1,0 +1,19 @@
+.tasksGrid{
+    padding: 5px;
+}
+.blink_text_no_active_waiting_to_active {
+    -webkit-animation: blink_text_no_active_waiting_to_active 2s linear infinite;
+    animation: blink_text_no_active_waiting_to_active 2s linear infinite;
+    cursor: wait;
+}
+@-webkit-keyframes blink_text_no_active_waiting_to_active {
+    0% { color: seagreen; }
+    50% { color: #FBB; }
+    100% { color: seagreen; }
+}
+
+@keyframes blink_text_no_active_waiting_to_active {
+    0% { color: seagreen; }
+    50% { color: #FBB; }
+    100% { color: seagreen; }
+}

@@ -17,7 +17,7 @@
 **************************************************************** 1-й вариант настройки хостинга (1 хост, 4 пути)
 sudo gedit /etc/apache2/sites-available/staff-api.conf
 <VirtualHost *:80>
-    ServerName staff_api
+    ServerName staff-api
     DocumentRoot /var/www/xle/staff-api
     <Directory /var/www/xle/staff-api>
         AllowOverride All
@@ -86,6 +86,7 @@ sudo service apache2 restart
 1. Создание и настройка БД
 mysql -u root -p
 CREATE DATABASE four_in_one;
+CREATE DATABASE xle_client;
 EXIT;
 
 добавить в common/config/main.php
@@ -115,3 +116,29 @@ php yii migrate
 
 8. Создание симлинков для фоновых задач
     php yii init
+    
+     INSERT INTO `oauth2_client`
+     (`client_id`, `client_secret`, `redirect_uri`, `grant_type`, `scope`, `created_at`, `updated_at`, `created_by`, `updated_by`)
+      VALUES ('xapi', '123','http://api.client', 'UserCredentials','none',1,1,1,1)
+
+
+Настройка клиента
+php yii migrate-client --migrationPath=@console/migrations/client
+
+1. Добавить недостающие разрешения и роли (из консоли)
+   php yii adminxx-client/common-roles-init
+
+2. Инициализировать новое меню (из консоли), старое - останется.
+   php yii adminxx/menu-init
+
+3. Инициализировать дефолтных пользователей.
+   php yii adminxx/users-init
+
+4 Сщздание администраторов (по выбору)
+   php yii adminxx/make-admin
+
+5 Создание суперадмина
+   php yii adminxx/make-super-admin
+   
+6. Инициализация словаря
+   php yii translate/init
