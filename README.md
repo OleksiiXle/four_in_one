@@ -123,6 +123,18 @@ php yii migrate
 
 
 Настройка клиента
+см README в api-client, 
+в терминале войти в api-client и там все запускать
+
+
+
+
+
+
+
+
+
+
 php yii migrate-client --migrationPath=@console/migrations/client
 
 1. Добавить недостающие разрешения и роли (из консоли)

@@ -5,7 +5,7 @@ $db = require __DIR__ . '/db.php';
 $backGroundDb = require(__DIR__ . '/backGroundDb.php');
 
 $config = [
-    'id' => 'basic',
+    'id' => 'api-client',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'defaultRoute' => 'adminxx',
@@ -21,17 +21,48 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'authClientCollection' => [
+            'class'   => 'yii\authclient\Collection',
+            'clients' => [
+                'xapi' => [
+                    'class'        => 'app\components\XapiAuthClient',
+                    /*
+                    'clientId'     => 'xapi',
+                    'clientSecret' => '123',
+                    'tokenUrl'     => 'http://api.server/oauth2/auth/token',
+                    'authUrl'      => 'http://api.server/oauth2/auth/index',
+                    // 'authUrl'      => 'http://api.server/oauth2/index?expand=email',
+                    'apiBaseUrl'   => 'http://api.server/v1',
+                    */
+                    'clientId'     => $params['clientId'],
+                    'clientSecret' => $params['clientSecret'],
+                    'tokenUrl'     => $params['tokenUrl'],
+                    'authUrl'      => $params['authUrl'],
+                    'apiBaseUrl'   => $params['apiBaseUrl'],
+
+                    'stateStorage' => 'app\components\XapiStateStorage'
+                ],
+            ],
+        ],
+        'xapi'  => [
+            'class'      => 'app\components\XapiV1Client',
+            'apiBaseUrl' => $params['apiBaseUrl'],
+        ],
         'authManager' => [
             'class' => 'app\components\DbManager', // or use 'yii\rbac\DbManager'
             'cache' => 'cache'
         ],
         'user' => [
-            'class' => 'app\components\UserX',
-            'identityClass' => 'app\modules\adminxx\models\User',
-            'loginUrl' => ['adminxx/user/login'],
-            'enableAutoLogin' => false,
+            'class' => 'app\models\UserX',
+            'identityClass' => 'app\models\User',
+            'loginUrl' => ['site/login'],
+            'enableAutoLogin' => true,
+            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
-
+        'session' => [
+            // this is the name of the session cookie used for login on the frontend
+            'name' => 'api-client',
+        ],
         'configs' => [
             'class' => 'app\components\ConfigsComponent',
         ],

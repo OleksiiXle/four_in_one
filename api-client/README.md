@@ -1,4 +1,7 @@
 Клиентское приложение
+
+composer update
+
 mysql -u root -p
 CREATE DATABASE xle_client;
 EXIT;
@@ -23,3 +26,4 @@ php yii migrate
 6. Инициализация словаря
    php yii translate/init
 
+composer update
