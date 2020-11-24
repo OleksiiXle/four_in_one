@@ -2,7 +2,6 @@
 
 namespace apiserver\modules\oauth2\controllers;
 
-use common\components\AccessControl;
 use yii\web\Controller;
 use common\helpers\Functions;
 use apiserver\modules\oauth2\AuthorizeFilter;
@@ -29,18 +28,6 @@ class AuthController extends Controller
                 'class' => AuthorizeFilter::className(),
                 'only' => ['index'],
             ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['index'],
-                'rules' => [
-                    [
-                        'actions' => ['index'],
-                        'allow' => true,
-                        'roles' => ['?', '@'],
-                    ],
-                ],
-            ],
-
         ];
     }
     public function actions()

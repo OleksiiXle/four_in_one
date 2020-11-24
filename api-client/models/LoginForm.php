@@ -141,7 +141,7 @@ http://xle-api-server/oauth2/auth/index
                                 'maxRedirects' => 0,
                             ])
                             ->setData([
-                                '_csrf-frontend' => $_csrf,
+                                '_csrf' => $_csrf,
                                 'LoginForm' => [
                                     'username' => $this->username,
                                     'password' => $this->password,

@@ -10,6 +10,11 @@ $config = [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'apiserverr\controllers',
     'defaultRoute' => 'site/index',
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
+    'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
 
     'modules' => [
         'v1' => [
@@ -34,6 +39,21 @@ $config = [
             'enableSession' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
+        'authManager' => [
+            'class' => 'apiserver\components\ApiDbManager',
+            'cache' => 'cache'
+        ],
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
+            'username' => 'root',
+            'password' => '111',
+            'charset' => 'utf8',
+        ],
+        'configs' => [
+            'class' => 'common\components\ConfigsComponent',
+        ],
+
         'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'api-server',

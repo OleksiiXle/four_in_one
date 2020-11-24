@@ -1,20 +1,29 @@
 <?php
+/**
+ * @link https://github.com/borodulin/yii2-oauth2-server
+ * @copyright Copyright (c) 2015 Andrey Borodulin
+ * @license https://github.com/borodulin/yii2-oauth2-server/blob/master/LICENSE
+ */
 
 namespace apiserver\modules\oauth2;
 
+use apiserver\modules\oauth2\responsetypes\Authorization;
 use common\helpers\Functions;
-use conquer\oauth2\responsetypes\Authorization;
-use conquer\oauth2\BaseModel;
 use Yii;
 use yii\base\ActionFilter;
 
+/**
+ *
+ * @author Andrey Borodulin
+ *
+ */
 class AuthorizeFilter extends ActionFilter
 {
     private $_responseType;
 
     public $responseTypes = [
-        'token' => 'conquer\oauth2\responsetypes\Implicit',
-        'code' => 'conquer\oauth2\responsetypes\Authorization',
+        'token' => 'apiserver\modules\oauth2\responsetypes\Implicit',
+        'code' => 'apiserver\modules\oauth2\responsetypes\Authorization',
     ];
 
     /**
@@ -27,7 +36,6 @@ class AuthorizeFilter extends ActionFilter
 
     public function init()
     {
-       // Functions::dbg();
         if (!$this->allowImplicit) {
             unset($this->responseTypes['token']);
         }
@@ -57,6 +65,10 @@ class AuthorizeFilter extends ActionFilter
 
         if ($this->storeKey) {
             Yii::$app->session->set($this->storeKey, serialize($this->_responseType));
+            \yii::trace('*******Yii::$app->session->set($this->storeKey, serialize($this->_responseType))', "dbg");
+            \yii::trace('*******$this->storeKey = ' . $this->storeKey , "dbg");
+            \yii::trace('*******$this->responseTypes[$responseType] = ' . $this->responseTypes[$responseType] , "dbg");
+            \yii::trace('*******serialize($this->_responseType) = ' . serialize($this->_responseType) , "dbg");
         }
 
         return true;
@@ -102,22 +114,26 @@ class AuthorizeFilter extends ActionFilter
      */
     public function finishAuthorization()
     {
+        \yii::trace('*******finishAuthorization', "dbg");
+
         /** @var Authorization $responseType */
         $responseType = $this->getResponseType();
+        \yii::trace('*******$responseType: ' , "dbg");
+        \yii::trace(\yii\helpers\VarDumper::dumpAsString($responseType), "dbg");
+
         if (Yii::$app->user->isGuest) {
             $responseType->errorRedirect(Yii::t('conquer/oauth2', 'The User denied access to your application.'), Exception::ACCESS_DENIED);
         }
         $parts = $responseType->getResponseData();
-     //   \yii::trace('************************************************ $parts', "dbg");
-     //   \yii::trace(\yii\helpers\VarDumper::dumpAsString($parts), "dbg");
+        \yii::trace('*******$parts = ' , "dbg");
+        \yii::trace(\yii\helpers\VarDumper::dumpAsString($parts), "dbg");
 
         $redirectUri = http_build_url($responseType->redirect_uri, $parts, HTTP_URL_JOIN_QUERY | HTTP_URL_STRIP_FRAGMENT);
 
         if (isset($parts['fragment'])) {
             $redirectUri .= '#' . $parts['fragment'];
         }
-   //     \yii::trace('************************************************ finishAuthorization', "dbg");
-   //     \yii::trace(\yii\helpers\VarDumper::dumpAsString($redirectUri), "dbg");
+        \yii::trace('*******$redirectUri = ' . $redirectUri , "dbg");
 
         Yii::$app->response->redirect($redirectUri);
     }

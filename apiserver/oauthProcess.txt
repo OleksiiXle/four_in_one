@@ -1,0 +1,144 @@
+1. Проверяется логин и пароль по базе клиента
+2. Создается екземпляр app\components\XapiAuthClient со свойствами:
+array (
+  'clientId' => 'xapi',
+  'clientSecret' => '123',
+  'tokenUrl' => 'http://xle.api.server/oauth2/auth/token',
+  'validateAuthState' => true,
+  'apiBaseUrl' => 'http://xle.api.server/v1',
+  'authUrl' => 'http://xle.api.server/oauth2/auth/index',
+  'scope' => NULL,
+  'autoRefreshAccessToken' => true,  
+)
+
+3. Создается $httpClient = new Client() (yii\httpclient\Client)
+ с url =
+	http://xle.api.server/oauth2/auth/index
+	?client_id=xapi
+	&response_type=code
+	&redirect_uri=http%3A%2F%2Fxle.api.client%2Fsite%2Flogin
+	&xoauth_displayname=My%20Application
+	&state=76d6ca66e01de7ef77ec68a46be0fb0f8dee1fe09271381821491b2431ec968d  - шифруется с использованием ид сессии клиента
+
+4. Отправляется на сервер http://xle.api.server/oauth2/auth/index - асторизация
+
+куда приходит
+'METHOD' => 'GET'
+    'HEADERS' => yii\web\HeaderCollection#1
+    (
+        [yii\web\HeaderCollection:_headers] => [
+            'host' => [
+                0 => 'xle.api.server'
+            ]
+            'connection' => [
+                0 => 'close'
+            ]
+        ]
+    )
+    'QUERY_PARAMS' => [
+        'client_id' => 'xapi'
+        'response_type' => 'code'
+        'redirect_uri' => 'http://xle.api.client/site/login'
+        'xoauth_displayname' => 'My Application'
+        'state' => '76d6ca66e01de7ef77ec68a46be0fb0f8dee1fe09271381821491b2431ec968d'
+    ]
+    'COOCIES' => yii\web\CookieCollection#2
+    (
+        [readOnly] => true
+        [yii\web\CookieCollection:_cookies] => []
+    )
+5. Сервер возвращает HTML - форму авторизации
+
+6. из формы берем $_csrf и $cookies, создаем новый $loginRequest = $httpClient->createRequest(), 
+	добавляем туда  $_csrf и $cookies, 
+[
+                                '_csrf' => $_csrf,
+                                'LoginForm' => [
+                                    'username' => $this->username,
+                                    'password' => $this->password,
+                                ]
+и постом отправляем на сервер http://xle.api.server/oauth2/auth/index
+
+7. Сервер сериализует и записывает в сессию с ключом public $storeKey = 'ear6kme7or19rnfldtmwsxgzxsrmngqw'
+apiserver\modules\oauth2\responsetypes\Authorization
+    [response_type] => 'code'
+    [client_id] => 'xapi'
+    [redirect_uri] => 'http://xle.api.client/site/login'
+    [scope] => null
+    [state] => '0942e90a1aa60fda5fc38672bb9a5318e742a8f70940164f9a892c1fc70129fa'
+    [*:_client] => apiserver\modules\oauth2\models\Client#2
+    (
+        [yii\db\BaseActiveRecord:_attributes] => [
+            'client_id' => 'xapi'
+            'client_secret' => '123'
+            'redirect_uri' => 'http://xle.api.client/site/login'
+            'grant_type' => 'UserCredentials'
+            'scope' => 'none'
+            'created_at' => 1
+            'updated_at' => 1
+            'created_by' => 1
+            'updated_by' => 1
+        ]
+        [yii\db\BaseActiveRecord:_oldAttributes] => [
+            'client_id' => 'xapi'
+            'client_secret' => '123'
+            'redirect_uri' => 'http://xle.api.client/site/login'
+            'grant_type' => 'UserCredentials'
+            'scope' => 'none'
+            'created_at' => 1
+            'updated_at' => 1
+            'created_by' => 1
+            'updated_by' => 1
+        ]
+       
+    [tokenType] => 'bearer'
+    [authCodeLifetime] => 30
+    [accessTokenLifetime] => 3600
+    [refreshTokenLifetime] => 1209600
+    
+и отправляет ответ
+$redirectUri = http://xle.api.client/site/login
+?code=CUJZo2Uzz4EvUckgQVwNBEbWoT5cJZUrsx-TA5xZ
+&state=0942e90a1aa60fda5fc38672bb9a5318e742a8f70940164f9a892c1fc70129fa
+
+клиент выделяет code и делает: $token = $client->fetchAccessTokenXle($code, [], $this->user)
+
+8. $token = $client->fetchAccessTokenXle($code, [], $this->user)
+	- проверяется state и удаляется из сессии
+	- формируется реквест на $this->tokenUrl, в него добавляется 'client_id' => $this->clientId, 'client_secret' => $this->clientSecret,
+	- 
+POST http://xle.api.server/oauth2/auth/token
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+code=CUJZo2Uzz4EvUckgQVwNBEbWoT5cJZUrsx-TA5xZ
+&grant_type=authorization_code
+&redirect_uri=http%3A%2F%2Fxle.api.client%2Fsite%2Flogin
+&client_id=xapi
+&client_secret=123
+
+	- отправляет запрос на http://xle.api.server/oauth2/auth/token
+
+
+откуда приходит 
+array (
+  'access_token' => '8T1eNy3HVSDaEsU9HPfZMUfId70RE5RSbZcPx4q4',
+  'expires_in' => 3600,
+  'token_type' => 'bearer',
+  'scope' => NULL,
+  'refresh_token' => 'DpnJLTDkCdaFEXiCDtu7wCszjyOwZWPc6JgnLbov',
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

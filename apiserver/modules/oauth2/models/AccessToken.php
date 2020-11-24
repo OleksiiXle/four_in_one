@@ -1,14 +1,30 @@
 <?php
+/**
+ * @link https://github.com/borodulin/yii2-oauth2-server
+ * @copyright Copyright (c) 2015 Andrey Borodulin
+ * @license https://github.com/borodulin/yii2-oauth2-server/blob/master/LICENSE
+ */
 
 namespace apiserver\modules\oauth2\models;
 
+use apiserver\modules\oauth2\Exception;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\VarDumper;
-use conquer\oauth2\models\Client;
-use conquer\oauth2\Exception;
 
-class AccessToken extends \yii\db\ActiveRecord
+/**
+ * This is the model class for table "oauth_access_token".
+ *
+ * @property string $access_token
+ * @property string $client_id
+ * @property integer $user_id
+ * @property integer $expires
+ * @property string $scope
+ *
+ * @property Client $client
+ * @property ActiveRecord $user
+ */
+class AccessToken extends ActiveRecord
 {
     /**
      * @inheritdoc
