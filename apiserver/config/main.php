@@ -50,10 +50,12 @@ $config = [
             'password' => '111',
             'charset' => 'utf8',
         ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
         'configs' => [
             'class' => 'common\components\ConfigsComponent',
         ],
-
         'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'api-server',

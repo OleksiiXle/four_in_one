@@ -4,11 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
-use yii\di\Instance;
 use yii\httpclient\Client;
-use yii\httpclient\Request;
-use app\models\User;
-//use app\components\ModelSessionStorageBehavior;
 
 
 /**
@@ -169,7 +165,7 @@ http://xle-api-server/oauth2/auth/index
                                 }
                                 if ($token){
                                     Yii::$app->session->setFlash('success', 'Подключено к АПИ ' . $this->provider);
-                                    Yii::$app->configs->apiProvider = $client->fullClientId;
+                                  //  Yii::$app->configs->apiProvider = $client->fullClientId;
                                     return Yii::$app->user->login($this->user, $this->rememberMe ? 3600 * 24 * 30 : 0);
                                 } else {
                                     $this->errorContent = $response->content;

@@ -2,6 +2,7 @@
 
 namespace apiserver\modules\v1\controllers;
 
+use common\helpers\Functions;
 use common\models\UserM;
 use apiserver\modules\oauth2\TokenAuth;
 use yii\web\BadRequestHttpException;
@@ -36,6 +37,8 @@ class UserController extends Controller
     public function actionUserinfo()
     {
 
+        Functions::log('***************** actionUserinfo');
+        Functions::logRequest();
         if ($userId = \Yii::$app->request->post('id')){
             $user = UserM::findOne($userId);
             $userProfile = $user->userProfileForApi;

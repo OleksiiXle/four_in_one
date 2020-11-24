@@ -25,7 +25,6 @@ class XapiAuthClient extends OAuth2
         return $this->_fullClientId;
     }
 
-
     /**
      * Restores access token.
      * @return OAuthToken auth token.
@@ -48,7 +47,6 @@ class XapiAuthClient extends OAuth2
         }
         return $token;
     }
-
 
     public function fetchAccessTokenXle($authCode, array $params = [], User $user)
     {
@@ -164,8 +162,10 @@ class XapiAuthClient extends OAuth2
                     throw new NotFoundHttpException("Client $clientId not found");
                 }
             }
+            $headers = [];
 
-            $userProfile = ($profile) ? $this->api('/user/userinfo', 'POST', ['id' => $client->id] ) : [];
+         //   $headers = ['Authorization' => 'Bearer ' . $token->params['access_token']];
+            $userProfile = ($profile) ? $this->api('/user/userinfo', 'POST', ['id' => $client->id], $headers ) : [];
             $tokenParams = [
                 'tokenParamKey' =>  $token->tokenParamKey,
                 'tokenSecretParamKey' =>  $token->tokenSecretParamKey,

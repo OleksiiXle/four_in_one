@@ -32,9 +32,9 @@ class TokenAction extends Action
 
     public function init()
     {
-        \yii::trace('******* TokenAction init()', "dbg");
+        Functions::log('******* TokenAction init()');
+        Functions::logRequest();
 
-        Functions::dbg();
         Yii::$app->response->format = $this->format;
         $this->controller->enableCsrfValidation = false;
     }
@@ -45,7 +45,7 @@ class TokenAction extends Action
             throw new Exception(Yii::t('conquer/oauth2', 'The grant type was not specified in the request.'));
         }
         if (isset($this->grantTypes[$grantType])) {
-            \yii::trace('******* $grantType = ' . $grantType , "dbg");
+            Functions::log('$grantType = '. $grantType);
 
             $grantModel = Yii::createObject($this->grantTypes[$grantType]);
         } else {
@@ -53,9 +53,11 @@ class TokenAction extends Action
         }
 
         $grantModel->validate();
-        \yii::trace('******* $grantModel : ' , "dbg");
-        \yii::trace(\yii\helpers\VarDumper::dumpAsString($grantModel), "dbg");
+      //  Functions::log('grantModel:');
+      //  Functions::log(\yii\helpers\VarDumper::dumpAsString($grantModel));
 
         Yii::$app->response->data = $grantModel->getResponseData();
+      //  Functions::log('Yii::$app->response->data:');
+     //   Functions::log(\yii\helpers\VarDumper::dumpAsString(Yii::$app->response->data));
     }
 }

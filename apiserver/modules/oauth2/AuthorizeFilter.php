@@ -65,10 +65,10 @@ class AuthorizeFilter extends ActionFilter
 
         if ($this->storeKey) {
             Yii::$app->session->set($this->storeKey, serialize($this->_responseType));
-            \yii::trace('*******Yii::$app->session->set($this->storeKey, serialize($this->_responseType))', "dbg");
-            \yii::trace('*******$this->storeKey = ' . $this->storeKey , "dbg");
-            \yii::trace('*******$this->responseTypes[$responseType] = ' . $this->responseTypes[$responseType] , "dbg");
-            \yii::trace('*******serialize($this->_responseType) = ' . serialize($this->_responseType) , "dbg");
+            Functions::log("**** перед $action->id:");
+            Functions::log("$responseType=$responseType");
+            Functions::log("в сессию storeKey = $this->storeKey:");
+            Functions::log(serialize($this->_responseType));
         }
 
         return true;
@@ -114,26 +114,22 @@ class AuthorizeFilter extends ActionFilter
      */
     public function finishAuthorization()
     {
-        \yii::trace('*******finishAuthorization', "dbg");
+        Functions::log("*******finishAuthorization");
 
         /** @var Authorization $responseType */
         $responseType = $this->getResponseType();
-        \yii::trace('*******$responseType: ' , "dbg");
-        \yii::trace(\yii\helpers\VarDumper::dumpAsString($responseType), "dbg");
 
         if (Yii::$app->user->isGuest) {
             $responseType->errorRedirect(Yii::t('conquer/oauth2', 'The User denied access to your application.'), Exception::ACCESS_DENIED);
         }
         $parts = $responseType->getResponseData();
-        \yii::trace('*******$parts = ' , "dbg");
-        \yii::trace(\yii\helpers\VarDumper::dumpAsString($parts), "dbg");
 
         $redirectUri = http_build_url($responseType->redirect_uri, $parts, HTTP_URL_JOIN_QUERY | HTTP_URL_STRIP_FRAGMENT);
 
         if (isset($parts['fragment'])) {
             $redirectUri .= '#' . $parts['fragment'];
         }
-        \yii::trace('*******$redirectUri = ' . $redirectUri , "dbg");
+        Functions::log("redirectUri = $redirectUri");
 
         Yii::$app->response->redirect($redirectUri);
     }

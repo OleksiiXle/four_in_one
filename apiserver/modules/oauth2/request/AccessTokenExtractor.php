@@ -3,6 +3,7 @@
 namespace apiserver\modules\oauth2\request;
 
 use apiserver\modules\oauth2\Exception;
+use common\helpers\Functions;
 use Yii;
 use yii\web\Request;
 
@@ -33,6 +34,9 @@ class AccessTokenExtractor
      */
     public function extract()
     {
+        Functions::log('****************************** AccessTokenExtractor');
+        Functions::logRequest();
+
         $headerToken = null;
         foreach ($this->_request->getHeaders()->get('Authorization', [], false) as $authHeader) {
             if (preg_match('/^Bearer\\s+(.*?)$/', $authHeader, $matches)) {

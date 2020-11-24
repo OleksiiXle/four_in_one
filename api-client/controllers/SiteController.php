@@ -2,6 +2,7 @@
 namespace app\controllers;
 
 use app\modules\adminxx\models\UserM;
+use common\helpers\Functions;
 use Yii;
 use app\components\AccessControl;
 //use yii\filters\AccessControl;
@@ -147,6 +148,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+     //  Functions::logRequest();
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->clientLogin()) {
             return $this->goBack();

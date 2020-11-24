@@ -20,7 +20,7 @@ array (
 	&xoauth_displayname=My%20Application
 	&state=76d6ca66e01de7ef77ec68a46be0fb0f8dee1fe09271381821491b2431ec968d  - шифруется с использованием ид сессии клиента
 
-4. Отправляется на сервер http://xle.api.server/oauth2/auth/index - асторизация
+4. Отправляется на сервер http://xle.api.server/oauth2/auth/index - авторизация
 
 куда приходит
 'METHOD' => 'GET'
@@ -118,7 +118,6 @@ code=CUJZo2Uzz4EvUckgQVwNBEbWoT5cJZUrsx-TA5xZ
 
 	- отправляет запрос на http://xle.api.server/oauth2/auth/token
 
-
 откуда приходит 
 array (
   'access_token' => '8T1eNy3HVSDaEsU9HPfZMUfId70RE5RSbZcPx4q4',
@@ -127,6 +126,12 @@ array (
   'scope' => NULL,
   'refresh_token' => 'DpnJLTDkCdaFEXiCDtu7wCszjyOwZWPc6JgnLbov',
 )
+
+9. Выделяется токен
+10. Клиент запрашивает у сервера инфу о юсере и его разрешениях
+POST http://xle.api.server/v1/user/userinfo
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+id=1
 
 
 

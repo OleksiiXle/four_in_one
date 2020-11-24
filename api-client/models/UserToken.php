@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "user_token".
@@ -22,7 +23,7 @@ use Yii;
  *
  * @property User $client
  */
-class UserToken extends MainModel
+class UserToken extends ActiveRecord
 {
     private $_expireTime;
 

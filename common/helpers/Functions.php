@@ -199,4 +199,56 @@ class Functions
 
     }
 
+    public static function log($data, $time=false)
+    {
+        $filename = \Yii::getAlias('@common'). '/runtime/logs/xleLog.log';
+        if (is_array($data)) {
+            ob_start();
+            var_dump($data);
+            $ret = ob_get_clean();
+        } else {
+            $ret = $data;
+        }
+        if ($time) {
+            file_put_contents($filename,'******* ' . Functions::intToDateTime(time()) . PHP_EOL, FILE_APPEND);
+        }
+        file_put_contents($filename,$ret . PHP_EOL, FILE_APPEND);
+    }
+
+    public static function logRequest()
+    {
+        $filename = \Yii::getAlias('@common'). '/runtime/logs/xleLog.log';
+
+        $request = \Yii::$app->request;
+        $data['METHOD'] = $request->getMethod();
+        $data['HEADERS'] = $request->headers;
+        //  $rec['RAW_BODY'] = \Yii::$app->request->rawBody;
+        //  $rec['BODY_PARAMS'] = \Yii::$app->request->bodyParams;
+        $data['QUERY_PARAMS'] = $request->queryParams;
+        $data['COOCIES'] = $request->cookies;
+        if (\Yii::$app->request->isPost){
+            $data['POST_DATA'] = $request->post();
+        }
+        file_put_contents($filename,'*** REQUEST *** ' . Functions::intToDateTime(time()) . PHP_EOL, FILE_APPEND);
+        file_put_contents($filename,print_r($data, true) . PHP_EOL, FILE_APPEND);
+    }
+
+    public static function logClientRequest($request)
+    {
+        $filename = \Yii::getAlias('@common'). '/runtime/logs/xleLog.log';
+
+        $data['METHOD'] = $request->getMethod();
+        $data['HEADERS'] = $request->headers;
+        //  $rec['RAW_BODY'] = \Yii::$app->request->rawBody;
+        //  $rec['BODY_PARAMS'] = \Yii::$app->request->bodyParams;
+        $data['QUERY_PARAMS'] = $request->queryParams;
+        $data['COOCIES'] = $request->cookies;
+        if (\Yii::$app->request->isPost){
+            $data['POST_DATA'] = $request->post();
+        }
+        file_put_contents($filename,'*** REQUEST *** ' . Functions::intToDateTime(time()) . PHP_EOL, FILE_APPEND);
+        file_put_contents($filename,print_r($data, true) . PHP_EOL, FILE_APPEND);
+    }
+
+
 }

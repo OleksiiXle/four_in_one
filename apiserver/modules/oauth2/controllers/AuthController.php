@@ -46,17 +46,16 @@ class AuthController extends Controller
     public function actionIndex()
     {
         $this->layout = false;
-        Functions::dbg();
-      //  \yii::trace('************************************************ isOauthRequest OK', "dbg");
+        Functions::logRequest();
 
         $model = new LoginForm();
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
             if ($this->isOauthRequest) {
-                \yii::trace('************************************************ isOauthRequest OK', "dbg");
+                Functions::log('**** пользователь залогинился ОК');
 
                 $this->finishAuthorization();
             } else {
-                \yii::trace('************************************************ isOauthRequest NOT', "dbg");
+                Functions::log('**** пользователь НЕ залогинился - пароль и имя не совпали');
                 return $this->goBack();
             }
 
