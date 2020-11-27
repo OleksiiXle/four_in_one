@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use frontend\models\LogoutForm;
+use app\models\LogoutForm;
 ?>
 <div class="container">
     <h1><?= Html::encode($this->title) ?></h1>

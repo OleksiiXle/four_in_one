@@ -202,10 +202,8 @@ class Functions
     public static function log($data, $time=false)
     {
         $filename = \Yii::getAlias('@common'). '/runtime/logs/xleLog.log';
-        if (is_array($data)) {
-            ob_start();
-            var_dump($data);
-            $ret = ob_get_clean();
+        if (is_array($data) || is_object($data)) {
+            $ret = \yii\helpers\VarDumper::dumpAsString($data);
         } else {
             $ret = $data;
         }

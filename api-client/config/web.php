@@ -40,6 +40,7 @@ $config = [
                     'clientSecret' => $params['clientSecret'],
                     'tokenUrl'     => $params['tokenUrl'],
                     'authUrl'      => $params['authUrl'],
+                    'signupUrl'      => $params['signupUrl'],
                     'apiBaseUrl'   => $params['apiBaseUrl'],
 
                     'stateStorage' => 'app\components\XapiStateStorage'

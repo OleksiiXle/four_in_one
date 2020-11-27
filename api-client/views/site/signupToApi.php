@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use app\models\LoginForm;
 
 $this->title = 'Signup';
 $this->params['breadcrumbs'][] = $this->title;
@@ -18,6 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
+                <?= $form->field($model, 'provider')->dropDownList(LoginForm::providers(),
+                ['options' => [ $model->provider => ['Selected' => true]],])
+                ->label('API-provider') ?>
 
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
@@ -40,4 +44,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php ActiveForm::end(); ?>
         </div>
     </div>
+    <div class="row" style="overflow: auto">
+        <?=$model->errorContent?>
+    </div>
+
 </div>

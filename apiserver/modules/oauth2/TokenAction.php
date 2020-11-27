@@ -23,9 +23,11 @@ class TokenAction extends Action
     public $format = Response::FORMAT_JSON;
 
     public $grantTypes = [
-        'authorization_code' => 'conquer\oauth2\granttypes\Authorization',
-        'refresh_token' => 'conquer\oauth2\granttypes\RefreshToken',
-        'client_credentials' => 'conquer\oauth2\granttypes\ClientCredentials',
+        'authorization_code' => 'apiserver\modules\oauth2\granttypes\Authorization',
+        'refresh_token' => 'apiserver\modules\oauth2\granttypes\RefreshToken',
+        'client_credentials' => 'apiserver\modules\oauth2\granttypes\ClientCredentials',
+        'logout' => 'apiserver\modules\oauth2\granttypes\Logout',
+
 //         'password' => 'conquer\oauth2\granttypes\UserCredentials',
 //         'urn:ietf:params:oauth:grant-type:jwt-bearer' => 'conquer\oauth2\granttypes\JwtBearer',
     ];
@@ -41,7 +43,10 @@ class TokenAction extends Action
 
     public function run()
     {
-        if (!$grantType = BaseModel::getRequestValue('grant_type')) {
+        $grantType = BaseModel::getRequestValue('grant_type');
+        Functions::log('******* grant_type = ' . (!empty($grantType) ? $grantType : 'none'));
+
+        if (!$grantType) {
             throw new Exception(Yii::t('conquer/oauth2', 'The grant type was not specified in the request.'));
         }
         if (isset($this->grantTypes[$grantType])) {

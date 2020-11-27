@@ -3,6 +3,7 @@
 namespace apiserver\modules\oauth2;
 
 use apiserver\modules\oauth2\models\Client;
+use common\helpers\Functions;
 use Yii;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -59,6 +60,9 @@ abstract class BaseModel extends Model
         foreach ($this->safeAttributes() as $attribute) {
             $this->$attribute = self::getRequestValue($attribute, ArrayHelper::getValue($headers, $attribute));
         }
+        Functions::log('attributes:');
+        Functions::log(\yii\helpers\VarDumper::dumpAsString($this->getAttributes()));
+
     }
 
     public function addError($attribute, $error = '', $type = Exception::INVALID_REQUEST)
@@ -128,7 +132,8 @@ abstract class BaseModel extends Model
         if (!empty($this->$attribute)) {
             $clientRedirectUri = $this->getClient()->redirect_uri;
             if (strncasecmp($this->$attribute, $clientRedirectUri, strlen($clientRedirectUri)) !== 0) {
-                $this->errorServer(Yii::t('conquer/oauth2', 'The redirect URI provided is missing or does not match.'), Exception::REDIRECT_URI_MISMATCH);
+                $this->errorServer(Yii::t('conquer/oauth2', 'The redirect URI provided is missing or does not match. URI=' . $this->$attribute . " clientRedirectUri=$clientRedirectUri" ),
+                    Exception::REDIRECT_URI_MISMATCH);
             }
         }
     }

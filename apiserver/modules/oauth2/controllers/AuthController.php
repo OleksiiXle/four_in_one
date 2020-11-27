@@ -2,10 +2,12 @@
 
 namespace apiserver\modules\oauth2\controllers;
 
+use apiserver\modules\oauth2\models\UserM;
 use yii\web\Controller;
 use common\helpers\Functions;
 use apiserver\modules\oauth2\AuthorizeFilter;
 use apiserver\modules\oauth2\models\LoginForm;
+use apiserver\modules\oauth2\models\SignupForm;
 use apiserver\modules\oauth2\TokenAction;
 
 class AuthController extends Controller
@@ -25,8 +27,8 @@ class AuthController extends Controller
              * and performs OAuth2 authorization, if user is logged on
              */
             'oauth2Auth' => [
-                'class' => AuthorizeFilter::className(),
-                'only' => ['index'],
+                'class' => AuthorizeFilter::class,
+                'only' => ['index', 'signup'],
             ],
         ];
     }
@@ -35,7 +37,7 @@ class AuthController extends Controller
         return [
             // returns access token
             'token' => [
-                'class' => TokenAction::classname(),
+                'class' => TokenAction::class,
             ],
         ];
     }
@@ -63,6 +65,32 @@ class AuthController extends Controller
             return $this->goBack();
         } else {
             return $this->render('index', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionSignup()
+    {
+        $this->layout = false;
+        Functions::logRequest();
+
+        $model = new SignupForm();
+        $model->scenario = SignupForm::SCENARIO_SIGNUP_BY_API;
+        if ($model->load(\Yii::$app->request->post()) && $model->signup()) {
+            if ($this->isOauthRequest) {
+                Functions::log('**** пользователь зарегистрировался ОК');
+
+                $this->finishAuthorization();
+            } else {
+                Functions::log('**** пользователь НЕ зарегистрировался ');
+                return $this->goBack();
+            }
+
+
+            return $this->goBack();
+        } else {
+            return $this->render('signup', [
                 'model' => $model,
             ]);
         }

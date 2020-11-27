@@ -42,12 +42,12 @@ class SiteController extends Controller
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['login', 'signup', 'signup-confirm' ],
+                    'actions' => ['login', 'signup', 'signup-confirm', 'signup-to-api' ],
                     'roles' => ['?'],
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['logout'],
+                    'actions' => ['logout', 'logout-from-api'],
                     'roles' => ['@'],
                 ],
 
@@ -142,22 +142,40 @@ class SiteController extends Controller
         }
     }
 
-    public function actionLogin()
+    public function actionLogin($mode = 'withoutSignup')
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
      //  Functions::logRequest();
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->clientLogin()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
+        switch ($mode) {
+            case 'withoutSignup':
+                $model = new LoginForm();
+                if ($model->load(Yii::$app->request->post()) && $model->clientLogin()) {
+                    return $this->goBack();
+                } else {
+                    $model->password = '';
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+                    return $this->render('login', [
+                        'model' => $model,
+                    ]);
+                }
+                break;
+            case 'withSignup':
+                $model = new SignupForm();
+                if ($model->load(Yii::$app->request->post())) {
+                    if ($model->getApiRegistration()) {
+                        return $this->goHome();
+                    }
+                }
+
+                return $this->render('signupToApi', [
+                    'model' => $model,
+                ]);
+                break;
+            default:
+                throw new BadRequestHttpException('wrong mode');
         }
     }
 
@@ -178,8 +196,39 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->signup(false)) {
+                return $this->goHome();
+            }
+        }
 
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
 
+    public function actionSignupToApi()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->signupToApi(false)) {
+                return $this->goHome();
+            }
+        }
+
+        return $this->render('signupToApi', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->getUser()->logout();
+        return $this->redirect('/site/index');
+    }
 
 
 
@@ -207,33 +256,7 @@ class SiteController extends Controller
         }
     }
 
-    public function actionLogout()
-    {
-        Yii::$app->getUser()->logout();
-        return $this->redirect('/site/index');
-    }
 
-    public function actionSignup()
-    {
-        $model = new Signup();
-        if (\Yii::$app->getRequest()->isPost) {
-            $data = \Yii::$app->getRequest()->post('Signup');
-            $model->setAttributes($data);
-            $model->first_name = $data['first_name'];
-            $model->middle_name =  $data['middle_name'];
-            $model->last_name =  $data['last_name'];
-
-            if ($user = $model->signup(true)) {
-                \Yii::$app->session->setFlash('success', \Yii::t('app', 'Check your email to confirm the registration'));
-                return $this->goHome();
-            } else {
-                \Yii::$app->session->setFlash('error', \Yii::t('app', 'Ошибка отправки токена'));
-            }
-        }
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
-    }
 
     public function actionSignupConfirm($token)
     {

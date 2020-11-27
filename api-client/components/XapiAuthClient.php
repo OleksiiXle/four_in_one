@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use Yii;
 use app\models\User;
 use app\models\UserToken;
 use TheSeer\Tokenizer\Exception;
@@ -13,6 +14,7 @@ use yii\web\NotFoundHttpException;
 
 class XapiAuthClient extends OAuth2
 {
+    public $signupUrl;
     public $errorMessage = '';
     private $_fullClientId;
 
@@ -48,7 +50,7 @@ class XapiAuthClient extends OAuth2
         return $token;
     }
 
-    public function fetchAccessTokenXle($authCode, array $params = [], User $user)
+    public function fetchAccessTokenXle($authCode, array $params = [], User $user=null)
     {
         if ($this->validateAuthState) {
             $authState = $this->getState('authState');
@@ -248,9 +250,31 @@ class XapiAuthClient extends OAuth2
         }
     }
 
+    /**
+     * Composes user authorization URL.
+     * @param array $params additional auth GET params.
+     * @return string authorization URL.
+     */
+    public function buildSignupUrl(array $params = [])
+    {
+        $defaultParams = [
+            'client_id' => $this->clientId,
+            'response_type' => 'code',
+            'redirect_uri' => $this->getReturnUrl(),
+            'xoauth_displayname' => Yii::$app->name,
+        ];
+        if (!empty($this->scope)) {
+            $defaultParams['scope'] = $this->scope;
+        }
 
+        if ($this->validateAuthState) {
+            $authState = $this->generateAuthState();
+            $this->setState('authState', $authState);
+            $defaultParams['state'] = $authState;
+        }
 
-
+        return $this->composeUrl($this->signupUrl, array_merge($defaultParams, $params));
+    }
 
     protected function initUserAttributes()
     {

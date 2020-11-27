@@ -2,11 +2,12 @@
 
 namespace apiserver\modules\oauth2\granttypes;
 
-use conquer\oauth2\BaseModel;
-use conquer\oauth2\Exception;
+use apiserver\modules\oauth2\BaseModel;
+use apiserver\modules\oauth2\Exception;
 use apiserver\modules\oauth2\models\AccessToken;
-use conquer\oauth2\models\AuthorizationCode;
-use conquer\oauth2\models\RefreshToken;
+use apiserver\modules\oauth2\models\AuthorizationCode;
+use apiserver\modules\oauth2\models\RefreshToken;
+use common\helpers\Functions;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -91,10 +92,11 @@ class Logout extends BaseModel
             'deleted_tokens' => $ret1,
             'deleted_refresh_tokens' => $ret2,
         ];
-        \yii::trace('************************************************ LOGOUT', "dbg");
-        \yii::trace(\yii\helpers\VarDumper::dumpAsString($this->getAttributes()), "dbg");
-        \yii::trace(\yii\helpers\VarDumper::dumpAsString($ret), "dbg");
-
+        Functions::log('******* LOGOUT');
+        Functions::log('$this->getAttributes():');
+        Functions::log(\yii\helpers\VarDumper::dumpAsString($this->getAttributes()));
+        Functions::log('$ret:');
+        Functions::log(\yii\helpers\VarDumper::dumpAsString($ret));
 
         return $ret;
     }
