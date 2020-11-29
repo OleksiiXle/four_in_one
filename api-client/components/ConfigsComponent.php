@@ -22,6 +22,8 @@ class ConfigsComponent extends Component
     private $_userProfile = null;
     private $_positionSort = null;
 
+    public $apiProvider = false;
+
 
     /*
       'adminEmail',

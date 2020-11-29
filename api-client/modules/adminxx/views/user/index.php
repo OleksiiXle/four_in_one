@@ -138,6 +138,12 @@ $this->title = Yii::t('app', 'Пользователи');
                             },
                         ],
                         [
+                            'attribute' => 'apiLoginsInfo',
+                            'label' => 'апи до:',
+                            'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
+                            'contentOptions' => ['style' => 'width: 8%; white-space: nowrap; overflow: hidden;'],
+                        ],
+                        [
                             'headerOptions' => ['style' => 'width: 3%; '],
                             'contentOptions' => [
                                 'style' => 'width: 3%; ',

@@ -17,9 +17,10 @@ class MainModel extends ActiveRecord
     {
         if ($insert){
             $this->created_at = time();
+            $user_id = \Yii::$app->user->getApiUserId();
             if ($this->hasAttribute('created_by')) {
-                if (isset(\Yii::$app->user->id)) {
-                    $this->created_by = \Yii::$app->user->id;
+                if ($user_id) {
+                    $this->created_by = $user_id;
                 } elseif(empty($this->created_by)) {
                     $this->created_by = 0;
                 }
@@ -27,8 +28,8 @@ class MainModel extends ActiveRecord
         }
         $this->updated_at = time();
         if ($this->hasAttribute('updated_by')) {
-            if (isset(\Yii::$app->user->id)) {
-                $this->updated_by = \Yii::$app->user->id;
+            if ($user_id) {
+                $this->updated_by = $user_id;
             } elseif(empty($this->updated_by)) {
                 $this->updated_by = 0;
             }

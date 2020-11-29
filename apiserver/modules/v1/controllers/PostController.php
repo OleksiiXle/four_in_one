@@ -3,23 +3,28 @@
 namespace apiserver\modules\v1\controllers;
 
 use apiserver\modules\v1\models\Post;
+use common\helpers\Functions;
 use yii\rest\Controller;
 use yii\web\Response;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use common\components\AccessControl;
 use apiserver\modules\oauth2\TokenAuth;
-use apiserver\modules\v1\models\KinoSeans;
 
 class PostController extends Controller
 {
 
     public function behaviors()
     {
+      //  Functions::logRequest();
         $behaviors = parent::behaviors();
-        $behaviors['tokenAuth'] = [
-            'class' => TokenAuth::className(),
-        ];
+        if (!in_array($this->action->id, [
+            'index',
+        ]) ) {
+            $behaviors['tokenAuth'] = [
+                'class' => TokenAuth::class,
+            ];
+        }
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
@@ -28,7 +33,7 @@ class PostController extends Controller
                     'actions'    => [
                         'index', 'view',
                     ],
-                    'roles'      => ['@' ],
+                    'roles'      => ['@', '?' ],
                 ],
                 [
                     'allow'      => true,
@@ -78,10 +83,15 @@ class PostController extends Controller
 
     public function actionCreate()
     {
+        $_post = \Yii::$app->request->post();
+        Functions::logRequest();
+        return $_post;
     }
+
     public function actionUpdate()
     {
     }
+
     public function actionDelete()
     {
     }

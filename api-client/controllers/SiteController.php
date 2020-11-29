@@ -149,6 +149,8 @@ class SiteController extends Controller
         }
 
      //  Functions::logRequest();
+        $this->layout = '@common/views/layouts/loginLayout.php';
+
         switch ($mode) {
             case 'withoutSignup':
                 $model = new LoginForm();
@@ -184,6 +186,7 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+        $this->layout = '@common/views/layouts/loginLayout.php';
 
         $model = new LogoutForm();
         if ($model->load(Yii::$app->request->post())) {

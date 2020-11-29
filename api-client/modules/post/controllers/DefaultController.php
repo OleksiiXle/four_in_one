@@ -33,18 +33,8 @@ class DefaultController extends MainController
     public function actionIndex()
     {
         $tmp=1;
-        $dataProvider = new ActiveDataProvider([
-            'query' => Post::find(),
-            'pagination' => [
-                'pageSize' => 20,
-            ],
+        return $this->render('index', [
+          //  'dataProvider'  => $dataProvider,
         ]);
-        return $this->render('posts', [
-            'dataProvider'  => $dataProvider,
-        ]);
-
-        return $this->render('index',
-            [
-            ]);
     }
 }

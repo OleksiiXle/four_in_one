@@ -2,9 +2,10 @@
 
 namespace app\modules\adminxx\models;
 
+use app\models\UserToken;
 use Yii;
-use app\helpers\Functions;
 use app\models\MainModel;
+use common\helpers\Functions;
 
 /**
  * User - модель с правилами, геттерами, сеттерами и пр. данными
@@ -73,10 +74,13 @@ class UserM extends MainModel
     private $_userUpdater;
 
     private $_firstVisitTime;
+
     private $_lastVisitTime;
     private $_firstVisitTimeTxt;
     private $_lastVisitTimeTxt;
     private $_lastRoute;
+
+    private $_apiLoginsInfo;
 
     public static function tableName()
     {
@@ -109,7 +113,6 @@ class UserM extends MainModel
         ];
         return $ret ;
     }
-
 
     /**
      * @inheritdoc
@@ -227,7 +230,7 @@ class UserM extends MainModel
      */
     public function getUserDatas()
     {
-        return $this->hasOne(UserData::className(), ['user_id' => 'id']);
+        return $this->hasOne(UserData::class, ['user_id' => 'id']);
     }
 
     /**
@@ -235,7 +238,15 @@ class UserM extends MainModel
      */
     public function getUControl()
     {
-        return $this->hasOne(UControl::className(), ['user_id' => 'id']);
+        return $this->hasOne(UControl::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserToken()
+    {
+        return $this->hasMany(UserToken::class, ['client_id' => 'id']);
     }
 
 //*********************************************************************************************** ГЕТТЕРЫ-СЕТТЕРЫ
@@ -551,6 +562,18 @@ class UserM extends MainModel
         return $this->_lastRoute;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getApiLoginsInfo()
+    {
+        $this->_apiLoginsInfo = '';
+        foreach ($this->userToken as $userToken) {
+            $expires_in = (int) $userToken->created_at + ((int) $userToken->expires_in);
+            $this->_apiLoginsInfo .= Functions::intToDateTime($expires_in) . PHP_EOL;
+        }
+        return $this->_apiLoginsInfo;
+    }
 
 //*********************************************************************************************** CRUD
 

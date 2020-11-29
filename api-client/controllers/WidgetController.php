@@ -4,8 +4,9 @@ namespace app\controllers;
 
 use app\widgets\menuUpdate\models\MenuX;
 use app\components\AccessControl;
+use yii\web\Controller;
 
-class WidgetController extends MainController
+class WidgetController extends Controller
 {
     /**
      * Ответ, который будет возвращаться на AJAX-запросы
@@ -30,6 +31,14 @@ class WidgetController extends MainController
                     ],
                     'roles'      => ['adminMenuEdit'],
                 ],
+                [
+                    'allow'      => true,
+                    'actions'    => [
+                        'change-language',
+                    ],
+                    'roles'      => ['@' , '?' ],
+                ],
+
 
             ],
 
@@ -206,5 +215,18 @@ class WidgetController extends MainController
     }
 
     //*************************************************************************************************************** РЕДАКТИРОВАНИЕ МЕНЮ (конец)
+    public function actionChangeLanguage()
+    {
+        try {
+            $language    = \Yii::$app->getRequest()->get('language');
+            if (!empty($language)){
+                \Yii::$app->userProfile->language = $language;
+            }
+        } catch (\Exception $e) {
+            $this->result['data'] = $e->getMessage();
+        }
+        return $this->redirect(\Yii::$app->request->referrer);
+    }
+
 
 }

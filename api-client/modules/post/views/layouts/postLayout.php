@@ -66,7 +66,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
             ?>
         </div>
         <!--************************************************************************************************************* LOGIN/LOGOUT-->
-        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="center" style="padding-left: 1px">
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center" style="padding-left: 1px">
             <?php
             if (!Yii::$app->user->isGuest){
                 $icon = \yii\helpers\Url::to('@web/images/log_logout_door_1563.png');
@@ -79,6 +79,18 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
             }
             ?>
         </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center" style="padding-left: 1px">
+            <?php
+            if (!empty(Yii::$app->user->getApiLoginsInfo())){
+                echo Html::beginForm(['/site/logout-from-api'], 'post');
+                echo Html::submitButton('Logout from API<br>' . Yii::$app->user->getApiLoginsInfo(),
+                    ['class' => 'btn btn-link ']
+                );
+                echo Html::endForm();
+            }
+            ?>
+        </div>
+
     </div>
     <div class="xLayoutContent">
 
