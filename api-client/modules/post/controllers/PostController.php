@@ -113,17 +113,13 @@ class PostController extends MainController
 
     public function actionCreate()
     {
-        $post = new Post();
+        $post = new Post(\Yii::$app->xapi);
         if (\Yii::$app->request->isPost) {
             $_post = \Yii::$app->request->post();
             if (isset($_post['reset-button'])) {
                 return $this->redirect('index');
             }
             $post->setAttributes($_post);
-
-            return $this->render('create', [
-                'model' => $post,
-            ]);
 
             if ($post->save()) {
                 return $this->redirect('index');

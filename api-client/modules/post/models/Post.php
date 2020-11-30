@@ -2,9 +2,8 @@
 
 namespace app\modules\post\models;
 
-use app\models\MainModel;
-use app\modules\adminxx\models\UserM;
 use Yii;
+use app\models\MainApiModel;
 
 /**
  * This is the model class for table "post".
@@ -20,7 +19,7 @@ use Yii;
  *
  * @property PostMedia[] $postMedia
  */
-class Post extends MainModel
+class Post extends MainApiModel
 {
     const TYPE_FRONT = 1;
     const TYPE_TARGET = 2;
@@ -31,16 +30,10 @@ class Post extends MainModel
     public $content;
     public $name;
 
-    public $response = [];
-
-    public $apiClient = null;
-
-    private $_shortName = null;
-
-    public function __construct(array $config = [])
+    public function __construct($apiClient)
     {
-        $this->apiClient = \Yii::$app->xapi;
-        parent::__construct($config);
+        $this->apiClient = $apiClient;
+        parent::__construct([]);
     }
 
     /**
@@ -95,67 +88,5 @@ class Post extends MainModel
         $model = new self();
 
 
-    }
-
-    /**
-     * @param null $names
-     * @param array $except
-     * @return array
-     * @throws \ReflectionException
-     */
-    public function getAttributes($names = null, $except = [])
-    {
-        $class = new \ReflectionClass(self::class);
-        $attributes = $class->getProperties(\ReflectionMethod::IS_PUBLIC);
-        $result = [];
-        if (!empty($names)) {
-            $needle = (is_array($names)) ? $names : array($names);
-            foreach ($attributes as $attribute) {
-                $attributeName = $attribute->name;
-                if (!empty($needle) && in_array($attributeName, $needle)) {
-                    $result[$attributeName] = $this->{$attributeName};
-                }
-            }
-
-            return $result;
-        }
-
-        if (!empty($except)) {
-            foreach ($attributes as $attribute) {
-                $attributeName = $attribute->name;
-                if (!in_array($attributeName, $except)) {
-                    $result[$attributeName] = $this->{$attributeName};
-                }
-            }
-
-            return $result;
-        }
-
-        foreach ($attributes as $attribute) {
-            $attributeName = $attribute->name;
-            $result[$attributeName] = $this->{$attributeName};
-        }
-
-        return $result;
-    }
-
-    public function setAttributes($values, $safeOnly = true)
-    {
-        $attributes = array_keys($this->getAttributes());
-        $data = (isset($values[$this->shortName])) ? $values[$this->shortName] : $values;
-        foreach ($data as $key => $value) {
-            if (in_array($key, $attributes)) {
-                $this->{$key} = $value;
-            }
-        }
-    }
-
-    public function __get($name)
-    {
-        switch ($name) {
-            case 'shortName':
-                $class = new \ReflectionClass(self::class);
-                return $class->getShortName();
-        }
     }
 }
