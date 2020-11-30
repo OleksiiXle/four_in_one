@@ -2,11 +2,10 @@
 
 namespace app\models;
 
-use app\helpers\DateHelper;
 use Yii;
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
-class MainApiModel extends ActiveRecord
+class MainApiModel extends Model
 {
     //******************** допустимые символы текста названий, пунктов приказа и пр.
     const PATTERN_TEXT = '#^[А-ЯІЇЄҐа-яіїєґ0-9A-Za-z ().№ʼ,«»\'"\-:;/]+$#u';
@@ -165,6 +164,36 @@ class MainApiModel extends ActiveRecord
                 $ret[] = $this->getAttributeLabel($attributeName) . ' - ' . $attributeError;
         }
         return $ret;
+    }
+
+    public function validate($attributeNames = null, $clearErrors = true)
+    {
+        if ($clearErrors) {
+            $this->clearErrors();
+        }
+
+        if (!$this->beforeValidate()) {
+            return false;
+        }
+
+        $scenarios = $this->scenarios();
+        $scenario = $this->getScenario();
+        if (!isset($scenarios[$scenario])) {
+            throw new InvalidArgumentException("Unknown scenario: $scenario");
+        }
+
+        if ($attributeNames === null) {
+            $attributeNames = $this->activeAttributes();
+        }
+
+        $attributeNames = (array)$attributeNames;
+
+        foreach ($this->getActiveValidators() as $validator) {
+            $validator->validateAttributes($this, $attributeNames);
+        }
+        $this->afterValidate();
+
+        return !$this->hasErrors();
     }
 
 }

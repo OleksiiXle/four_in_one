@@ -141,7 +141,7 @@ class PostController extends MainController
         }
 
         return $this->render('create', [
-            'model' => $post,
+           // 'model' => $post,
         ]);
     }
 

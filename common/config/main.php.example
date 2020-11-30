@@ -11,7 +11,14 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=xle_api',
+            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
+            'username' => 'root',
+            'password' => '111',
+            'charset' => 'utf8',
+        ],
+        'backGroundDb' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
             'username' => 'root',
             'password' => '111',
             'charset' => 'utf8',
@@ -24,5 +31,68 @@ return [
             // for the mailer to send real emails.
             'useFileTransport' => true,
         ],
+        'request' => [
+            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+            'cookieValidationKey' => 'vfyrHPxjQZfzATztb4_Lzlclxk0kcRLv',
+        ],
+        'authManager' => [
+            'class' => 'common\components\DbManager', // or use 'yii\rbac\DbManager'
+            'cache' => 'cache'
+        ],
+        'configs' => [
+            'class' => 'common\components\ConfigsComponent',
+        ],
+        'conservation' => [
+            'class' => 'common\components\conservation\ConservationComponent',
+        ],
+        'userProfile' => [
+            'class' => 'common\components\UserProfileComponent',
+        ],
+        'errorHandler' => [
+            'errorAction' => 'site/error',
+        ],
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    //  'class' => 'yii\i18n\DbMessageSource',
+                    'class' => 'common\components\DbMessageSource',
+                    //   'class' => 'app\i18n\PhpMessageSource',
+                    //'basePath' => '@app/messages',
+                    'sourceLanguage' => 'ru-RU',
+                    /*
+                    'fileMap' => [
+                        'app'       => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                    */
+                ],
+            ],
+        ],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning'],
+                ],
+            ],
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
     ],
+    'as access' => [
+        'class' => 'common\components\AccessControl',
+        /*
+        'allowActions' => [
+            'site/error',
+            'debug/*',
+            'gii/*',
+        ]
+        */
+    ],
+
 ];

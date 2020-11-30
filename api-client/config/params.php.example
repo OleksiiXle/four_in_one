@@ -1,4 +1,5 @@
 <?php
+
 return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
@@ -36,4 +37,18 @@ return [
         'user',
         'adminUsers',
     ],
+
+    'pathToBackgroundTasksLogs' => '/runtime/logs/backgroundTasks/',
+    'pathToBackgroundTasksTmpFiles' => '/runtime/logs/backgroundTasks/tmp/',
+    'killBackgroundTaskAfterDone' => false,
+
+    'tokenUrl' => 'http://xle.api.server/oauth2/auth/token',
+    'authUrl'  => 'http://xle.api.server/oauth2/auth/index',
+    'signupUrl'  => 'http://xle.api.server/oauth2/auth/signup',
+    //'authUrl' => 'http://api-server/oauth2/auth/index?expand=email',
+    'apiBaseUrl' => 'http://xle.api.server/v1',
+    'clientId' => 'xapi',
+    'clientSecret' => '123',
+
+
 ];

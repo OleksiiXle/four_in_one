@@ -166,12 +166,25 @@ php yii migrate-client --migrationPath=@console/migrations/client
    php yii translate/init
 
 
+CENTOS
+RewriteEngine On
 
+# End the processing, if a rewrite already occurred
+RewriteRule ^(frontend|admin|api|client)/web/ - [L]
 
+# Handle the case of backend, skip ([S=1]) the following rule, if current matched
+RewriteRule ^admin(/(.*))?$ admin/web/$2 [S=1]
 
-http://xle.api.server/oauth2/auth/index
-?client_id=xapi
-&response_type=code
-&redirect_uri=http%3A%2F%2Fxle.api.client%2Fsite%2Flogin
-&xoauth_displayname=My%20Application
-&state=c1615978fd0a029fa0a00d72265b0a88a4a028cee996b4285bbec7f51f7ffe83
+# Handle the case of backend, skip ([S=1]) the following rule, if current matched
+RewriteRule ^frontend(/(.*))?$ frontend/web/$2 [S=1]
+
+# Handle the case of backend, skip ([S=1]) the following rule, if current matched
+RewriteRule ^api(/(.*))?$ api/web/$2 [S=1]
+
+# Handle the case of backend, skip ([S=1]) the following rule, if current matched
+RewriteRule ^client(/(.*))?$ client/web/$2 [S=1]
+
+# Uncomment the following, if you want speaking URL
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+/web)/.*$ $1/index.php
