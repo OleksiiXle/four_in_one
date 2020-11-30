@@ -35,6 +35,8 @@ class Post extends MainModel
 
     public $apiClient = null;
 
+    private $_shortName = null;
+
     public function __construct(array $config = [])
     {
         $this->apiClient = \Yii::$app->xapi;
@@ -86,5 +88,74 @@ class Post extends MainModel
         $this->response = $this->apiClient->callMethod(self::API_ROUTE_CREATE, [], 'POST', $data);
 
         return $this->response['status'];
+    }
+
+    public static function findOne($condition)
+    {
+        $model = new self();
+
+
+    }
+
+    /**
+     * @param null $names
+     * @param array $except
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getAttributes($names = null, $except = [])
+    {
+        $class = new \ReflectionClass(self::class);
+        $attributes = $class->getProperties(\ReflectionMethod::IS_PUBLIC);
+        $result = [];
+        if (!empty($names)) {
+            $needle = (is_array($names)) ? $names : array($names);
+            foreach ($attributes as $attribute) {
+                $attributeName = $attribute->name;
+                if (!empty($needle) && in_array($attributeName, $needle)) {
+                    $result[$attributeName] = $this->{$attributeName};
+                }
+            }
+
+            return $result;
+        }
+
+        if (!empty($except)) {
+            foreach ($attributes as $attribute) {
+                $attributeName = $attribute->name;
+                if (!in_array($attributeName, $except)) {
+                    $result[$attributeName] = $this->{$attributeName};
+                }
+            }
+
+            return $result;
+        }
+
+        foreach ($attributes as $attribute) {
+            $attributeName = $attribute->name;
+            $result[$attributeName] = $this->{$attributeName};
+        }
+
+        return $result;
+    }
+
+    public function setAttributes($values, $safeOnly = true)
+    {
+        $attributes = array_keys($this->getAttributes());
+        $data = (isset($values[$this->shortName])) ? $values[$this->shortName] : $values;
+        foreach ($data as $key => $value) {
+            if (in_array($key, $attributes)) {
+                $this->{$key} = $value;
+            }
+        }
+    }
+
+    public function __get($name)
+    {
+        switch ($name) {
+            case 'shortName':
+                $class = new \ReflectionClass(self::class);
+                return $class->getShortName();
+        }
     }
 }

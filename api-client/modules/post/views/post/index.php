@@ -24,7 +24,10 @@ $this->title = Yii::t('app', 'Посты');
     <div class="row xContent" style="overflow: auto">
         <?php foreach ($response['data'] as $post):?>
             <div class="row">
-                <h3><?=$post['name']?></h3><br>
+                <h3><?=$post['name']?></h3>
+                <?=Html::a('Изменить', Url::to(['/post/update', 'id' => $post->id]), ['class' => 'btn btn-primary'])?>
+
+                <br>
                 <h4><?=$post['content']?></h4>
             </div>
 

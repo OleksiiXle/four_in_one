@@ -119,13 +119,31 @@ class PostController extends MainController
             if (isset($_post['reset-button'])) {
                 return $this->redirect('index');
             }
-            $post->load($_post);
+            $post->setAttributes($_post);
+
+            return $this->render('create', [
+                'model' => $post,
+            ]);
+
             if ($post->save()) {
                 return $this->redirect('index');
             } else {
                 $this->checkApiAuthorization($post->response);
             }
         }
+        return $this->render('create', [
+            'model' => $post,
+        ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        if (\Yii::$app->request->isPost) {
+
+        } else {
+
+        }
+
         return $this->render('create', [
             'model' => $post,
         ]);
