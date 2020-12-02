@@ -544,13 +544,13 @@ class BackgroundTask extends ActiveRecord
     {
         $tmp = 1;
 
-        $php = '/usr/bin/php'; // /var/www/xle/staff-api/backend
+        $php = '/usr/bin/php'; // /var/www/xle/staff-api/apiadmin
 
         $commandStr = $php . ' ' . $this->basePath . 'yii ' .
             'backgroundTasks' . DIRECTORY_SEPARATOR .
             'run-task --task_id=' . $this->id;
         // /usr/bin/php /var/www/xle/staff/yii backgroundTasks/run-task --id=5
-// /usr/bin/php /var/www/xle/staff-api/backend/yii backgroundTasks/run-task --task_id=9
+// /usr/bin/php /var/www/xle/staff-api/apiadmin/yii backgroundTasks/run-task --task_id=9
 // /usr/bin/php /var/www/xle/staff-api/yii backgroundTasks/run-task --task_id=9
         $pid = null;
 

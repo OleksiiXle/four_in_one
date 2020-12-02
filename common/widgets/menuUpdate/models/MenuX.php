@@ -3,7 +3,7 @@
 namespace common\widgets\menuUpdate\models;
 
 use common\modules\adminxx\models\MenuXX;
-use backend\modules\adminxx\models\Route;
+use apiadmin\modules\adminxx\models\Route;
 use yii\helpers\Html;
 use yii\helpers\Url;
 

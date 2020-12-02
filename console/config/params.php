@@ -3,7 +3,7 @@ return [
     'adminEmail' => 'admin@example.com',
     'appAliases' => [
         'frontend',
-        'backend',
+        'apiadmin',
         'apiserver',
         'api-client',
     ],
