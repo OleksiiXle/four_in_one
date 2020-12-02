@@ -15,9 +15,9 @@
 
 
 **************************************************************** 1-й вариант настройки хостинга (1 хост, 4 пути)
-sudo gedit /etc/apache2/sites-available/staff-api.conf
+sudo gedit /etc/apache2/sites-available/staff.api.conf
 <VirtualHost *:80>
-    ServerName staff-api
+    ServerName staff.api
     DocumentRoot /var/www/xle/staff-api
     <Directory /var/www/xle/staff-api>
         AllowOverride All
@@ -25,9 +25,9 @@ sudo gedit /etc/apache2/sites-available/staff-api.conf
 </VirtualHost>
 
 sudo gedit /etc/hosts
-->   127.0.2.1       staff-api
+->   127.0.2.1       staff.api
 
-sudo a2ensite staff-api.conf
+sudo a2ensite staff.api.conf
 sudo service apache2 restart
 
 **************************************************************** 2-й вариант настройки хостинга (4 хостa)

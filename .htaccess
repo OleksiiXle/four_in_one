@@ -1,24 +1,21 @@
-Options -Indexes
-Options FollowSymlinks
-RewriteEngine on
+RewriteEngine On
 
-RewriteCond %{HTTP_HOST} ^www\.(.*)$
-RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
+# End the processing, if a rewrite already occurred
+RewriteRule ^(apiuser|apiadmin|apiserver|apiclient)/web/ - [L]
 
-RewriteCond %{REQUEST_URI} ^/admin/$
-RewriteRule ^(admin)/$ /$1 [R=301,L]
-RewriteCond %{REQUEST_URI} ^/admin
-RewriteRule ^admin(/.+)?$ /apiadmin/web/$1 [L,PT]
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
+RewriteRule ^apiadmin(/(.*))?$ apiadmin/web/$2 [S=1]
 
-RewriteCond %{REQUEST_URI} ^/client/$
-RewriteRule ^(client)/$ /$1 [R=301,L]
-RewriteCond %{REQUEST_URI} ^/client
-RewriteRule ^client(/.+)?$ /apiclient/web/$1 [L,PT]
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
+RewriteRule ^apiuser(/(.*))?$ apiuser/web/$2 [S=1]
 
-RewriteCond %{REQUEST_URI} ^/server/$
-RewriteRule ^(server)/$ /$1 [R=301,L]
-RewriteCond %{REQUEST_URI} ^/server
-RewriteRule ^server(/.+)?$ /apiserver/web/$1 [L,PT]
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
+RewriteRule ^apiserver(/(.*))?$ apiserver/web/$2 [S=1]
 
-RewriteCond %{REQUEST_URI} ^.*$
-RewriteRule ^(.*)$ /apiuser/web/$1
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
+RewriteRule ^apiclient(/(.*))?$ apiclient/web/$2 [S=1]
+
+# Uncomment the following, if you want speaking URL
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+/web)/.*$ $1/index.php

@@ -18,7 +18,7 @@ RewriteRule ^client(/.+)?$ /apiclient/web/$1 [L,PT]
 RewriteCond %{REQUEST_URI} ^/server/$
 RewriteRule ^(server)/$ /$1 [R=301,L]
 RewriteCond %{REQUEST_URI} ^/server
-RewriteRule ^server(/.+)?$ /api-server/web/$1 [L,PT]
+RewriteRule ^server(/.+)?$ /apiserver/web/$1 [L,PT]
 
 RewriteCond %{REQUEST_URI} ^.*$
 RewriteRule ^(.*)$ /apiuser/web/$1
