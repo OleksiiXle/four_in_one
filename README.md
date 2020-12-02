@@ -124,12 +124,16 @@ php yii migrate
 7. Добавление тестовых постов
    php yii post/init
 
-8. Создание симлинков для фоновых задач
+8. Создание симлинков для фоновых задач 
     php yii init
+
+mysql -u root -p
+USE test_api_server;
+INSERT INTO `oauth2_client`
+(`client_id`, `client_secret`, `redirect_uri`, `grant_type`, `scope`, `created_at`, `updated_at`, `created_by`, `updated_by`)
+VALUES ('xapi', '123','http://192.168.1.105/dstest/apiclient/site/login', 'UserCredentials','none',1,1,1,1);
+EXIT;
     
-     INSERT INTO `oauth2_client`
-     (`client_id`, `client_secret`, `redirect_uri`, `grant_type`, `scope`, `created_at`, `updated_at`, `created_by`, `updated_by`)
-      VALUES ('xapi', '123','http://api.client', 'UserCredentials','none',1,1,1,1)
 
 
 Настройка клиента

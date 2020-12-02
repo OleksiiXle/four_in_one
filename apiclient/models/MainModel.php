@@ -17,7 +17,11 @@ class MainModel extends ActiveRecord
     {
         if ($insert){
             $this->created_at = time();
-            $user_id = \Yii::$app->user->getApiUserId();
+            if (isset(\Yii::$app->user)) {
+                $user_id = \Yii::$app->user->getApiUserId();
+            } else {
+                $user_id = 0;
+            }
             if ($this->hasAttribute('created_by')) {
                 if ($user_id) {
                     $this->created_by = $user_id;
