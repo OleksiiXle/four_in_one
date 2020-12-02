@@ -1,16 +1,16 @@
 <?php
 
-namespace frontend\tests\unit\models;
+namespace apiuser\tests\unit\models;
 
 
 use Codeception\Test\Unit;
 use common\fixtures\UserFixture;
-use frontend\models\ResendVerificationEmailForm;
+use apiuser\models\ResendVerificationEmailForm;
 
 class ResendVerificationEmailFormTest extends Unit
 {
     /**
-     * @var \frontend\tests\UnitTester
+     * @var \apiuser\tests\UnitTester
      */
     protected $tester;
 

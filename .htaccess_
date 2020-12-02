@@ -8,12 +8,12 @@ RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
 RewriteCond %{REQUEST_URI} ^/admin/$
 RewriteRule ^(admin)/$ /$1 [R=301,L]
 RewriteCond %{REQUEST_URI} ^/admin
-RewriteRule ^admin(/.+)?$ /backend/web/$1 [L,PT]
+RewriteRule ^admin(/.+)?$ /apiadmin/web/$1 [L,PT]
 
 RewriteCond %{REQUEST_URI} ^/client/$
 RewriteRule ^(client)/$ /$1 [R=301,L]
 RewriteCond %{REQUEST_URI} ^/client
-RewriteRule ^client(/.+)?$ /api-client/web/$1 [L,PT]
+RewriteRule ^client(/.+)?$ /apiclient/web/$1 [L,PT]
 
 RewriteCond %{REQUEST_URI} ^/server/$
 RewriteRule ^(server)/$ /$1 [R=301,L]
@@ -21,4 +21,4 @@ RewriteCond %{REQUEST_URI} ^/server
 RewriteRule ^server(/.+)?$ /api-server/web/$1 [L,PT]
 
 RewriteCond %{REQUEST_URI} ^.*$
-RewriteRule ^(.*)$ /frontend/web/$1
+RewriteRule ^(.*)$ /apiuser/web/$1

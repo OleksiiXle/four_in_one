@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\Pjax;
-use backend\modules\adminxx\models\AuthItemX;
+use apiadmin\modules\adminxx\models\AuthItemX;
 use common\widgets\xlegrid\Xlegrid;
 
 ?>

@@ -1,10 +1,10 @@
 <?php
 
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
+use apiadmin\controllers\MainController;
 use common\components\AccessControl;
-use backend\modules\adminxx\models\MenuXX;
+use apiadmin\modules\adminxx\models\MenuXX;
 use common\models\Route;
 
 /**

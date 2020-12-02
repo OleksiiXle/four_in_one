@@ -1,10 +1,10 @@
 <?php
 use yii\helpers\Html;
-use backend\modules\adminxx\models\UserM;
+use apiadmin\modules\adminxx\models\UserM;
 use common\widgets\xlegrid\Xlegrid;
 use common\widgets\menuAction\MenuActionWidget;
 use yii\helpers\Url;
-use backend\modules\adminxx\assets\AdminxxUserAsset;
+use apiadmin\modules\adminxx\assets\AdminxxUserAsset;
 
 AdminxxUserAsset::register($this);
 

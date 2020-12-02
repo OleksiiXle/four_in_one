@@ -20,7 +20,7 @@ use \yii\helpers\Url;
         <div class="xCard">
             <?php
             echo $form->field($filter, 'activityInterval')
-                ->dropDownList(\backend\modules\adminxx\models\UserData::$activityIntervalArray,
+                ->dropDownList(\apiadmin\modules\adminxx\models\UserData::$activityIntervalArray,
                     ['options' => [ $filter->activityInterval => ['Selected' => true]],]);
             echo $form->field($filter, 'username');
             ?>

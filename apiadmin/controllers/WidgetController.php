@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\controllers;
+namespace apiadmin\controllers;
 
 use common\controllers\WidgetController As Controller;
 

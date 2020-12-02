@@ -1,15 +1,15 @@
 <?php
 
-namespace frontend\modules\post\controllers;
+namespace apiuser\modules\post\controllers;
 
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\models\FileUpload;
 use common\components\AccessControl;
-use frontend\modules\post\models\filters\PostFilter;
-use frontend\modules\post\models\Post;
-use frontend\modules\post\models\PostMedia;
+use apiuser\modules\post\models\filters\PostFilter;
+use apiuser\modules\post\models\Post;
+use apiuser\modules\post\models\PostMedia;
 
 class PostController extends MainController
 {

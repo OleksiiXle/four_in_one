@@ -1,9 +1,9 @@
 <?php
-namespace backend\modules\adminxx\models\form;
+namespace apiadmin\modules\adminxx\models\form;
 
 use Yii;
-use backend\modules\adminxx\models\UserM;
-use backend\modules\adminxx\models\UserData;
+use apiadmin\modules\adminxx\models\UserM;
+use apiadmin\modules\adminxx\models\UserData;
 
 /**
  * Signup form
@@ -76,8 +76,8 @@ class Signup extends UserM
             ['phone',  'match', 'pattern' => self::USER_PHONE_PATTERN,
                 'message' => self::USER_PHONE_ERROR_MESSAGE],
             //------------------------------------------------------------------------ УНИКАЛЬНОСТЬ
-            ['username', 'unique', 'targetClass' => 'backend\modules\adminxx\models\User', 'on' => self::SCENARIO_CREATE],
-            ['email', 'unique', 'targetClass' => 'backend\modules\adminxx\models\User', 'on' => self::SCENARIO_CREATE],
+            ['username', 'unique', 'targetClass' => 'apiadmin\modules\adminxx\models\User', 'on' => self::SCENARIO_CREATE],
+            ['email', 'unique', 'targetClass' => 'apiadmin\modules\adminxx\models\User', 'on' => self::SCENARIO_CREATE],
         ];
     }
 

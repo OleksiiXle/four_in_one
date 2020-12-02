@@ -2,10 +2,10 @@
 return [
     'adminEmail' => 'admin@example.com',
     'appAliases' => [
-        'frontend',
+        'apiuser',
         'apiadmin',
         'apiserver',
-        'api-client',
+        'apiclient',
     ],
     'pathToBackgroundTasksLogs' => '/backgroundTasks',
     'pathToBackgroundTasksTmpFiles' => '/backgroundTasks/tmp',

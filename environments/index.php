@@ -35,8 +35,8 @@ return [
             'apiadmin/runtime',
             'apiadmin/web/assets',
             'console/runtime',
-            'frontend/runtime',
-            'frontend/web/assets',
+            'apiuser/runtime',
+            'apiuser/web/assets',
         ],
         'setExecutable' => [
             'yii',
@@ -45,7 +45,7 @@ return [
         'setCookieValidationKey' => [
             'apiadmin/config/main-local.php',
             'common/config/codeception-local.php',
-            'frontend/config/main-local.php',
+            'apiuser/config/main-local.php',
         ],
     ],
     'Production' => [
@@ -54,15 +54,15 @@ return [
             'apiadmin/runtime',
             'apiadmin/web/assets',
             'console/runtime',
-            'frontend/runtime',
-            'frontend/web/assets',
+            'apiuser/runtime',
+            'apiuser/web/assets',
         ],
         'setExecutable' => [
             'yii',
         ],
         'setCookieValidationKey' => [
             'apiadmin/config/main-local.php',
-            'frontend/config/main-local.php',
+            'apiuser/config/main-local.php',
         ],
     ],
 ];

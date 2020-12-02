@@ -1,9 +1,9 @@
 <?php
-namespace backend\modules\adminxx\models\filters;
+namespace apiadmin\modules\adminxx\models\filters;
 
 use console\backgroundTasks\models\BackgroundTask;
 use common\helpers\Functions;
-use backend\modules\adminxx\models\UserM;
+use apiadmin\modules\adminxx\models\UserM;
 use common\widgets\xlegrid\models\GridFilter;
 
 class UserFilter extends GridFilter

@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use \backend\modules\adminxx\models\AuthItemX;
+use \apiadmin\modules\adminxx\models\AuthItemX;
 
 switch ($model->type){
     case AuthItemX::TYPE_ROLE:
@@ -24,7 +24,7 @@ $this->registerJs("
     var _name       = '{$model->name}';
     var _type       = '{$model->type}';
 ",\yii\web\View::POS_HEAD);
-\backend\modules\adminxx\assets\AdminxxUpdateAuthItemAsset::register($this);
+\apiadmin\modules\adminxx\assets\AdminxxUpdateAuthItemAsset::register($this);
 
 $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
 
@@ -49,7 +49,7 @@ $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
         <div class="col-md-3">
             <?php
             echo $form->field($model, 'rule_name')
-                ->dropDownList(\backend\modules\adminxx\models\AuthItemX::getRulesList(),
+                ->dropDownList(\apiadmin\modules\adminxx\models\AuthItemX::getRulesList(),
                     ['options' => [ $model->rule_name => ['Selected' => true]],]);
             ?>
         </div>

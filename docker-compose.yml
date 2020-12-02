@@ -2,8 +2,8 @@ version: '3.2'
 
 services:
 
-  frontend:
-    build: frontend
+  apiuser:
+    build: apiuser
     ports:
       - 20080:80
     volumes:
@@ -12,8 +12,8 @@ services:
       # Mount source-code for development
       - ./:/app
 
-  backend:
-    build: backend
+  apiadmin:
+    build: apiadmin
     ports:
       - 21080:80
     volumes:

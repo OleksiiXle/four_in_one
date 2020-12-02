@@ -3,8 +3,8 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \yii\helpers\Url;
-use \backend\modules\adminxx\models\UserData;
-use \backend\modules\adminxx\models\UserDepartment;
+use \apiadmin\modules\adminxx\models\UserData;
+use \apiadmin\modules\adminxx\models\UserDepartment;
 ?>
 <div class="user-search container-fluid" >
     <?php

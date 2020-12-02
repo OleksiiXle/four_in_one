@@ -4,7 +4,7 @@ use yii\helpers\Url;
 use yii\jui\JuiAsset;
 use common\widgets\menuX\MenuXWidget;
 use common\widgets\changeLanguage\ChangeLanguageWidget;
-use backend\modules\adminxx\assets\AdminxxLayoutAsset;
+use apiadmin\modules\adminxx\assets\AdminxxLayoutAsset;
 use common\assets\BackgroundTaskAsset;
 use common\helpers\DateHelper;
 

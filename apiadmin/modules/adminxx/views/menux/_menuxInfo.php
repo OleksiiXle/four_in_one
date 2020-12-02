@@ -1,6 +1,6 @@
 <?php
 use yii\widgets\DetailView;
-use backend\modules\adminxx\models\MenuXX;
+use apiadmin\modules\adminxx\models\MenuXX;
 
 echo DetailView::widget([
     'model' => $model,

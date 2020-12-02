@@ -5,20 +5,20 @@ $params = array_merge(
 );
 
 $config = [
-    'id' => 'app-backend',
+    'id' => 'app-apiadmin',
     'basePath' => dirname(__DIR__),
-    'controllerNamespace' => 'backend\controllers',
+    'controllerNamespace' => 'apiadmin\controllers',
     'bootstrap' => ['log'],
     'defaultRoute' => 'adminxx',
     'language' => 'ru-RU',
     'components' => [
         'request' => [
-           // 'csrfParam' => '_csrf-backend',
+           // 'csrfParam' => '_csrf-apiadmin',
             'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            // this is the name of the session cookie used for login on the apiadmin
+            'name' => 'advanced-apiadmin',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -33,7 +33,7 @@ $config = [
     ],
     'modules' => [
         'adminxx' => [
-            'class' => 'backend\modules\adminxx\Adminxx',
+            'class' => 'apiadmin\modules\adminxx\Adminxx',
         ],
     ],
     'params' => $params,

@@ -1,11 +1,11 @@
 <?php
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
 use Yii;
 use yii\filters\VerbFilter;
 use common\components\AccessControl;
-use backend\controllers\MainController;
-use backend\modules\adminxx\models\Assignment;
+use apiadmin\controllers\MainController;
+use apiadmin\modules\adminxx\models\Assignment;
 
 /**
  * Class AssignmentController

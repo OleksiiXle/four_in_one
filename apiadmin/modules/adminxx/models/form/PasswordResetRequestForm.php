@@ -1,8 +1,8 @@
 <?php
 
-namespace backend\modules\adminxx\models\form;
+namespace apiadmin\modules\adminxx\models\form;
 
-use backend\modules\adminxx\models\User;
+use apiadmin\modules\adminxx\models\User;
 use Yii;
 use yii\base\Model;
 
@@ -20,7 +20,7 @@ class PasswordResetRequestForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'exist',
-                'targetClass' => '\backend\modules\adminxx\models\User',
+                'targetClass' => '\apiadmin\modules\adminxx\models\User',
                 'filter' => ['status' => User::STATUS_ACTIVE],
             ],
         ];

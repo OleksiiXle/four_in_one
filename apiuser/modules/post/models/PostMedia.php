@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\post\models;
+namespace apiuser\modules\post\models;
 
 use Yii;
 use common\models\FileUpload;

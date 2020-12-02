@@ -1,15 +1,15 @@
 <?php
 
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
-use backend\controllers\MainController;
-use backend\modules\adminxx\models\filters\UControlFilter;
-use backend\modules\adminxx\models\filters\UserActivityFilter;
-use backend\modules\adminxx\models\UControl;
-use backend\modules\adminxx\models\UserData;
-use backend\modules\adminxx\models\UserM;
+use apiadmin\controllers\MainController;
+use apiadmin\modules\adminxx\models\filters\UControlFilter;
+use apiadmin\modules\adminxx\models\filters\UserActivityFilter;
+use apiadmin\modules\adminxx\models\UControl;
+use apiadmin\modules\adminxx\models\UserData;
+use apiadmin\modules\adminxx\models\UserM;
 
 /**
  * Class CheckController

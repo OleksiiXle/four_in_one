@@ -1,5 +1,5 @@
 <?php
-namespace backend\modules\adminxx\models\filters;
+namespace apiadmin\modules\adminxx\models\filters;
 
 use Yii;
 use common\components\models\Translation;

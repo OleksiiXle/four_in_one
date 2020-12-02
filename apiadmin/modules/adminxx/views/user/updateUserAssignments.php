@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-\backend\modules\adminxx\assets\AdminxxUpdateUserAssignmentsAsset::register($this);
+\apiadmin\modules\adminxx\assets\AdminxxUpdateUserAssignmentsAsset::register($this);
 
 $this->title = 'Зміна ролей та дозвілів користувача ' . $model->username;
 

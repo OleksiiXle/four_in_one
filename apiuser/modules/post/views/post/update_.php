@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use \macgyer\yii2materializecss\widgets\form\ActiveForm;
 
 
-\frontend\modules\post\assets\UpdadePostAsset::register($this);
+\apiuser\modules\post\assets\UpdadePostAsset::register($this);
 
 $cleanImage = \Yii::getAlias('@web'). \Yii::$app->params['pathToFiles'] . '/image/clean.png';
 
@@ -35,7 +35,7 @@ $this->title = \Yii::t('app', 'Пост');
             ]);
          //   echo $form->field($model, 'targetFile');
             echo $form->field($model, 'name');
-            echo $form->field($model, 'type')->dropDownList(\frontend\modules\post\models\Post::getListType(),
+            echo $form->field($model, 'type')->dropDownList(\apiuser\modules\post\models\Post::getListType(),
                 ['options' => [ $model->type => ['Selected' => true]]]);
             echo $form->field($model,'content')
                 ->widget(dosamigos\ckeditor\CKEditor::class,

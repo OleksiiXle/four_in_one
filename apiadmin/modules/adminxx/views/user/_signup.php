@@ -4,7 +4,7 @@ use yii\bootstrap\ActiveForm;
 use \yii\helpers\Url;
 use \app\widgets\changePosDep\ChangePosDepWidget;
 
-\backend\modules\adminxx\assets\AdminxxSingupAsset::register($this);
+\apiadmin\modules\adminxx\assets\AdminxxSingupAsset::register($this);
 //\app\modules\adminxx\assets\AdminxxMdlAsset::register($this);
 
 if ($model->isNewRecord){
@@ -127,7 +127,7 @@ $this->registerJs("
                     <?= $form->field($model, 'phone'); ?>
                     <?= $form->field($model, 'direction', ['inputOptions' =>
                         ['class' => 'form-control', 'tabindex' => '4']])
-                        ->dropDownList(\backend\modules\adminx\models\UserData::$directionArray,
+                        ->dropDownList(\apiadmin\modules\adminx\models\UserData::$directionArray,
                             ['options' => [ $model->direction => ['Selected' => true]],]);?>
                     <?= $form->field($model, 'job_name')->textarea([
                         'rows' => '5'

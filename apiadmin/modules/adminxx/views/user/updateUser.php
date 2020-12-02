@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \yii\helpers\Url;
-use backend\modules\adminxx\assets\AdminxxUpdateUserAsset;
+use apiadmin\modules\adminxx\assets\AdminxxUpdateUserAsset;
 
 AdminxxUpdateUserAsset::register($this);
 //\app\modules\adminxx\assets\AdminxxMdlAsset::register($this);
@@ -126,7 +126,7 @@ $this->registerJs("
                     <?= $form->field($model, 'phone'); ?>
                     <?= $form->field($model, 'direction', ['inputOptions' =>
                         ['class' => 'form-control', 'tabindex' => '4']])
-                        ->dropDownList(\backend\modules\adminxx\models\UserData::$directionArray,
+                        ->dropDownList(\apiadmin\modules\adminxx\models\UserData::$directionArray,
                             ['options' => [ $model->direction => ['Selected' => true]],]);?>
                     <?= $form->field($model, 'job_name')->textarea([
                         'rows' => '5'

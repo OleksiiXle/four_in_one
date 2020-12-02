@@ -5,7 +5,7 @@ use common\assets\AppAsset;
 use common\widgets\menuX\MenuXWidget;
 
 //AppAsset::register($this);
-\backend\modules\adminxx\assets\AdminxxLayoutAsset::register($this);
+\apiadmin\modules\adminxx\assets\AdminxxLayoutAsset::register($this);
 
 ?>
 <?php

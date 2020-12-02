@@ -3,7 +3,7 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use backend\modules\adminxx\assets\AdminxxUpdateUserAsset;
+use apiadmin\modules\adminxx\assets\AdminxxUpdateUserAsset;
 use common\widgets\selectMultiXle\SelectMultiXleWidget;
 
 AdminxxUpdateUserAsset::register($this);

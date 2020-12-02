@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\modules\post\controllers;
+namespace apiuser\modules\post\controllers;
 
 use Yii;
 use common\controllers\MainController as Controller;
@@ -14,5 +14,5 @@ class MainController extends Controller
     /**
      * @var string
      */
-    public $layout = '@frontend/modules/post/views/layouts/postLayout.php';
+    public $layout = '@apiuser/modules/post/views/layouts/postLayout.php';
 }

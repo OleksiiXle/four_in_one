@@ -98,8 +98,15 @@ $t = [
         ]
     ],
     [
-        'name'       => 'Вход',
+        'name'       => 'Вход без АПИ',
         'route'      => '/adminxx/user/login',
+        'role' => '',
+        'access_level' => 0,
+        'children' => [],
+    ],
+    [
+        'name'       => 'Вход с АПИ',
+        'route'      => '/site/login',
         'role' => '',
         'access_level' => 0,
         'children' => [],

@@ -4,7 +4,7 @@ use \yii\helpers\Html;
 use common\widgets\menuUpdate\MenuUpdateWidget;
 
 //\app\components\widgets\menuUpdate\MenuUpdateAssets::register($this);
-\backend\modules\adminxx\assets\AdminxxMenuAsset::register($this);
+\apiadmin\modules\adminxx\assets\AdminxxMenuAsset::register($this);
 
 $this->title = \Yii::t('app', 'Редактор меню');
 

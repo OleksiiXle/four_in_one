@@ -1,8 +1,8 @@
 <?php
 
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
+use apiadmin\controllers\MainController;
 use common\components\AccessControl;
 use common\components\models\Configs;
 use yii\data\ActiveDataProvider;

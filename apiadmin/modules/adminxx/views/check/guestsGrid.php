@@ -2,10 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\Pjax;
-use backend\components\widgets\xlegrid\Xlegrid;
+use apiadmin\components\widgets\xlegrid\Xlegrid;
 use yii\helpers\Url;
 
-\backend\modules\adminxx\assets\AdminxxGuestsControlAsset::register($this);
+\apiadmin\modules\adminxx\assets\AdminxxGuestsControlAsset::register($this);
 
 $this->title = \Yii::t('app', 'Відвідувачі');
 $interval = (empty($dataProvider->filterModel->getAttributes()['activityInterval']))

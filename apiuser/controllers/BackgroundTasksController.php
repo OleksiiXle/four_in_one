@@ -1,12 +1,12 @@
 <?php
-namespace frontend\controllers;
+namespace apiuser\controllers;
 
 use common\controllers\BackgroundTasksController as Controller;
 use common\components\AccessControl;
 
 /**
  * Class BackgroundTasksController
- * @package backend\controllers
+ * @package apiadmin\controllers
  */
 class BackgroundTasksController extends Controller
 {

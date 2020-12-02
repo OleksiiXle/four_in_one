@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\models;
+namespace apiadmin\modules\adminxx\models;
 
 use common\models\MainModel;
 use yii\helpers\Html;

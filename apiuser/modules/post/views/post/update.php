@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use frontend\modules\post\assets\UpdadePostAsset;
+use apiuser\modules\post\assets\UpdadePostAsset;
 use yii\jui\JuiAsset;
 
 
@@ -46,7 +46,7 @@ $this->title = \Yii::t('app', 'Пост');
             ]);
             //   echo $form->field($model, 'targetFile');
             echo $form->field($model, 'name');
-            echo $form->field($model, 'type')->dropDownList(\frontend\modules\post\models\Post::getListType(),
+            echo $form->field($model, 'type')->dropDownList(\apiuser\modules\post\models\Post::getListType(),
                 ['options' => [ $model->type => ['Selected' => true]]]);
             echo $form->field($model, 'content')->textarea(['col' => 40, 'row' => 3]);
             /*

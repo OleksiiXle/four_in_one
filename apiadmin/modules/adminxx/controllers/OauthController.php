@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
-use backend\modules\adminxx\models\oauth\OauthAccessToken;
-use backend\modules\adminxx\models\oauth\OauthAuthorizationCode;
-use backend\modules\adminxx\models\oauth\OauthCient;
-use backend\modules\adminxx\models\oauth\OauthRefreshToken;
+use apiadmin\modules\adminxx\models\oauth\OauthAccessToken;
+use apiadmin\modules\adminxx\models\oauth\OauthAuthorizationCode;
+use apiadmin\modules\adminxx\models\oauth\OauthCient;
+use apiadmin\modules\adminxx\models\oauth\OauthRefreshToken;
 use Yii;
 use yii\data\ActiveDataProvider;
 use common\components\AccessControl;
-use backend\controllers\MainController;
-use backend\modules\adminxx\models\RuleX;
+use apiadmin\controllers\MainController;
+use apiadmin\modules\adminxx\models\RuleX;
 
 /**
  * Class RuleController

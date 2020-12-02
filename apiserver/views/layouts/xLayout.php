@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use common\components\widgets\menuX\MenuXWidget;
-use frontend\assets\XLayoutAsset;
+use apiuser\assets\XLayoutAsset;
 use yii\bootstrap\Alert;
 
 XLayoutAsset::register($this);

@@ -1,11 +1,11 @@
 <?php
 
-namespace backend\modules\adminxx\models\form;
+namespace apiadmin\modules\adminxx\models\form;
 
 use Yii;
-use backend\modules\adminxx\models\UserM;
-use backend\modules\adminxx\models\User;
-use backend\modules\adminxx\models\UserData;
+use apiadmin\modules\adminxx\models\UserM;
+use apiadmin\modules\adminxx\models\User;
+use apiadmin\modules\adminxx\models\UserData;
 
 class Signup extends UserM
 {

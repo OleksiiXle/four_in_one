@@ -5,7 +5,7 @@ $db = require __DIR__ . '/db.php';
 $backGroundDb = require(__DIR__ . '/backGroundDb.php');
 
 $config = [
-    'id' => 'api-client',
+    'id' => 'apiclient',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
  //   'defaultRoute' => 'adminxx',
@@ -61,11 +61,11 @@ $config = [
             'identityClass' => 'app\models\User',
             'loginUrl' => ['site/login'],
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-apiuser', 'httpOnly' => true],
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
-            'name' => 'api-client',
+            // this is the name of the session cookie used for login on the apiuser
+            'name' => 'apiclient',
         ],
         'configs' => [
             'class' => 'app\components\ConfigsComponent',

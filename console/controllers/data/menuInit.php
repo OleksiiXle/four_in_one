@@ -62,6 +62,49 @@ $t = [
                 'access_level' => 2,
                 'children' => [],
             ],
+            [
+                'name' => 'Фоновые задачи',
+                'route' => '',
+                'role' => 'menuAdminxMain',
+                'access_level' => 2,
+                'children' => [
+                    [
+                        'name'       => 'Список фоновых задач',
+                        'route'      => '/adminxx/background-tasks/index',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                    [
+                        'name'       => 'Тестовая фоновая задача - запуск в фоне',
+                        'route'      => '/adminxx/background-tasks/start-background-task',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                    [
+                        'name'       => 'Тестовая фоновая задача - старт для пошаговой отладки',
+                        'route'      => '/adminxx/background-tasks/run-background-task',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                    [
+                        'name'       => 'Тестовая фоновая задача - запуск из вида аяксом',
+                        'route'      => '/adminxx/background-tasks/run-background-task-ajax',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                ]
+            ],
+            [
+                'name'       => 'Oauth',
+                'route'      => '/adminxx/oauth/index',
+                'role' => 'menuAdminxMain',
+                'access_level' => 2,
+                'children' => [],
+            ],
         ]
     ],
 

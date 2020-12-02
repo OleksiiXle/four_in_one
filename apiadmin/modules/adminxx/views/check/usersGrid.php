@@ -22,7 +22,7 @@ $timeFix = time() - $interval;
             <?php
             echo \common\widgets\xlegrid\Xlegrid::widget([
                 'dataProvider' => $dataProvider,
-                'gridTitle' => '' . \backend\modules\adminxx\models\UserData::$activityIntervalArray[$interval] ,
+                'gridTitle' => '' . \apiadmin\modules\adminxx\models\UserData::$activityIntervalArray[$interval] ,
                 'additionalTitle' => 'qq',
                 'filterView' => '@app/modules/adminxx/views/check/_filterUserActivity',
                 //-------------------------------------------

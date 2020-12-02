@@ -27,7 +27,7 @@ $config = [
 
     'components' => [
         'request' => [
-           // 'csrfParam' => '_csrf-frontend',
+           // 'csrfParam' => '_csrf-apiuser',
             'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
         ],
         'user' => [
@@ -37,7 +37,7 @@ $config = [
             'loginUrl' => ['site/login'],
             'enableAutoLogin' => false,
             'enableSession' => false,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-apiuser', 'httpOnly' => true],
         ],
         'authManager' => [
             'class' => 'apiserver\components\ApiDbManager',
@@ -57,7 +57,7 @@ $config = [
             'class' => 'common\components\ConfigsComponent',
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
+            // this is the name of the session cookie used for login on the apiuser
             'name' => 'api-server',
         ],
         'log' => [

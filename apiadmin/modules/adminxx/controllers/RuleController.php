@@ -1,12 +1,12 @@
 <?php
 
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
 use common\components\AccessControl;
-use backend\controllers\MainController;
-use backend\modules\adminxx\models\RuleX;
+use apiadmin\controllers\MainController;
+use apiadmin\modules\adminxx\models\RuleX;
 
 /**
  * Class RuleController

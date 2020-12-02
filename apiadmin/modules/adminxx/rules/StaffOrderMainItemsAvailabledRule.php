@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\rules;
+namespace apiadmin\modules\adminxx\rules;
 use common\helpers\AccessHelper;
 use yii\rbac\Rule;
 

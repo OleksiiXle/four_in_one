@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use common\widgets\xlegrid\Xlegrid;
-use backend\modules\adminxx\assets\AdminxxBackgroundTaskAsset;
+use apiadmin\modules\adminxx\assets\AdminxxBackgroundTaskAsset;
 
 AdminxxBackgroundTaskAsset::register($this);
 

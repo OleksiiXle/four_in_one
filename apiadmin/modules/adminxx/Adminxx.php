@@ -1,13 +1,13 @@
 <?php
 
-namespace backend\modules\adminxx;
+namespace apiadmin\modules\adminxx;
 
 class Adminxx extends \yii\base\Module
 {
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'backend\modules\adminxx\controllers';
+    public $controllerNamespace = 'apiadmin\modules\adminxx\controllers';
 
     /**
      * @inheritdoc

@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
 use yii\db\Query;
 use yii\filters\VerbFilter;
@@ -8,8 +8,8 @@ use yii\helpers\FileHelper;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\models\Translation;
 use common\components\AccessControl;
-use backend\controllers\MainController;
-use backend\modules\adminxx\models\filters\TranslationFilter;
+use apiadmin\controllers\MainController;
+use apiadmin\modules\adminxx\models\filters\TranslationFilter;
 
 class TranslationController extends MainController
 {

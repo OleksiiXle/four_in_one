@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\models;
+namespace apiadmin\modules\adminxx\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -121,7 +121,7 @@ class RuleX extends ActiveRecord
     public static function getRulesClasses()
     {
         $pathToFile = \Yii::getAlias('@app/modules/adminxx/rules');
-        $namespace = 'backend\modules\adminxx\rules';
+        $namespace = 'apiadmin\modules\adminxx\rules';
 
         $ret = [];
         if ($handle = opendir($pathToFile)) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\assets;
+namespace apiadmin\modules\adminxx\assets;
 
 use yii\web\AssetBundle;
 

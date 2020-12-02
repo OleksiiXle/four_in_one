@@ -5,22 +5,22 @@ $params = array_merge(
 );
 
 $config = [
-    'id' => 'app-frontend',
+    'id' => 'app-apiuser',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'frontend\controllers',
+    'controllerNamespace' => 'apiuser\controllers',
     'components' => [
         'request' => [
-            'csrfParam' => '_csrf-frontend',
+            'csrfParam' => '_csrf-apiuser',
         ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-apiuser', 'httpOnly' => true],
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
-            'name' => 'advanced-frontend',
+            // this is the name of the session cookie used for login on the apiuser
+            'name' => 'advanced-apiuser',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\models\oauth;
+namespace apiadmin\modules\adminxx\models\oauth;
 
 use Yii;
 use yii\db\ActiveRecord;

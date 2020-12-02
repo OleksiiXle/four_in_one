@@ -1,6 +1,6 @@
 <?php
 use yii\widgets\ListView;
-use frontend\modules\post\assets\PostsListAsset;
+use apiuser\modules\post\assets\PostsListAsset;
 
 PostsListAsset::register($this);
 ?>

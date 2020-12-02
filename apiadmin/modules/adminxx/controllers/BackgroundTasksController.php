@@ -1,11 +1,11 @@
 <?php
 
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
 use console\controllers\backgroundTasks\models\BackgroundTask;
 use console\controllers\backgroundTasks\tasks\TestTaskWorker;
-use backend\modules\adminxx\models\filters\BackgroundTaskFilter;
-use backend\controllers\MainController;
+use apiadmin\modules\adminxx\models\filters\BackgroundTaskFilter;
+use apiadmin\controllers\MainController;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
 

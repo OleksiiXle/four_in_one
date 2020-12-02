@@ -1,8 +1,8 @@
 <?php
-namespace frontend\modules\post\models\filters;
+namespace apiuser\modules\post\models\filters;
 
 use Yii;
-use frontend\modules\post\models\Post;
+use apiuser\modules\post\models\Post;
 use common\widgets\xlegrid\models\GridFilter;
 
 class PostFilter extends GridFilter

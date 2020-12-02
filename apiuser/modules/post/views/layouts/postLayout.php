@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use common\widgets\menuX\MenuXWidget;
 use common\widgets\changeLanguage\ChangeLanguageWidget;
-use frontend\modules\post\assets\PostLayoutAsset;
+use apiuser\modules\post\assets\PostLayoutAsset;
 use yii\helpers\Url;
 
 //use common\assets\AppAsset;

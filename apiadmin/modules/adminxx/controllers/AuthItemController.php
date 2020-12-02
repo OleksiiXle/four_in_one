@@ -1,11 +1,11 @@
 <?php
-namespace backend\modules\adminxx\controllers;
+namespace apiadmin\modules\adminxx\controllers;
 
-use backend\controllers\MainController;
+use apiadmin\controllers\MainController;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
-use backend\modules\adminxx\models\AuthItemX;
-use backend\modules\adminxx\models\filters\AuthItemFilter;
+use apiadmin\modules\adminxx\models\AuthItemX;
+use apiadmin\modules\adminxx\models\filters\AuthItemFilter;
 use yii\rbac\Item;
 
 /**

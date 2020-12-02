@@ -18,7 +18,7 @@ use yii\bootstrap\ActiveForm;
         <div class="col-md-4">
             <?php
             echo $form->field($filter, 'type')
-                ->dropDownList(\backend\modules\adminxx\models\AuthItemX::getTypeDict(),
+                ->dropDownList(\apiadmin\modules\adminxx\models\AuthItemX::getTypeDict(),
                     ['options' => [ $filter->type => ['Selected' => true]],]);
             ?>
         </div>
@@ -30,7 +30,7 @@ use yii\bootstrap\ActiveForm;
         <div class="col-md-4">
             <?php
             echo $form->field($filter, 'rule_name')
-                ->dropDownList(\backend\modules\adminxx\models\AuthItemX::getRulesList(),
+                ->dropDownList(\apiadmin\modules\adminxx\models\AuthItemX::getRulesList(),
                     ['options' => [ $filter->rule_name => ['Selected' => true]],]);
             ?>
         </div>

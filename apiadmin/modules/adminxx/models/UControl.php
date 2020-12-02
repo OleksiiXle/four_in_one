@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\models;
+namespace apiadmin\modules\adminxx\models;
 
 use common\helpers\Functions;
 use yii\db\Exception;

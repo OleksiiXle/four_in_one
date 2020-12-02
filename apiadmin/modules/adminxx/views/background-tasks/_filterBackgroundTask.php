@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use backend\modules\adminxx\models\filters\BackgroundTaskFilter;
+use apiadmin\modules\adminxx\models\filters\BackgroundTaskFilter;
 
 ?>
 

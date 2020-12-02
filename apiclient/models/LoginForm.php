@@ -117,7 +117,7 @@ http://xle-api-server/oauth2/auth/index
                     ?expand=email
                     &client_id=xapi
                     &response_type=code
-                    &redirect_uri=http%3A%2F%2Fxle-api-client%2Fsite%2Flogin
+                    &redirect_uri=http%3A%2F%2Fxle-apiclient%2Fsite%2Flogin
                     &xoauth_displayname=My%20Application
                     &state=a1f62fb02f737781c736a4aca4597503ca7651ff72119ea7a87d6b0593a1ea6d
                      */

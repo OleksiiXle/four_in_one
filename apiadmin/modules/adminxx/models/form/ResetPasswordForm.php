@@ -1,9 +1,9 @@
 <?php
 
-namespace backend\modules\adminxx\models\form;
+namespace apiadmin\modules\adminxx\models\form;
 
-use backend\modules\adminxx\models\User;
-use backend\modules\adminxx\models\UserM;
+use apiadmin\modules\adminxx\models\User;
+use apiadmin\modules\adminxx\models\UserM;
 use yii\base\Model;
 use yii\base\InvalidParamException;
 

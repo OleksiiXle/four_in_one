@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\adminxx\models\backgroundTasks;
+namespace apiadmin\modules\adminxx\models\backgroundTasks;
 
 use console\controllers\backgroundTasks\models\TaskWorker;
 use console\controllers\backgroundTasks\models\BackgroundTask;

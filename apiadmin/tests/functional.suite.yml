@@ -1,4 +1,4 @@
-suite_namespace: backend\tests\functional
+suite_namespace: apiadmin\tests\functional
 actor: FunctionalTester
 modules:
     enabled:

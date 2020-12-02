@@ -1,8 +1,8 @@
 <?php
 
-namespace backend\modules\adminxx\models\form;
+namespace apiadmin\modules\adminxx\models\form;
 
-use backend\modules\adminxx\models\UserM;
+use apiadmin\modules\adminxx\models\UserM;
 use Yii;
 use yii\base\Model;
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace frontend\modules\post;
+namespace apiuser\modules\post;
 
 class Post extends \yii\base\Module
 {
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'frontend\modules\post\controllers';
+    public $controllerNamespace = 'apiuser\modules\post\controllers';
 
     /**
      * @inheritdoc

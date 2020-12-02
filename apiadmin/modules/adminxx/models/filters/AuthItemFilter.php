@@ -1,7 +1,7 @@
 <?php
-namespace backend\modules\adminxx\models\filters;
+namespace apiadmin\modules\adminxx\models\filters;
 
-use backend\modules\adminxx\models\AuthItemX;
+use apiadmin\modules\adminxx\models\AuthItemX;
 use yii\base\Model;
 use common\widgets\xlegrid\models\GridFilter;
 

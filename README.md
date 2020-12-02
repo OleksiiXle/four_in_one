@@ -8,10 +8,10 @@
 
 
 .htaccess настроены так, что:
--hostName/ - (frontend) фронтенд, работа с контентом сервера без АПИ
--hostName/admin - (backend) бекенд, администрирование настроек и пользователей сервера без АПИ
+-hostName/ - (apiuser) фронтенд, работа с контентом сервера без АПИ
+-hostName/admin - (apiadmin) бекенд, администрирование настроек и пользователей сервера без АПИ
 -hostName/server - (api-server) АПИ - сервер, обработка запросов и выдача ответов клиенту по REST FULL API
--hostName/client - (api-client) клиент АПИ - запросы к серверу на работу с контентом по REST FULL API
+-hostName/client - (apiclient) клиент АПИ - запросы к серверу на работу с контентом по REST FULL API
 
 
 **************************************************************** 1-й вариант настройки хостинга (1 хост, 4 пути)
@@ -34,8 +34,8 @@ sudo service apache2 restart
 sudo gedit /etc/apache2/sites-available/xle.admin.conf
 <VirtualHost *:80>
     ServerName xle.admin
-    DocumentRoot /var/www/xle/staff-api/backend/web
-    <Directory /var/www/xle/staff-api/backend>
+    DocumentRoot /var/www/xle/staff-api/apiadmin/web
+    <Directory /var/www/xle/staff-api/apiadmin>
         AllowOverride All
     </Directory>
 </VirtualHost>
@@ -43,8 +43,8 @@ sudo gedit /etc/apache2/sites-available/xle.admin.conf
 sudo gedit /etc/apache2/sites-available/xle.user.conf
 <VirtualHost *:80>
     ServerName xle.user
-    DocumentRoot /var/www/xle/staff-api/frontend/web
-    <Directory /var/www/xle/staff-api/frontend>
+    DocumentRoot /var/www/xle/staff-api/apiuser/web
+    <Directory /var/www/xle/staff-api/apiuser>
         AllowOverride All
     </Directory>
 </VirtualHost>
@@ -61,8 +61,8 @@ sudo gedit /etc/apache2/sites-available/xle.api.server.conf
 sudo gedit /etc/apache2/sites-available/xle.api.client.conf
 <VirtualHost *:80>
     ServerName xle.api.client
-    DocumentRoot /var/www/xle/staff-api/api-client/web
-    <Directory /var/www/xle/staff-api/api-client>
+    DocumentRoot /var/www/xle/staff-api/apiclient/web
+    <Directory /var/www/xle/staff-api/apiclient>
         AllowOverride All
     </Directory>
 </VirtualHost>
@@ -82,12 +82,12 @@ sudo a2ensite xle.api.client.conf
 sudo a2ensite xle-admin.conf
 sudo a2ensite xle-user.conf
 sudo a2ensite xle-api-server.conf
-sudo a2ensite xle-api-client.conf
+sudo a2ensite xle-apiclient.conf
 
 sudo a2dissite xle-admin.conf
 sudo a2dissite xle-user.conf
 sudo a2dissite xle-api-server.conf
-sudo a2dissite xle-api-client.conf
+sudo a2dissite xle-apiclient.conf
 
 sudo service apache2 restart
 *****************************************************************************************
@@ -133,8 +133,8 @@ php yii migrate
 
 
 Настройка клиента
-см README в api-client, 
-в терминале войти в api-client и там все запускать
+см README в apiclient, 
+в терминале войти в apiclient и там все запускать
 
 
 
@@ -170,18 +170,18 @@ CENTOS
 RewriteEngine On
 
 # End the processing, if a rewrite already occurred
-RewriteRule ^(frontend|admin|api|client)/web/ - [L]
+RewriteRule ^(apiuser|admin|api|client)/web/ - [L]
 
-# Handle the case of backend, skip ([S=1]) the following rule, if current matched
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
 RewriteRule ^admin(/(.*))?$ admin/web/$2 [S=1]
 
-# Handle the case of backend, skip ([S=1]) the following rule, if current matched
-RewriteRule ^frontend(/(.*))?$ frontend/web/$2 [S=1]
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
+RewriteRule ^apiuser(/(.*))?$ apiuser/web/$2 [S=1]
 
-# Handle the case of backend, skip ([S=1]) the following rule, if current matched
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
 RewriteRule ^api(/(.*))?$ api/web/$2 [S=1]
 
-# Handle the case of backend, skip ([S=1]) the following rule, if current matched
+# Handle the case of apiadmin, skip ([S=1]) the following rule, if current matched
 RewriteRule ^client(/(.*))?$ client/web/$2 [S=1]
 
 # Uncomment the following, if you want speaking URL

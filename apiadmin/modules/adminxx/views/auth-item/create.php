@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use \backend\modules\adminxx\models\AuthItemX;
+use \apiadmin\modules\adminxx\models\AuthItemX;
 
 switch ($model->type){
     case AuthItemX::TYPE_ROLE:
@@ -33,7 +33,7 @@ switch ($model->type){
         echo $form->field($model, 'name');
         echo $form->field($model, 'description');
         echo $form->field($model, 'rule_name')
-            ->dropDownList(\backend\modules\adminxx\models\AuthItemX::getRulesList(),
+            ->dropDownList(\apiadmin\modules\adminxx\models\AuthItemX::getRulesList(),
                 ['options' => [ $model->rule_name => ['Selected' => true]],]);
 
         ?>

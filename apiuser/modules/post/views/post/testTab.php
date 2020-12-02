@@ -1,7 +1,7 @@
 
 <?php
-use frontend\components\widgets\selectXle\SelectXleWidget;
-use frontend\models\Translation;
+use apiuser\components\widgets\selectXle\SelectXleWidget;
+use apiuser\models\Translation;
 
 
 yii\jui\JuiAsset::register($this);

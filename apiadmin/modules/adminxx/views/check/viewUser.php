@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use \yii\widgets\DetailView;
-use \backend\modules\adminxx\models\UserM;
+use \apiadmin\modules\adminxx\models\UserM;
 use yii\jui\JuiAsset;
 use \dosamigos\datepicker\DatePicker;
 

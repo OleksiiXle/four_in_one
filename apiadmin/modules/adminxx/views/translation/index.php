@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use common\widgets\xlegrid\Xlegrid;
 use common\widgets\menuAction\MenuActionWidget;
 use yii\helpers\Url;
-use backend\modules\adminxx\assets\AdminxxTranslationsAsset;
+use apiadmin\modules\adminxx\assets\AdminxxTranslationsAsset;
 
 AdminxxTranslationsAsset::register($this);
 $this->title = Yii::t('app', 'Переводы');

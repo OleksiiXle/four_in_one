@@ -11,7 +11,7 @@ use yii\bootstrap\ActiveForm;
             <?php $form = ActiveForm::begin(); ?>
             <?= $form->field($model, 'positionSort', ['inputOptions' =>
                 ['class' => 'form-control', 'tabindex' => '1']])
-                ->dropDownList(\backend\modules\adminxx\models\form\ChangeSort::$positionSorts,
+                ->dropDownList(\apiadmin\modules\adminxx\models\form\ChangeSort::$positionSorts,
                     ['options' => [ $model->positionSort => ['Selected' => true]],]);?>
             <div class="form-group">
                 <?= Html::submitButton('Змінити', ['class' => 'btn btn-primary']) ?>
