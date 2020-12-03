@@ -377,7 +377,6 @@ class UserM extends MainModel
                 }
             }
         }
-        $userDepartments = $this->userDepartmentsData;
 
         //---------------------
         $this->_userProfile = [
@@ -405,7 +404,6 @@ class UserM extends MainModel
             'lastRoute' => $this->lastRoute,
 
             //-- user_data
-            'personal_id' => (isset($userDatas)) ? $userDatas->personal_id : 0,
 
             //-- personal
         ];

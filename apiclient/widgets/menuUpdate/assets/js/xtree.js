@@ -123,7 +123,7 @@ var MENU_TREE = {
     drawDefaultTree: function (tree_id) {
         var that = this;
         $.ajax({
-            url: '/widget/menux-get-default-tree',
+            url: _BASE_URL + '/widget/menux-get-default-tree',
             type: "POST",
             data: {'_csrf':_csrfT},
             dataType: 'json',
@@ -158,7 +158,7 @@ var MENU_TREE = {
             case ICON_CLOSE:
                 parent.innerHTML = ICON_OPEN;
                 $.ajax({
-                    url: '/widget/menux-get-children',
+                    url: _BASE_URL + '/widget/menux-get-children',
                     type: "POST",
                     data: {
                         'id' : parent_id,
@@ -254,7 +254,7 @@ var MENU_TREE = {
     //    alert(this.tree_id + ' modalOpenMenuUpdate ' + this.selected_id);
         var that = this;
         //var url = '/widget/menux-modal-open-menu-update?id=' + that.selected_id + '&menu_id=' + that.tree_id + '&nodeAction=' + nodeAction;
-        var url = '/widget/menux-modal-open-menu-update';
+        var url = _BASE_URL + '/widget/menux-modal-open-menu-update';
         var data = {
             'id' : that.selected_id,
             'menu_id' : that.tree_id,
@@ -328,7 +328,7 @@ var MENU_TREE = {
         var data = $("#menuMmodifyForm").serialize();
         var new_item;
         $.ajax({
-            url: '/widget/menux-menu-update',
+            url: _BASE_URL + '/widget/menux-menu-update',
             type: "POST",
             data: data,
             dataType: 'json',
@@ -466,7 +466,7 @@ sort: 2
                 break;
         }
         $.ajax({
-            url: '/widget/menux-tree-modify-auto',
+            url: _BASE_URL + '/widget/menux-tree-modify-auto',
             type: "POST",
             data: {
                 'node1_id' : node1_id,
@@ -553,7 +553,7 @@ sort: 2
         if (confirm('Подтвердите удаление')){
             var that = this;
             $.ajax({
-                url: '/widget/menux-delete',
+                url: _BASE_URL + '/widget/menux-delete',
                 type: "POST",
                 data: {
                     '_csrf':_csrfT,

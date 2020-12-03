@@ -3,7 +3,6 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\Nav;
@@ -17,6 +16,11 @@ $this->registerJs("
 ",\yii\web\View::POS_HEAD);
 
 AppAsset::register($this);
+
+//$logoImg = Url::toRoute(['/images/sun_61831.png']);
+$logoImg = Url::toRoute(['/images/np_logo.png']);
+$exitLogo = Url::toRoute('/images/log_logout_door_1563.png');
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

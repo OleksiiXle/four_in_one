@@ -3,6 +3,7 @@ namespace app\modules\adminxx\controllers;
 
 use Yii;
 use app\components\AccessControl;
+use yii\helpers\Url;
 
 class DefaultController extends MainController
 {
@@ -36,7 +37,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Пользователи'),
-                    'route' => '/adminxx/user'
+                    'route' => Url::toRoute('/adminxx/user')
                 ]
                 : [
                     'show' => false,
@@ -45,7 +46,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Правила'),
-                    'route' => '/adminxx/rule'
+                    'route' => Url::toRoute('/adminxx/rule')
                 ]
                 : [
                     'show' => false,
@@ -54,7 +55,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Разрешения'),
-                    'route' => '/adminxx/auth-item'
+                    'route' => Url::toRoute('/adminxx/auth-item')
                 ]
                 : [
                     'show' => false,
@@ -63,7 +64,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Редактор меню'),
-                    'route' => '/adminxx/menux/menu'
+                    'route' => Url::toRoute('/adminxx/menux/menu')
                 ]
                 : [
                     'show' => false,
@@ -72,7 +73,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Системные настройки'),
-                    'route' => '/adminxx/configs/update'
+                    'route' => Url::toRoute('/adminxx/configs/update')
                 ]
                 : [
                     'show' => false,
@@ -81,7 +82,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Посещения сайта'),
-                    'route' => '/adminxx/check/guest-control'
+                    'route' => Url::toRoute('/adminxx/check/guest-control')
                 ]
                 : [
                     'show' => false,
@@ -90,7 +91,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Переводы'),
-                    'route' => 'adminxx/translation/index'
+                    'route' => Url::toRoute('/adminxx/translation/index')
                 ]
                 : [
                     'show' => false,
@@ -100,7 +101,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => 'PHP-info',
-                    'route' => 'adminxx/user/php-info'
+                    'route' => Url::toRoute('/adminxx/user/php-info')
                 ]
                 : [
                     'show' => false,

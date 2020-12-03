@@ -42,11 +42,17 @@ return [
     'pathToBackgroundTasksTmpFiles' => '/runtime/logs/backgroundTasks/tmp/',
     'killBackgroundTaskAfterDone' => false,
 
+    'tokenUrl' => 'http://staff.api/apiserver/oauth2/auth/token',
+    'authUrl'  => 'http://staff.api/apiserver/oauth2/auth/index',
+    'signupUrl'  => 'http://staff.api/apiserver/oauth2/auth/signup',
+    'apiBaseUrl' => 'http://staff.api/apiserver/v1',
+    /*
     'tokenUrl' => 'http://xle.api.server/oauth2/auth/token',
     'authUrl'  => 'http://xle.api.server/oauth2/auth/index',
     'signupUrl'  => 'http://xle.api.server/oauth2/auth/signup',
-    //'authUrl' => 'http://api-server/oauth2/auth/index?expand=email',
     'apiBaseUrl' => 'http://xle.api.server/v1',
+    */
+    //'authUrl' => 'http://api-server/oauth2/auth/index?expand=email',
     'clientId' => 'xapi',
     'clientSecret' => '123',
 

@@ -29,6 +29,8 @@ $config = [
         'request' => [
            // 'csrfParam' => '_csrf-apiuser',
             'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
+            'baseUrl'=>'/apiserver', //todo раскомментировать в случае одного хоста
+
         ],
         'user' => [
             'class' => 'apiserver\modules\oauth2\models\UserYii',

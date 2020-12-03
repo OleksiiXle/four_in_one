@@ -15,6 +15,7 @@
 
 
 **************************************************************** 1-й вариант настройки хостинга (1 хост, 4 пути)
+1. Хостинг
 sudo gedit /etc/apache2/sites-available/staff.api.conf
 <VirtualHost *:80>
     ServerName staff.api
@@ -29,6 +30,16 @@ sudo gedit /etc/hosts
 
 sudo a2ensite staff.api.conf
 sudo service apache2 restart
+
+2. Файлы .htaccess -> .htaccess_IF_ONE_HOST
+
+3. В конфигах всех частей:
+        'request' => [
+            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+            'cookieValidationKey' => 'vfyrHPxjQZfzATztb4_Lzlclxk0kcRLv',
+            'baseUrl'=>'/apiserver', //todo раскомментировать в случае одного хоста
+        ],
+
 
 **************************************************************** 2-й вариант настройки хостинга (4 хостa)
 sudo gedit /etc/apache2/sites-available/xle.admin.conf
