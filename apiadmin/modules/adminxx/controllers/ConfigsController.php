@@ -7,6 +7,7 @@ use common\components\AccessControl;
 use common\components\models\Configs;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 /**
  * Class ConfigsController
@@ -56,11 +57,11 @@ class ConfigsController extends MainController
         if (\Yii::$app->getRequest()->isPost) {
             $data = \Yii::$app->getRequest()->post('Configs');
             if (isset($data['reset-button'])){
-                return $this->redirect('/adminxx');
+                return $this->redirect(Url::toRoute('/adminxx'));
             }
             $model->setAttributes($data);
             if ($model->setConfigs()) {
-                return $this->redirect('/adminxx');
+                return $this->redirect(Url::toRoute('/adminxx'));
             }
         }
 
@@ -98,11 +99,11 @@ class ConfigsController extends MainController
         if (\Yii::$app->getRequest()->isPost) {
             $data = \Yii::$app->getRequest()->post('Configs');
             if (isset($data['reset-button'])){
-                return $this->redirect(['index']);
+                return $this->redirect(Url::toRoute('index'));
             }
             $model->setAttributes($data);
             if ($model->save()) {
-                return $this->redirect(['index']);
+                return $this->redirect(Url::toRoute('index'));
             }
         }
 
@@ -123,7 +124,7 @@ class ConfigsController extends MainController
                 \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
             }
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 
@@ -135,7 +136,7 @@ class ConfigsController extends MainController
     {
         $configs = new Configs();
         $configs->getConfigs();
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 

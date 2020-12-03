@@ -160,7 +160,7 @@ class AccessControl extends ActionFilter
                 } else {
                     throw new ForbiddenHttpException($errMessage);
                 }
-               // Yii::$app->response->redirect(Url::to('site/notactivated'));
+               // Yii::$app->response->redirect(Url::toRoute('site/notactivated'));
             }
         }
     }

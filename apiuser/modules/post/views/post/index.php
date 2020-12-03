@@ -14,7 +14,7 @@ $this->title = Yii::t('app', 'Посты');
             </div>
             <div class="col-md-6" align="right" >
                 <?php
-                echo Html::a('Добавить новый', '/post/post/create', [
+                echo Html::a('Добавить новый', \yii\helpers\Url::toRoute('/post/post/create'), [
                     'class' =>'btn btn-primary',
                 ]);
                 ?>
@@ -92,11 +92,11 @@ $this->title = Yii::t('app', 'Посты');
                                         'items' => [
                                             Yii::t('app', 'Изменить') => [
                                                 'icon' => 'glyphicon glyphicon-pencil',
-                                                'route' => Url::to(['/post/post/update', 'id' => $data['id']]),
+                                                'route' => Url::toRoute(['/post/post/update', 'id' => $data['id']]),
                                             ],
                                             Yii::t('app', 'Удалить') => [
                                                 'icon' => 'glyphicon glyphicon-trash',
-                                                'route' => Url::to(['/post/post/delete','id' => $data['id']]),
+                                                'route' => Url::toRoute(['/post/post/delete','id' => $data['id']]),
                                                 'confirm' => 'Подтвердите удаление',
                                             ],
                                         ],

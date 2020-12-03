@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \apiadmin\modules\adminxx\models\AuthItemX;
+use yii\helpers\Url;
 
 switch ($model->type){
     case AuthItemX::TYPE_ROLE:
@@ -39,7 +40,7 @@ switch ($model->type){
         ?>
         <div class="form-group" align="center">
             <?= Html::submitButton(\Yii::t('app', 'Создать'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-            <?= Html::a(\Yii::t('app', 'Отмена'), '/adminxx/auth-item',[
+            <?= Html::a(\Yii::t('app', 'Отмена'), Url::toRoute('/adminxx/auth-item'),[
                 'class' => 'btn btn-danger', 'name' => 'reset-button'
             ]);?>
         </div>

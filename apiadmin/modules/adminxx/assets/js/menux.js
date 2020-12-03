@@ -1,7 +1,7 @@
 function clickItemFunction(tree_id, selected_id) {
    // alert('clickItemFunction ' + tree_id + ' ' + selected_id);
     $.ajax({
-        url: '/adminxx/menux/get-menux',
+        url: _BASE_URL + '/adminxx/menux/get-menux',
         type: "GET",
         data: {
             'id' : selected_id

@@ -5,10 +5,16 @@
 
 use app\widgets\Alert;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+
+$absoluteBaseUrl = Url::base(true);
+$this->registerJs("
+    const _BASE_URL = '{$absoluteBaseUrl}';
+",\yii\web\View::POS_HEAD);
 
 AppAsset::register($this);
 ?>
@@ -75,7 +81,7 @@ AppAsset::register($this);
     <?php
     /*
     if (!Yii::$app->user->isGuest){
-        $icon = \yii\helpers\Url::to('@web/images/log_logout_door_1563.png');
+        $icon = \yii\helpers\Url::toRoute('@web/images/log_logout_door_1563.png');
         echo Html::beginForm(['/site/logout'], 'post');
         echo Html::submitButton(
             '<span> <img  src="' . $icon . '" height="30px" width="30px;">' . Yii::$app->user->getIdentity()->username .  '</span>',

@@ -22,6 +22,7 @@ use app\models\VerifyEmailForm;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
+use yii\helpers\Url;
 
 class SiteController extends Controller
 {
@@ -230,7 +231,7 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->getUser()->logout();
-        return $this->redirect('/site/index');
+        return $this->redirect(Url::toRoute('/site/index'));
     }
 
 

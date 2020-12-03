@@ -7,6 +7,7 @@ use Yii;
 use app\components\AccessControl;
 use yii\filters\VerbFilter;
 use yii\httpclient\Client;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use app\components\AuthHandler;
 
@@ -117,12 +118,12 @@ class PostController extends MainController
         if (\Yii::$app->request->isPost) {
             $_post = \Yii::$app->request->post();
             if (isset($_post['reset-button'])) {
-                return $this->redirect('index');
+                return $this->redirect(Url::toRoute('index'));
             }
             $post->setAttributes($_post);
 
             if ($post->save()) {
-                return $this->redirect('index');
+                return $this->redirect(Url::toRoute('index'));
             } else {
                 $this->checkApiAuthorization($post->response);
             }

@@ -1,7 +1,7 @@
 function changeUserActivity(user_id){
     //  console.log(user_id);
     $.ajax({
-        url: '/adminxx/user/change-user-activity',
+        url: _BASE_URL + '/adminxx/user/change-user-activity',
         type: "POST",
         data: {
             'user_id'   : user_id,

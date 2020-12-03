@@ -7,6 +7,7 @@ use common\components\AccessControl;
 use apiadmin\modules\adminxx\models\AuthItemX;
 use apiadmin\modules\adminxx\models\filters\AuthItemFilter;
 use yii\rbac\Item;
+use yii\helpers\Url;
 
 /**
  * Class AuthItemController
@@ -71,7 +72,7 @@ class AuthItemController extends MainController
         $model->type = $type;
         if ($model->load(\Yii::$app->getRequest()->post())) {
             if ($model->save()) {
-                return $this->redirect(['/adminxx/auth-item/update', 'name' => $model->name]);
+                return $this->redirect([Url::toRoute('/adminxx/auth-item/update'), 'name' => $model->name]);
             }
         }
         return $this->render('create',
@@ -100,10 +101,10 @@ class AuthItemController extends MainController
                         $manager->getRole($model->name) :
                         $manager->getPermission($model->name);
                     $manager->remove($item);
-                    return $this->redirect('/adminxx/auth-item');
+                    return $this->redirect(Url::toRoute('/adminxx/auth-item'));
                 }
                 if ($model->save()) {
-                    return $this->redirect('/adminxx/auth-item');
+                    return $this->redirect(Url::toRoute('/adminxx/auth-item'));
                 }
             }
             return $this->render('update', [
@@ -112,7 +113,7 @@ class AuthItemController extends MainController
                 ]);
 
         } else {
-            return $this->redirect('/adminxx/auth-item');
+            return $this->redirect(Url::toRoute('/adminxx/auth-item'));
         }
     }
 

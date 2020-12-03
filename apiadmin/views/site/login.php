@@ -25,7 +25,7 @@ use yii\bootstrap\ActiveForm;
                         <?= Html::submitButton(Yii::t('app', 'Вход'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                     </div>
                     <div class="form-group">
-                        <?= Html::a(Yii::t('app', 'Забыл пароль'), 'forget-password');?>
+                        <?= Html::a(Yii::t('app', 'Забыл пароль'), \yii\helpers\Url::toRoute('forget-password'));?>
                     </div>
                     <?php ActiveForm::end(); ?>
                 </div>

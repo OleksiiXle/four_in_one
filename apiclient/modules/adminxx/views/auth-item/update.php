@@ -56,7 +56,7 @@ $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
         <div class="col-md-3">
             <div class="form-group" align="center">
                 <?= Html::submitButton( \Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary', 'name' => 'update-button']) ?>
-                <?= Html::a(\Yii::t('app', 'Отмена'), '/adminxx/auth-item',[
+                <?= Html::a(\Yii::t('app', 'Отмена'), \yii\helpers\Url::toRoute('/adminxx/auth-item'),[
                     'class' => 'btn btn-success', 'name' => 'reset-button'
                 ]);?>
                 <?= Html::submitButton(\Yii::t('app', 'Удалить'), [
@@ -82,14 +82,14 @@ $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
                         <br><br>
                         <?= Html::a('&gt;&gt;' , false, [
                             'class' => 'btn btn-success btn-assign actionAssign',
-                            'data-rout' => '/adminxx/auth-item/assign',
+                            'data-rout' => \yii\helpers\Url::toRoute('/adminxx/auth-item/assign'),
                             'data-name' => $model->name,
                             'data-target' => 'avaliable',
                             'title' => Yii::t('app', 'Добавить')
                         ]) ?><br><br>
                         <?= Html::a('&lt;&lt;', false, [
                             'class' => 'btn btn-danger btn-assign actionRevoke',
-                            'data-rout' => '/adminxx/auth-item/revoke',
+                            'data-rout' => \yii\helpers\Url::toRoute('/adminxx/auth-item/revoke'),
                             'data-name' => $model->name,
                             'data-target' => 'assigned',
                             'title' => Yii::t('app', 'Удалить')

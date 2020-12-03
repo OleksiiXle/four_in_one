@@ -76,7 +76,7 @@ $this->registerJs("
                     'id' => 'cleanBtn',
                     'onclick' => 'cleanFilter(true);',
                 ]) ?>
-                <?=Html::a(Yii::t('app', 'В файл'), '/adminxx/translation/upload', [
+                <?=Html::a(Yii::t('app', 'В файл'), \yii\helpers\Url::toRoute('/adminxx/translation/upload'), [
                     'class' => 'btn btn-success no-pjax',
                 ])?>
             </div>

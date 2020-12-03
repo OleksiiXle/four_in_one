@@ -23,7 +23,7 @@ $this->title = Yii::t('app', 'Пользователи');
         </div>
         <div class="col-md-6" align="right" >
             <?php
-            echo Html::a( 'Рєєстрація нового користувача', '/adminxx/user/signup-by-admin', [
+            echo Html::a( 'Рєєстрація нового користувача', \yii\helpers\Url::toRoute('/adminxx/user/signup-by-admin'), [
                 'class' =>'btn btn-primary',
             ]);
             ?>
@@ -155,20 +155,20 @@ $this->title = Yii::t('app', 'Пользователи');
                                         'items' => [
                                             'Перегляд інформації' => [
                                                 'icon' => 'glyphicon glyphicon-eye-open',
-                                                'route' => Url::to(['/adminxx/user/view', 'id' => $data['id']]),
+                                                'route' => Url::toRoute(['/adminxx/user/view', 'id' => $data['id']]),
                                             ],
                                             'Змінити данні' => [
                                                 'icon' => 'glyphicon glyphicon-pencil',
-                                                'route' => Url::to(['/adminxx/user/update-by-admin', 'id' => $data['id']]),
+                                                'route' => Url::toRoute(['/adminxx/user/update-by-admin', 'id' => $data['id']]),
                                             ],
                                             'Змінити дозвіли та ролі' => [
                                                 'icon' => 'glyphicon glyphicon-lock',
-                                                'route' => Url::to(['/adminxx/user/update-user-assignments', 'id' => $data['id']]),
+                                                'route' => Url::toRoute(['/adminxx/user/update-user-assignments', 'id' => $data['id']]),
                                             ],
                                             /*
                                             'Переглянути консерву' => [
                                                 'icon' => 'glyphicon glyphicon-lock',
-                                                'route' => Url::to(['/adminxx/user/conservation', 'id' => $data['id']]),
+                                                'route' => Url::toRoute(['/adminxx/user/conservation', 'id' => $data['id']]),
                                             ],
                                             */
                                         ],

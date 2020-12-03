@@ -1,11 +1,17 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use app\widgets\menuX\MenuXWidget;
 use app\widgets\changeLanguage\ChangeLanguageWidget;
 use app\modules\adminxx\assets\AdminxxLayoutAsset;
 use app\modules\adminxx\assets\AdminxxBackgroundTaskAsset;
 use yii\jui\JuiAsset;
 use app\helpers\DateHelper;
+
+$absoluteBaseUrl = Url::base(true);
+$this->registerJs("
+    const _BASE_URL = '{$absoluteBaseUrl}';
+",\yii\web\View::POS_HEAD);
 
 AdminxxLayoutAsset::register($this);
 AdminxxBackgroundTaskAsset::register($this);
@@ -19,7 +25,7 @@ if (Yii::$app->session->getAllFlashes()){
 
 ?>
 <?php
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\helpers\Url::to(['/images/sun_61831.png'])]);?>
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\helpers\Url::toRoute(['/images/sun_61831.png'])]);?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -41,9 +47,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
 
         <!--************************************************************************************************************* MENU BTN-->
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="left" style="padding-left: 2px; padding-right: 0">
-            <a href="/adminxx" title="На гоговну сторінку">
+            <a href="<?=\yii\helpers\Url::toRoute('/adminxx')?>" title="На гоговну сторінку">
                  <span class ="img-rounded">
-                        <img  src="<?=\yii\helpers\Url::to('@web/images/sun_61831.png');?>" height="40px" width="40px;">
+                        <img  src="<?=\yii\helpers\Url::toRoute('@web/images/sun_61831.png');?>" height="40px" width="40px;">
                  </span>
             </a>
             <button id="open-menu-btn" onclick="showMenu();" class="xMenuBtn" >
@@ -64,7 +70,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center" style="padding-left: 1px">
             <?php
             if (!Yii::$app->user->isGuest){
-                $icon = \yii\helpers\Url::to('@web/images/log_logout_door_1563.png');
+                $icon = \yii\helpers\Url::toRoute('@web/images/log_logout_door_1563.png');
                 echo Html::beginForm(['/adminxx/user/logout'], 'post');
                 echo Html::submitButton(
                     '<span> <img  src="' . $icon . '" height="30px" width="30px;">' . Yii::$app->user->getIdentity()->username .  '</span>',
@@ -122,7 +128,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
         <div id="xMenuContent" >
         <button class="xMenuCloseBtn" onclick="hideMenu();">
             <span class ="img-rounded">
-                <img  src="<?=\yii\helpers\Url::to('@web/images/sun_61831.png');?>" height="50px" width="50px;">
+                <img  src="<?=\yii\helpers\Url::toRoute('@web/images/sun_61831.png');?>" height="50px" width="50px;">
             </span>
 
         </button>

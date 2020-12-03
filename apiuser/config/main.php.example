@@ -7,38 +7,51 @@ $params = array_merge(
 $config = [
     'id' => 'app-apiuser',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
     'controllerNamespace' => 'apiuser\controllers',
+    'bootstrap' => ['log'],
+    'defaultRoute' => 'post',
+    'language' => 'ru-RU',
     'components' => [
         'request' => [
-            'csrfParam' => '_csrf-apiuser',
-        ],
-        'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-apiuser', 'httpOnly' => true],
+          //  'csrfParam' => '_csrf-apiuser',
+            'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
+            'baseUrl'=>'/apiuser', //todo раскомментировать в случае одного хоста
+
         ],
         'session' => [
             // this is the name of the session cookie used for login on the apiuser
             'name' => 'advanced-apiuser',
         ],
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
+        'user' => [
+            'class' => 'common\components\UserX',
+            'identityClass' => 'common\models\User',
+            'loginUrl' => ['site/login'],  //todo********************* resolve it ****************
+            'enableAutoLogin' => false,
         ],
+
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            //     'scriptUrl'=>'/apiadmin/index.php',
             'rules' => [
+                /*
+                '<module:\w+>/<controller:\w+>/<action:\w+>/<id:\d+>' => '<module>/<controller>/<action>',
+                '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
+                '<module:\w+>/<controller:\w+>' => '<module>/<controller>/index',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<controller:\w+>' => '<controller>/index',
+                */
+                //        '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
+        ],
+
+    ],
+    'modules' => [
+        'post' => [
+            'class' => 'apiuser\modules\post\Post',
         ],
     ],
     'params' => $params,

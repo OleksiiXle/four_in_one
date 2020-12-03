@@ -2,10 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\Pjax;
-use apiadmin\components\widgets\xlegrid\Xlegrid;
+use common\widgets\xlegrid\Xlegrid;
 use yii\helpers\Url;
+use \apiadmin\modules\adminxx\assets\AdminxxGuestsControlAsset;
 
-\apiadmin\modules\adminxx\assets\AdminxxGuestsControlAsset::register($this);
+AdminxxGuestsControlAsset::register($this);
 
 $this->title = \Yii::t('app', 'Відвідувачі');
 $interval = (empty($dataProvider->filterModel->getAttributes()['activityInterval']))
@@ -51,7 +52,7 @@ $timeFix = time() - $interval;
                         'content'=>function($data){
                             $ret = $data->remote_ip;
                             if (empty($data->username)){
-                                $ret = Html::a($ret, Url::to(['/adminxx/check/view-guest', 'ip' => $data->remote_ip ]));
+                                $ret = Html::a($ret, Url::toRoute(['/adminxx/check/view-guest', 'ip' => $data->remote_ip ]));
                             }
                             return $ret;
                         },
@@ -65,7 +66,7 @@ $timeFix = time() - $interval;
                         'content'=>function($data){
                             $ret = $data->username;
                             if (!empty($data->username)){
-                                $ret = Html::a($ret, Url::to(['/adminxx/check/view-user', 'id' => $data->user_id ]));
+                                $ret = Html::a($ret, Url::toRoute(['/adminxx/check/view-user', 'id' => $data->user_id ]));
                             }
                             return $ret;
                         },

@@ -1,3 +1,7 @@
+/*
+const _BASE_URL - передается из главного лайаута php - http://staff.api/apiadmin
+ */
+
 var tasksCounter = 0;
 var tasksPool = {};
 var defaultParams = {
@@ -12,6 +16,12 @@ var defaultParams = {
 };
 var urlGetTasksPool = '/background-tasks/get-background-tasks-pool';
 var _csrf = $('meta[name="csrf-token"]').attr("content");
+
+$(document).ready(function(){
+  //  console.log(_BASE_URL);
+    urlGetTasksPool = _BASE_URL + urlGetTasksPool;
+    startTasksFromPool();
+});
 
 /*
 * Проверка, если в сессии есть фоновые задачи- запускаем их
@@ -284,4 +294,4 @@ function downloadFile(btn) {
     tasksPool[taskId].uploadResult(true, true, 'result');
 }
 
-startTasksFromPool();
+

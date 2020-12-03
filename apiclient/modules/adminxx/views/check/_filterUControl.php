@@ -65,19 +65,19 @@ use \app\modules\adminxx\models\UserDepartment;
         </div>
         <div class="row">
             <div class="form-group" align="center" style="padding: 20px">
-                <?= Html::a('Видалити всі данні користувачів та відвідувачів', Url::to(['/adminxx/check/delete-visitors', 'mode' => 'deleteAll']),
+                <?= Html::a('Видалити всі данні користувачів та відвідувачів', Url::toRoute(['/adminxx/check/delete-visitors', 'mode' => 'deleteAll']),
                     [
                         'class' => 'btn btn-danger',
                         'data-confirm' => 'Are you sure?',
                         'data-method' => 'post',
                     ]);?>
-                <?= Html::a('Видалити застарілі данні відвідувачів', Url::to(['/adminxx/check/delete-visitors', 'mode' => 'deleteOldGuests']),
+                <?= Html::a('Видалити застарілі данні відвідувачів', Url::toRoute(['/adminxx/check/delete-visitors', 'mode' => 'deleteOldGuests']),
                     [
                         'class' => 'btn btn-danger',
                         'data-confirm' => 'Are you sure?',
                         'data-method' => 'post',
                     ]);?>
-                <?= Html::a('Видалити данні всіх відвідувачів', Url::to(['/adminxx/check/delete-visitors', 'mode' => 'deleteAllGuests']),
+                <?= Html::a('Видалити данні всіх відвідувачів', Url::toRoute(['/adminxx/check/delete-visitors', 'mode' => 'deleteAllGuests']),
                     [
                         'class' => 'btn btn-danger',
                         'data-confirm' => 'Are you sure?',

@@ -27,3 +27,12 @@ php yii migrate
    php yii translate/init
 
 composer update
+
+chmod -R 777 /var/www/html/dstest/apiadmin/runtime
+chmod -R 777 /var/www/html/dstest/apiadmin/web/assets
+chmod -R 777 /var/www/html/dstest/apiuser/runtime
+chmod -R 777 /var/www/html/dstest/apiuser/web/assets
+chmod -R 777 /var/www/html/dstest/apiclient/web/assets
+chmod -R 777 /var/www/html/dstest/apiclient/runtime
+chmod -R 777 /var/www/html/dstest/apiserver/web/assets
+chmod -R 777 /var/www/html/dstest/apiserver/runtime

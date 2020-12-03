@@ -25,7 +25,7 @@ function clickItemFunction(id, type) {
     var depId = $("#userfilter-treedepartment_id") ;
     var depName = $("#userfilter-treedepartmentname") ;
     $.ajax({
-        url: '/adminxx/user/get-department-full-name',
+        url: _BASE_URL + '/adminxx/user/get-department-full-name',
         type: "POST",
         dataType: 'json',
         data: {
@@ -56,7 +56,7 @@ function initDep() {
     if (depId != 0){
         var depName = $("#userfilter-treedepartmentname") ;
         $.ajax({
-            url: '/adminxx/user/get-department-full-name',
+            url: _BASE_URL + '/adminxx/user/get-department-full-name',
             type: "POST",
             dataType: 'json',
             data: {
@@ -105,7 +105,7 @@ function getExportQuery() {
 
 function uploadData() {
     $.ajax({
-        url: '/adminxx/user/export-to-exel-prepare',
+        url: _BASE_URL + '/adminxx/user/export-to-exel-prepare',
         type: "POST",
         data: {
             'exportQuery'   : exportQuery,
@@ -144,7 +144,7 @@ function uploadData() {
 function uploadDataPartitional() {
     var usersCount;
     $.ajax({
-        url: '/adminxx/user/export-to-exel-count',
+        url: _BASE_URL + '/adminxx/user/export-to-exel-count',
         type: "POST",
         data: {
             'exportQuery'   : exportQuery,
@@ -212,7 +212,7 @@ function uploadDataPartitional() {
 
 function getPartition() {
     return     $.ajax({
-        url: '/adminxx/user/export-to-exel-get-partition',
+        url: _BASE_URL + '/adminxx/user/export-to-exel-get-partition',
         type: "POST",
         data: {
             'limit' : limit,

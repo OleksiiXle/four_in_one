@@ -526,7 +526,7 @@ class MenuXX extends MainModel
                         . '> ' . \Yii::t('app', $row['name'])
                         . '</a>';
                 } else {
-                    $content = Html::a(\Yii::t('app', $row['name']), Url::to($row['route'], true),
+                    $content = Html::a(\Yii::t('app', $row['name']), Url::toRoute($row['route'], true),
                         [
                             'class' => 'route',
                         ]);

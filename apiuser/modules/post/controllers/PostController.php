@@ -37,7 +37,7 @@ class PostController extends MainController
             /*
             'denyCallback' => function ($rule, $action) {
                 if (\Yii::$app->user->isGuest){
-                    $redirect = Url::to(\Yii::$app->user->loginUrl);
+                    $redirect = Url::toRoute(\Yii::$app->user->loginUrl);
                     return $this->redirect( $redirect);
                 } else {
                     \yii::$app->getSession()->addFlash("warning",\Yii::t('app', "Действие запрещено"));
@@ -82,7 +82,7 @@ class PostController extends MainController
             if (isset($_post['submit-button'])){
                 $model->setAttributes($_post['Post']);
                 if ($model->savePost()){
-                    return $this->redirect(Url::to(['update', 'id' => $model->id]));
+                    return $this->redirect(Url::toRoute(['update', 'id' => $model->id]));
                 }
             }
         }
@@ -113,10 +113,10 @@ class PostController extends MainController
                 if (isset($_post['signup-button'])){
                     $model->setAttributes($_post['Post']);
                     if ($model->savePost()){
-                        return $this->redirect('index');
+                        return $this->redirect(Url::toRoute('index'));
                     }
                 } else {
-                    return $this->redirect('index');
+                    return $this->redirect(Url::toRoute('index'));
 
                 }
 
@@ -128,7 +128,7 @@ class PostController extends MainController
                 ]);
         } else {
             \yii::$app->getSession()->addFlash("warning",\Yii::t('app', "Информация не найдена"));
-            return $this->redirect('index');
+            return $this->redirect(Url::toRoute('index'));
         }
     }
 
@@ -147,7 +147,7 @@ class PostController extends MainController
                 \yii::$app->getSession()->addFlash("warning",\Yii::t('app', "Ошибка удаления поста"));
             }
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 

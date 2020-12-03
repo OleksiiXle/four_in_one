@@ -11,8 +11,8 @@ if (Yii::$app->session->getAllFlashes()){
          $_fms = \yii\helpers\Json::htmlEncode($fms);
          $this->registerJs("var _fms = {$_fms};",\yii\web\View::POS_HEAD);
 }
-//$logoImg = Url::to(['/images/sun_61831.png']);
-$logoImg = Url::to(['/images/np_logo.png']);
+//$logoImg = Url::toRoute(['/images/sun_61831.png']);
+$logoImg = Url::toRoute(['/images/np_logo.png']);
 
 ?>
 <?php

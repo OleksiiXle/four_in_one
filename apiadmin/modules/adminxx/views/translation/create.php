@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\jui\JuiAsset;
+use \yii\helpers\Url;
 
 JuiAsset::register($this);
 $this->title = 'Перевод';
@@ -30,7 +31,7 @@ $this->registerJs("
             ?>
             <div class="form-group" align="center">
                 <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-                <?= Html::a('Отмена', '/adminxx/translation',[
+                <?= Html::a('Отмена', Url::toRoute('/adminxx/translation'),[
                     'class' => 'btn btn-danger', 'name' => 'reset-button'
                 ]);?>
             </div>

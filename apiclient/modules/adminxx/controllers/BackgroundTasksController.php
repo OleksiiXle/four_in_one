@@ -52,9 +52,11 @@ class BackgroundTasksController extends MainController
             'pageSize' => 15,
         ]);
         $r=1;
+        /*
         if (\Yii::$app->request->isPost){
             return $this->redirect('index');
         }
+        */
         return $this->render('index',[
             'dataProvider' => $dataProvider,
         ]);

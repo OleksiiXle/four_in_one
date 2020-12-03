@@ -14,7 +14,7 @@ $this->title = \Yii::t('app', 'Настройки');
         </div>
         <div class="col-md-6" align="right" style="padding-top: 20px">
             <?php
-            echo Html::a(\Yii::t('app', 'Изменить'), '/adminxx/configs/update', [
+            echo Html::a(\Yii::t('app', 'Изменить'), \yii\helpers\Url::toRoute('/adminxx/configs/update'), [
                 'class' =>'btn btn-primary',
             ]);
             ?>

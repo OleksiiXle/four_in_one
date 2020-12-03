@@ -115,7 +115,7 @@ $this->title =  'Фонові завдання';
                             'contentOptions' => ['style' => 'width: 1%; overflow: hidden'],
                             'content'=>function($data){
                                 return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
-                                    Url::to(['/adminxx/background-tasks/view', 'id' => $data->id]),
+                                    Url::toRoute(['/adminxx/background-tasks/view', 'id' => $data->id]),
                                     [
                                         'title' => 'Переглянути',
                                     ]);

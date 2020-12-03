@@ -6,6 +6,7 @@ use Yii;
 use app\components\AccessControl;
 use app\modules\adminxx\models\RuleX;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Url;
 
 /**
  * Class RuleController
@@ -78,7 +79,7 @@ class RuleController extends MainController
                     // Helper::invalidate();
                 }
             }
-            return $this->redirect('index');
+            return $this->redirect(Url::toRoute('index'));
         }
         return $this->render('update', ['model' => $model, 'rulesClasses' => $rulesClasses]);
     }
@@ -95,7 +96,7 @@ class RuleController extends MainController
             $model = RuleX::getRule($id);
             $model->delete();
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 
@@ -122,7 +123,7 @@ class RuleController extends MainController
                     // Helper::invalidate();
                 }
             }
-            return $this->redirect('index');
+            return $this->redirect(Url::toRoute('index'));
         }
         return $this->render('update', ['model' => $model,]);
     }

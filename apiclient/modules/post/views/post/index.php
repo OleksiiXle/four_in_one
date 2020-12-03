@@ -14,7 +14,7 @@ $this->title = Yii::t('app', 'Посты');
             </div>
             <div class="col-md-6" align="right" >
                 <?php
-                echo Html::a('Добавить новый', '/post/post/create', [
+                echo Html::a('Добавить новый', \yii\helpers\Url::toRoute('/post/post/create'), [
                     'class' =>'btn btn-primary',
                 ]);
                 ?>

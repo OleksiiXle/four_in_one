@@ -96,11 +96,11 @@ function BackgroundTask(params) {
     this.mode = 'dev';
     this.checkForAlreadyRunning = false;
     this.checkProgressInterval = 2000;
-    this.urlStartBackgroundTask = '/background-tasks/start-task';
-    this.urlTestBackgroundTask = '/background-tasks/test-background-task';
-    this.urlGetTaskProgress = '/background-tasks/check-task';
-    this.urlUploadResult = '/background-tasks/upload-result';
-    this.urlKillTask = '/background-tasks/kill-task';
+    this.urlStartBackgroundTask = _BASE_URL + '/background-tasks/start-task';
+    this.urlTestBackgroundTask = _BASE_URL + '/background-tasks/test-background-task';
+    this.urlGetTaskProgress = _BASE_URL + '/background-tasks/check-task';
+    this.urlUploadResult = _BASE_URL + '/background-tasks/upload-result';
+    this.urlKillTask = _BASE_URL + '/background-tasks/kill-task';
     this.model = null;
     this.arguments = null;
     this._csrf = $('meta[name="csrf-token"]').attr("content");

@@ -3,7 +3,7 @@ let noReload = false;
 
 function modalOpenBackgroundTask(id, mode) {
     noReload = true;
-    var url = '/adminxx/background-tasks/modal-open-background-task?id=' + id  + '&mode=' + mode;
+    var url = _BASE_URL + '/adminxx/background-tasks/modal-open-background-task?id=' + id  + '&mode=' + mode;
     var title;
     switch (mode) {
         case 'view':
@@ -29,7 +29,7 @@ function modalOpenBackgroundTask(id, mode) {
 }
 
 function modalOpenBackgroundTaskDelete___(id) {
-    var url = '/adminxx/background-tasks/modal-open-background-task-delete-confirm?id=' + id + '&mode=delete';
+    var url = _BASE_URL + '/adminxx/background-tasks/modal-open-background-task-delete-confirm?id=' + id + '&mode=delete';
     var title = 'Підтвердження видалення';
 
     $.ajax({
@@ -46,7 +46,7 @@ function modalOpenBackgroundTaskDelete___(id) {
 
 function deleteBackgroundTask(id) {
     $.ajax({
-        url: '/adminxx/background-tasks/background-task-delete',
+        url: _BASE_URL + '/adminxx/background-tasks/background-task-delete',
         type: "POST",
         data: {'id' : id},
         dataType: 'json',
@@ -76,7 +76,7 @@ function deleteBackgroundTask(id) {
 }
 
 function showLog(mode) {
-    var url = '/adminxx/background-tasks/modal-open-background-task-logs?mode=' + mode;
+    var url = _BASE_URL + '/adminxx/background-tasks/modal-open-background-task-logs?mode=' + mode;
     var title;
     switch (mode) {
         case 'success':

@@ -69,7 +69,7 @@ if ($model->isNewRecord){
                     <?= Html::submitButton(Yii::t('app', 'Сохранить'), [
                         'class' => 'btn btn-primary',
                     ]) ?>
-                    <?= Html::a(Yii::t('app', 'Отмена'), '/adminxx/user',[
+                    <?= Html::a(Yii::t('app', 'Отмена'), \yii\helpers\Url::toRoute('/adminxx/user'),[
                         'class' => 'btn btn-danger', 'name' => 'reset-button'
                     ]);?>
                 </div>

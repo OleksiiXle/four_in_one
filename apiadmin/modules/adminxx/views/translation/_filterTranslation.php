@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\jui\JuiAsset;
+use yii\helpers\Url;
 
 JuiAsset::register($this);
 $autocompleteArray = $filter->dataForAutocomplete;
@@ -76,7 +77,7 @@ $this->registerJs("
                     'id' => 'cleanBtn',
                     'onclick' => 'cleanFilter(true);',
                 ]) ?>
-                <?=Html::a(Yii::t('app', 'В файл'), '/adminxx/translation/upload', [
+                <?=Html::a(Yii::t('app', 'В файл'), Url::toRoute('/adminxx/translation/upload'), [
                     'class' => 'btn btn-success no-pjax',
                 ])?>
             </div>

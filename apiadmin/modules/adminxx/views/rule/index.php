@@ -11,7 +11,7 @@ $this->title =  'Правила';
 
 
     <p>
-        <?= Html::a('Нове правило', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Нове правило', \yii\helpers\Url::toRoute('create'), ['class' => 'btn btn-success']) ?>
     </p>
     <div class="xCard">
         <?=

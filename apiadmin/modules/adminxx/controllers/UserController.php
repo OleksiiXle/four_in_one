@@ -18,6 +18,7 @@ use apiadmin\modules\adminxx\models\form\Login;
 use apiadmin\modules\adminxx\models\form\PasswordResetRequestForm;
 use apiadmin\modules\adminxx\models\form\Update;
 use apiadmin\modules\adminxx\models\UserM;
+use yii\helpers\Url;
 
 /**
  * Class UserController
@@ -84,7 +85,7 @@ class UserController extends MainController
             /*
             'denyCallback' => function ($rule, $action) {
             if (\Yii::$app->user->isGuest){
-                $redirect = Url::to(\Yii::$app->user->loginUrl);
+                $redirect = Url::toRoute(\Yii::$app->user->loginUrl);
                 return $this->redirect( $redirect);
             } else {
                 \yii::$app->getSession()->addFlash("warning",\Yii::t('app', "Действие запрещено"));
@@ -187,7 +188,7 @@ class UserController extends MainController
                 }
                 $session->set('searchIid', $model->id );
 
-                return $this->redirect('index');
+                return $this->redirect(Url::toRoute('index'));
             }
         }
 
@@ -226,7 +227,7 @@ class UserController extends MainController
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->updateUser()) {
-                return $this->redirect('index');
+                return $this->redirect(Url::toRoute('index'));
             }
         }
 
@@ -264,7 +265,7 @@ class UserController extends MainController
             $data = \Yii::$app->getRequest()->post('UserM');
             $ret = ($data['status'] == UserM::STATUS_INACTIVE) ? $model->deactivate() : $model->activate();
             if ($ret) {
-                return $this->redirect('/adminxx/user');
+                return $this->redirect(Url::toRoute('/adminxx/user'));
             }
         }
 
@@ -760,7 +761,7 @@ class UserController extends MainController
                 return true;
             }
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
     }
 
     /**
@@ -852,7 +853,7 @@ class UserController extends MainController
                 \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
             }
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 

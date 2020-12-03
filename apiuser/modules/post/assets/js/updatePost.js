@@ -49,7 +49,7 @@ $(document).ready ( function(){
         data.append( 'type', 'image' );
         console.log(data);
         $.ajax({
-            url         : '/post/post/get-media-preview',
+            url         : _BASE_URL + '/post/post/get-media-preview',
             type        : 'POST', // важно!
             data        : data,
             cache       : false,
@@ -92,7 +92,7 @@ $(document).ready ( function(){
 
 function refreshPostMediaList() {
     return $.ajax({
-        url: '/post/post/get-post-media',
+        url: _BASE_URL + '/post/post/get-post-media',
         type: "GET",
         data: {
             'id' : _id
@@ -128,7 +128,7 @@ function createPostMedia(type) {
   //  console.log(formData);
 
     $.ajax({
-        url: '/post/post/create-post-media',
+        url: _BASE_URL + '/post/post/create-post-media',
         type: "POST",
         data: formData,
         dataType: 'json',
@@ -159,7 +159,7 @@ function createPostMedia(type) {
 function deletePostMedia(id) {
     if (confirm('Подтвердите удаление')){
         $.ajax({
-            url: '/post/post/delete-post-media',
+            url: _BASE_URL + '/post/post/delete-post-media',
             type: "POST",
             data: {'postMediaId':id},
             dataType: 'json',

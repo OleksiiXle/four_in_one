@@ -256,7 +256,7 @@ function setUserActivity() {
     // console.log(_user_id + ' ' + _user_action);
     if (_user_id !== undefined){
         $.ajax({
-            url: '/site/set-user-activity',
+            url: _BASE_URL + '/site/set-user-activity',
             type: "POST",
             data: {
                 'user_id' : _user_id,

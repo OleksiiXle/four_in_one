@@ -5,6 +5,7 @@ namespace apiadmin\modules\adminxx\controllers;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\FileHelper;
+use yii\helpers\Url;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\models\Translation;
 use common\components\AccessControl;
@@ -137,7 +138,7 @@ class TranslationController extends MainController
         if (\Yii::$app->getRequest()->isPost) {
             $data = \Yii::$app->getRequest()->post('Translation');
             if (isset($data['reset-button'])){
-                return $this->redirect(['index']);
+                return $this->redirect(Url::toRoute('index'));
             }
             $model->setAttributes($data);
             if ($model->saveTranslation()) {
@@ -147,7 +148,7 @@ class TranslationController extends MainController
                 }
                 $session->set('searchIid', $model->id );
 
-                return $this->redirect(['index']);
+                return $this->redirect(Url::toRoute('index'));
             }
         }
 
@@ -170,11 +171,11 @@ class TranslationController extends MainController
         if (\Yii::$app->getRequest()->isPost) {
             $data = \Yii::$app->getRequest()->post('Translation');
             if (isset($data['reset-button'])){
-                return $this->redirect(['index']);
+                return $this->redirect(Url::toRoute('index'));
             }
             $model->setAttributes($data);
             if ($model->saveTranslation()) {
-                return $this->redirect(['index']);
+                return $this->redirect(Url::toRoute('index'));
             }
         }
 
@@ -196,7 +197,7 @@ class TranslationController extends MainController
                 \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
             }
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 

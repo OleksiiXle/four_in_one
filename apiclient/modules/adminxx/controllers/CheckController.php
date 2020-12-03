@@ -9,6 +9,7 @@ use app\modules\adminxx\models\filters\UserActivityFilter;
 use app\modules\adminxx\models\UControl;
 use app\modules\adminxx\models\UserData;
 use app\modules\adminxx\models\UserM;
+use yii\helpers\Url;
 
 /**
  * Class CheckController
@@ -115,7 +116,7 @@ class CheckController extends MainController
 
         ]);
         if (\Yii::$app->request->isPost){
-            return $this->redirect('guest-control');
+            return $this->redirect(Url::toRoute('guest-control'));
         }
 
         return $this->render('guestsGrid',[
@@ -145,7 +146,7 @@ class CheckController extends MainController
                     break;
             }
         }
-        return $this->redirect('/adminxx/check/guest-control');
+        return $this->redirect(Url::toRoute('/adminxx/check/guest-control'));
     }
 
     /**

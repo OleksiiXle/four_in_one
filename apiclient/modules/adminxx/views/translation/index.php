@@ -14,7 +14,7 @@ $this->title = Yii::t('app', 'Переводы');
         </div>
         <div class="col-md-6" align="right" >
             <?php
-            echo Html::a('Добавить новый', '/adminxx/translation/create', [
+            echo Html::a('Добавить новый', \yii\helpers\Url::toRoute('/adminxx/translation/create'), [
                 'class' =>'btn btn-primary',
             ]);
             ?>
@@ -107,11 +107,11 @@ $this->title = Yii::t('app', 'Переводы');
                                     'items' => [
                                         'Изменить' => [
                                             'icon' => 'glyphicon glyphicon-pencil',
-                                            'route' => Url::to(['/adminxx/translation/update', 'id' => $data['id']]),
+                                            'route' => Url::toRoute(['/adminxx/translation/update', 'id' => $data['id']]),
                                         ],
                                         'Удалить' => [
                                             'icon' => 'glyphicon glyphicon-trash',
-                                            'route' => Url::to(['/adminxx/translation/delete','tkey' => $data['tkey']]),
+                                            'route' => Url::toRoute(['/adminxx/translation/delete','tkey' => $data['tkey']]),
                                             'confirm' => 'Подтвердите удаление',
                                         ],
                                    ],

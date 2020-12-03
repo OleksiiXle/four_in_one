@@ -65,7 +65,7 @@ $this->title = 'Профіль користувача';
                 <h4><?= UserM::STATUS_DICT[$userProfile['status']]  ?></h4>
             </div>
             <div class="col-md-12 col-lg-2">
-                <h4><?= Html::a('Повернутися', 'guest-control', ['style' => 'color:red']);?></h4>
+                <h4><?= Html::a('Повернутися', \yii\helpers\Url::toRoute('guest-control'), ['style' => 'color:red']);?></h4>
             </div>
         </div>
     </div>

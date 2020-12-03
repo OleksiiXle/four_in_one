@@ -15,7 +15,7 @@ if (Yii::$app->session->getAllFlashes()){
 
 ?>
 <?php
-$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\helpers\Url::to(['/images/np_logo.png'])]);?>
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\helpers\Url::toRoute(['/images/np_logo.png'])]);?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -59,7 +59,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
                 );
                 echo Html::endForm();
             } else {
-                echo Html::a('<span class="glyphicon glyphicon-log-in" ></span>', '/site/login',
+                echo Html::a('<span class="glyphicon glyphicon-log-in" ></span>', \yii\helpers\Url::toRoute('/site/login'),
                     ['title' => 'Войти']);
                 /*
                             <a href="/adminx" title="На гоговну сторінку">
@@ -116,7 +116,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
         <div id="xMenuContent" >
         <button class="xMenuCloseBtn" onclick="hideMenu();">
             <span class ="img-rounded">
-                <img  src="<?=\yii\helpers\Url::to('@web/images/np_logo.png');?>" height="50px" width="50px;">
+                <img  src="<?=\yii\helpers\Url::toRoute('@web/images/np_logo.png');?>" height="50px" width="50px;">
             </span>
 
         </button>

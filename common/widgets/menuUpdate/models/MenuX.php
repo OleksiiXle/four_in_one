@@ -72,7 +72,7 @@ class MenuX extends MenuXX
                             . '> ' . $row['name']
                             . '</a>';
                     } else {
-                        $content = Html::a($row['name'], Url::to($row['route'], true),
+                        $content = Html::a($row['name'], Url::toRoute($row['route'], true),
                             [
                                 'class' => 'route',
                             ]);

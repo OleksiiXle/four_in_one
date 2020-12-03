@@ -3,7 +3,7 @@ function updateModel(modelName, formId, urlName, container_id ){
     // var qq=$("#" + formId).serialize();
     //  objDump(qq);
     $.ajax({
-        url: urlName ,
+        url: _BASE_URL + urlName ,
         type: "POST",
         data: $("#" + formId).serialize(),
         dataType: 'json',
@@ -158,7 +158,7 @@ function alert_xle(txt, title){
  */
 function checkLocks(locks, doLock, doNoLock) {
     $.ajax({
-        url: '/main/check-locks' ,
+        url: _BASE_URL + '/main/check-locks' ,
         type: "POST",
         data: {'locks' : locks},
         dataType: 'json',
@@ -206,7 +206,7 @@ function setUserActivity() {
    // console.log(_user_id + ' ' + _user_action);
     if (_user_id !== undefined){
         $.ajax({
-            url: '/site/set-user-activity',
+            url: _BASE_URL + '/site/set-user-activity',
             type: "POST",
             data: {
                 'user_id' : _user_id,
@@ -290,7 +290,7 @@ function changeSort(data) {
     console.log(data.value);
    // document.location.href = urlUploadStructure + '/?id=' + selected_id;
     $.ajax({
-        url: '/main/change-sort',
+        url: _BASE_URL + '/main/change-sort',
         type: "POST",
         data: {'sort' : data.value},
         dataType: 'json',

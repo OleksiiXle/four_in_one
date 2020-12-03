@@ -60,7 +60,7 @@ $this->title = 'Профіль користувача';
                 <h4><?= UserM::getStatusDict()[$userProfile['status']]  ?></h4>
             </div>
             <div class="col-md-12 col-lg-2">
-                <h4><?= Html::a('До списку користувачів', 'index', ['style' => 'color:red']);?></h4>
+                <h4><?= Html::a('До списку користувачів', \yii\helpers\Url::toRoute('index'), ['style' => 'color:red']);?></h4>
             </div>
         </div>
     </div>

@@ -11,6 +11,7 @@ use yii\data\ActiveDataProvider;
 use common\components\AccessControl;
 use apiadmin\controllers\MainController;
 use apiadmin\modules\adminxx\models\RuleX;
+use yii\helpers\Url;
 
 /**
  * Class RuleController
@@ -95,7 +96,7 @@ class OauthController extends MainController
                     // Helper::invalidate();
                 }
             }
-            return $this->redirect('index');
+            return $this->redirect(Url::toRoute('index'));
         }
         return $this->render('update', ['model' => $model, 'rulesClasses' => $rulesClasses]);
     }
@@ -112,7 +113,7 @@ class OauthController extends MainController
             $model = RuleX::getRule($id);
             $model->delete();
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 
@@ -139,7 +140,7 @@ class OauthController extends MainController
                     // Helper::invalidate();
                 }
             }
-            return $this->redirect('index');
+            return $this->redirect(Url::toRoute('index'));
         }
         return $this->render('update', ['model' => $model,]);
     }

@@ -10,7 +10,7 @@ $('.btn-assign').click(function () {
     var $this = $(this);
     var target = $this.data('target');
     var items = $('select.list[data-target="' + target + '"]').val();
-    var route = '/adminxx/auth-item/assign';
+    var route = _BASE_URL + '/adminxx/auth-item/assign';
     if ($this.hasClass('actionRevoke')){
         route = '/adminxx/auth-item/revoke';
     }

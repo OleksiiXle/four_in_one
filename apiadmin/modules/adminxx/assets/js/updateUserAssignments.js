@@ -54,7 +54,7 @@ $(document).ready ( function(){
         if (roles && roles.length) {
             $this.children('i.glyphicon-refresh-animate').show();
             $.ajax({
-                url: route,
+                url: _BASE_URL + route,
                 type: "POST",
                 data: data,
                 dataType: 'json',

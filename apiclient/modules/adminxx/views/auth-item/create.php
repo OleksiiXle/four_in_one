@@ -39,7 +39,7 @@ switch ($model->type){
         ?>
         <div class="form-group" align="center">
             <?= Html::submitButton(\Yii::t('app', 'Создать'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-            <?= Html::a(\Yii::t('app', 'Отмена'), '/adminxx/auth-item',[
+            <?= Html::a(\Yii::t('app', 'Отмена'), \yii\helpers\Url::toRoute('/adminxx/auth-item'),[
                 'class' => 'btn btn-danger', 'name' => 'reset-button'
             ]);?>
         </div>

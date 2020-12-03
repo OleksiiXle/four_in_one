@@ -22,7 +22,7 @@ $this->title = \Yii::t('app', 'Профиль');
         </div>
         <div class="card-action">
             <?= Html::submitButton(\Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-            <?= Html::a(\Yii::t('app', 'Отмена'), '/site/index',[
+            <?= Html::a(\Yii::t('app', 'Отмена'), \yii\helpers\Url::toRoute('/site/index'),[
                 'class' => 'btn btn-danger', 'name' => 'reset-button'
             ]);?>
         </div>

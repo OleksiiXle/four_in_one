@@ -26,14 +26,14 @@ $this->registerJs("
                             <br><br>
                             <?= Html::a('&gt;&gt;' , false, [
                                 'class' => 'btn btn-success btn-assign actionAssign',
-                                'data-rout' => '/adminxx/assignment/assign',
+                                'data-rout' => \yii\helpers\Url::toRoute('/adminxx/assignment/assign'),
                                 'data-user_id' => $user_id,
                                 'data-target' => 'avaliableRoles',
                                 'title' => 'Додати'
                             ]) ?><br><br>
                             <?= Html::a('&lt;&lt;' , false, [
                                 'class' => 'btn btn-danger btn-assign actionRevoke',
-                                'data-rout' => '/adminxx/assignment/revoke',
+                                'data-rout' => \yii\helpers\Url::toRoute('/adminxx/assignment/revoke'),
                                 'data-user_id' => $user_id,
                                 'data-target' => 'assignedRoles',
                                 'title' =>'Скасувати'
@@ -98,8 +98,8 @@ $this->registerJs("
                         ['options' => [ $model->status => ['Selected' => true]],])->label('Змінити статус') ;
                 ?>
                 <div class="form-group" align="center">
-                    <?= Html::submitButton('Зберігти', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-                    <?= Html::a('Відміна', '/adminxx/user',[
+                    <?= Html::submitButton('Зберігти', ['class' => 'btn btn-primary']) ?>
+                    <?= Html::a('Відміна', \yii\helpers\Url::toRoute('/adminxx/user'),[
                         'class' => 'btn btn-danger', 'name' => 'reset-button'
                     ]);?>
                 </div>

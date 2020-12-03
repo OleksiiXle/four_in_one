@@ -5,10 +5,17 @@
 
 use apiadmin\assets\AppAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+
+$absoluteBaseUrl = Url::base(true);
+$this->registerJs("
+    const _BASE_URL = '{$absoluteBaseUrl}';
+",\yii\web\View::POS_HEAD);
+
 
 AppAsset::register($this);
 ?>

@@ -4,6 +4,7 @@ namespace apiadmin\modules\adminxx\controllers;
 
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Url;
 use common\components\AccessControl;
 use apiadmin\controllers\MainController;
 use apiadmin\modules\adminxx\models\RuleX;
@@ -79,7 +80,7 @@ class RuleController extends MainController
                     // Helper::invalidate();
                 }
             }
-            return $this->redirect('index');
+            return $this->redirect(Url::toRoute('index'));
         }
         return $this->render('update', ['model' => $model, 'rulesClasses' => $rulesClasses]);
     }
@@ -96,7 +97,7 @@ class RuleController extends MainController
             $model = RuleX::getRule($id);
             $model->delete();
         }
-        return $this->redirect('index');
+        return $this->redirect(Url::toRoute('index'));
 
     }
 
@@ -123,7 +124,7 @@ class RuleController extends MainController
                     // Helper::invalidate();
                 }
             }
-            return $this->redirect('index');
+            return $this->redirect(Url::toRoute('index'));
         }
         return $this->render('update', ['model' => $model,]);
     }

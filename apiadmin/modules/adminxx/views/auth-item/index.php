@@ -19,12 +19,12 @@ $this->title =  'Дозвіли, ролі';
         </div>
         <div class="col-md-6" align="right" >
             <?php
-            echo Html::a('Створити роль', ['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_ROLE],
+            echo Html::a('Створити роль', [\yii\helpers\Url::toRoute('/adminxx/auth-item/create'), 'type' => AuthItemX::TYPE_ROLE],
                 [
                     'class' =>'btn btn-primary',
                 ]);
             echo '  ';
-            echo Html::a('Створити дозвіл', ['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_PERMISSION], [
+            echo Html::a('Створити дозвіл', [\yii\helpers\Url::toRoute('/adminxx/auth-item/create'), 'type' => AuthItemX::TYPE_PERMISSION], [
                 'class' =>'btn btn-primary',
             ]);
             echo '  ';

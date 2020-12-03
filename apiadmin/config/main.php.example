@@ -11,11 +11,20 @@ $config = [
     'bootstrap' => ['log'],
     'defaultRoute' => 'adminxx',
     'language' => 'ru-RU',
+ //   'homeUrl' => '/apiadmin',
     'components' => [
         'request' => [
            // 'csrfParam' => '_csrf-apiadmin',
             'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
+            'baseUrl'=>'/apiadmin', //todo раскомментировать в случае одного хоста
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
+
         'session' => [
             // this is the name of the session cookie used for login on the apiadmin
             'name' => 'advanced-apiadmin',

@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+
 use common\widgets\menuX\MenuXWidget;
 use common\widgets\changeLanguage\ChangeLanguageWidget;
 use apiuser\modules\post\assets\PostLayoutAsset;
@@ -9,6 +10,12 @@ use yii\helpers\Url;
 //use app\assets\BackgroundTaskAsset;
 use yii\jui\JuiAsset;
 use common\helpers\DateHelper;
+
+$absoluteBaseUrl = Url::base(true);
+$this->registerJs("
+    const _BASE_URL = '{$absoluteBaseUrl}';
+",\yii\web\View::POS_HEAD);
+
 
 
 //AppAsset::register($this);
@@ -22,10 +29,10 @@ if (Yii::$app->session->getAllFlashes()){
          $_fms = \yii\helpers\Json::htmlEncode($fms);
          $this->registerJs("var _fms = {$_fms};",\yii\web\View::POS_HEAD);
 }
-//$logoImg = Url::to(['/images/sun_61831.png']);
+//$logoImg = Url::toRoute(['/images/sun_61831.png']);
 
-$logoImg = Url::to(['/images/np_logo.png']);
-$exitLogo = Url::to('@web/images/log_logout_door_1563.png');
+$logoImg = Url::toRoute(['/images/np_logo.png']);
+$exitLogo = Url::toRoute('/images/log_logout_door_1563.png');
 
 ?>
 <?php
@@ -52,7 +59,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoI
         <!--************************************************************************************************************* MENU BTN-->
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="left" style="padding-left: 2px; padding-right: 0">
             <!--  <button id="open-menu-btn" onclick="showModal(500,600, 'lokoko the best');" class="xMenuBtn" >-->
-            <a href="/adminxx" title="На гоговну сторінку">
+            <a href="<?=Url::toRoute('/adminxx')?>" title="На гоговну сторінку">
                  <span class ="img-rounded">
                         <img  src="<?=$logoImg;?>" height="40px" width="40px;">
                  </span>

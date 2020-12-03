@@ -4,6 +4,7 @@ namespace common\widgets\changeLanguage;
 use Yii;
 use yii\base\Widget;
 use common\components\models\Translation;
+use yii\helpers\Url;
 
 class ChangeLanguageWidget extends Widget
 {
@@ -29,7 +30,7 @@ class ChangeLanguageWidget extends Widget
             'languagesList' => json_encode($this->languagesList),
             'languagesListArray' => $this->languagesList,
             'selectedLanguage' => $this->selectedLanguage,
-            'changeLanguageRoute' => $this->changeLanguageRoute,
+            'changeLanguageRoute' => Url::toRoute($this->changeLanguageRoute),
             ]);
     }
 

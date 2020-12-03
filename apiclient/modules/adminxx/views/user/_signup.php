@@ -327,7 +327,7 @@ $this->registerJs("
                         'name' => 'signup-button',
                         'onclick' => 'saveUser();'
                     ]) ?>
-                    <?= Html::a('Відміна', '/adminxx/user',[
+                    <?= Html::a('Відміна', \yii\helpers\Url::toRoute('/adminxx/user'),[
                         'class' => 'btn btn-danger', 'name' => 'reset-button'
                     ]);?>
                 </div>
