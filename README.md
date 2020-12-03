@@ -106,8 +106,8 @@ sudo service apache2 restart
 
 1. Создание и настройка БД
 mysql -u root -p
-CREATE DATABASE four_in_one;
-CREATE DATABASE xle_client;
+CREATE DATABASE test_api_server;
+CREATE DATABASE test_api_client;
 EXIT;
 
 добавить в common/config/main.php
