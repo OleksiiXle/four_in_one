@@ -36,3 +36,5 @@ chmod -R 777 /var/www/html/dstest/apiclient/web/assets
 chmod -R 777 /var/www/html/dstest/apiclient/runtime
 chmod -R 777 /var/www/html/dstest/apiserver/web/assets
 chmod -R 777 /var/www/html/dstest/apiserver/runtime
+mkdir /var/www/html/dstest/common/runtime/logs
+chmod -R 777 /var/www/html/dstest/common/runtime

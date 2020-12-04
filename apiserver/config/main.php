@@ -29,7 +29,7 @@ $config = [
         'request' => [
            // 'csrfParam' => '_csrf-apiuser',
             'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
-            'baseUrl'=>'/apiserver', //todo раскомментировать в случае одного хоста
+            'baseUrl'=>'/dstest/apiserver', //todo раскомментировать в случае одного хоста
 
         ],
         'user' => [
@@ -47,7 +47,7 @@ $config = [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
+            'dsn' => 'mysql:host=localhost;dbname=test_api_server',
             'username' => 'root',
             'password' => '111',
             'charset' => 'utf8',

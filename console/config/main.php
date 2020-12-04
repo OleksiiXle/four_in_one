@@ -65,14 +65,14 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
+            'dsn' => 'mysql:host=localhost;dbname=test_api_server',
             'username' => 'root',
             'password' => '111',
             'charset' => 'utf8',
         ],
         'backGroundDb' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
+            'dsn' => 'mysql:host=localhost;dbname=test_api_server',
             'username' => 'root',
             'password' => '111',
             'charset' => 'utf8',

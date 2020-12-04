@@ -20,7 +20,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'vfyrHPxjQZfzATztb4_Lzlclxk0kcRLv',
-            'baseUrl'=>'/apiclient', //todo раскомментировать в случае одного хоста
+            'baseUrl'=>'/dstest/apiclient', //todo раскомментировать в случае одного хоста
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
