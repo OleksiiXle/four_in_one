@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\models\Provider;
 use Yii;
 use yii\base\Model;
 use yii\httpclient\Client;
@@ -72,15 +73,7 @@ class LoginForm extends Model
 
     public static function providers()
     {
-        $t=Yii::$app->authClientCollection->clients;
-        $ret = [
-            'none' => 'none',
-        ];
-        foreach ($t as $client){
-            $ret[$client->clientId] = $client->clientId;
-        }
-        return $ret;
-
+        return array_merge(['none' => 'Без АПИ'], Provider::getClientsList());
     }
 
 

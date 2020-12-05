@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use app\components\models\Provider;
 use Yii;
 use app\models\User;
 use app\models\UserToken;

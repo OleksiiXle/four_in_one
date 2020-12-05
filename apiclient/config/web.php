@@ -3,6 +3,7 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 $backGroundDb = require(__DIR__ . '/backGroundDb.php');
+$providers = require(__DIR__ . '/providers.php');
 
 $config = [
     'id' => 'apiclient',
@@ -26,18 +27,14 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'authClientCollection' => [
+            'class'   => 'app\components\CollectionX',
+        ],
+        /*
+        'authClientCollection' => [
             'class'   => 'yii\authclient\Collection',
             'clients' => [
                 'xapi' => [
                     'class'        => 'app\components\XapiAuthClient',
-                    /*
-                    'clientId'     => 'xapi',
-                    'clientSecret' => '123',
-                    'tokenUrl'     => 'http://api.server/oauth2/auth/token',
-                    'authUrl'      => 'http://api.server/oauth2/auth/index',
-                    // 'authUrl'      => 'http://api.server/oauth2/index?expand=email',
-                    'apiBaseUrl'   => 'http://api.server/v1',
-                    */
                     'clientId'     => $params['clientId'],
                     'clientSecret' => $params['clientSecret'],
                     'tokenUrl'     => $params['tokenUrl'],
@@ -49,9 +46,10 @@ $config = [
                 ],
             ],
         ],
+        */
         'xapi'  => [
             'class'      => 'app\components\XapiV1Client',
-            'apiBaseUrl' => $params['apiBaseUrl'],
+            'apiBaseUrl' => $providers['xapi']['apiBaseUrl'], //todo брать из authClientCollection
         ],
         'authManager' => [
             'class' => 'app\components\DbManager', // or use 'yii\rbac\DbManager'

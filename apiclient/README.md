@@ -25,6 +25,8 @@ php yii migrate
    
 6. Инициализация словаря
    php yii translate/init
+   
+   php yii provider/init
 
 composer update
 

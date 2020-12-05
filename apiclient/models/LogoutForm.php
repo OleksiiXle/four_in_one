@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\models\Provider;
 use Yii;
 use yii\base\Model;
 use yii\di\Instance;
@@ -45,15 +46,7 @@ class LogoutForm extends Model
 
     public static function providers()
     {
-        $t=Yii::$app->authClientCollection->clients;
-        $ret = [
-            'all' => 'Все',
-        ];
-        foreach ($t as $client){
-            $ret[$client->clientId] = $client->clientId;
-        }
-        return $ret;
-
+        return array_merge(['all' => 'Все'], Provider::getClientsList());
     }
 
 
