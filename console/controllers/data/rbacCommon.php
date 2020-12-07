@@ -32,6 +32,7 @@ return [
         'adminConfigUpdate'           => 'Изменение системных настроек',
 
         'menuAdminTranslateUpdate'    => '*** Изменение словарей (меню)',
+        'adminTranslateUpdate'        => '*** Изменение словарей',
         //***************************************************************** Посты
         'postCRUD'                    => 'Изменение постов',
 
@@ -48,6 +49,26 @@ return [
     'rolesPermissions' => [
         'adminSuper' => [
             'menuAdminxMain',
+            'menuAdminUsersView',
+            'adminUsersView',
+            'adminUserView',
+            'adminUserCreate',
+            'adminUserUpdate',
+            'adminChangeUserAssignments',
+            'adminChangeUserActivity',
+            'menuAdminGuestControl',
+            'adminGuestControl',
+            'adminGuestControlDelete',
+            'menuAdminAuthItemList',
+            'adminAuthItemList',
+            'adminAuthItemCRUD',
+            'menuAdminMenuEdit',
+            'adminMenuEdit',
+            'menuAdminConfigUpdate',
+            'adminConfigUpdate',
+            'menuAdminTranslateUpdate',
+            'adminTranslateUpdate',
+            'postCRUD',
         ],
         'adminSystem' => [
             'menuAdminxMain',
