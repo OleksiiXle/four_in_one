@@ -72,7 +72,7 @@ class UserController extends MainController
                     'actions'    => [
                         'update-user-assignments',
                     ],
-                    'roles'      => ['adminChangeUserAssignments'],
+                    'roles'      => ['adminChangeUserAssignments', 'adminUsersAdvanced'],
                 ],
                 [
                     'allow'      => true,

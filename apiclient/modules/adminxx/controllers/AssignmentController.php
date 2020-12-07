@@ -27,7 +27,7 @@ class AssignmentController extends MainController
                     'actions'    => [
                         'assign', 'revoke'
                     ],
-                    'roles'      => ['adminChangeUserAssignments', ],
+                    'roles'      => ['adminChangeUserAssignments', 'adminUsersAdvanced' ],
                 ],
             ],
         ];
