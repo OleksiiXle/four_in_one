@@ -15,6 +15,7 @@ $this->title = 'Апи провайдер';
             ]); ?>
             <?= Html::errorSummary($model)?>
             <?php
+             echo $form->field($model, 'name');
              echo $form->field($model, 'class');
              echo $form->field($model, 'client_id');
              echo $form->field($model, 'client_secret');

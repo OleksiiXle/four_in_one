@@ -28,7 +28,6 @@ class CollectionX extends Component
 
     public function init()
     {
-        $tmp = 1;
         $providers = Provider::find()
             ->all();
         foreach ($providers as $provider) {
@@ -103,4 +102,14 @@ class CollectionX extends Component
 
         return Yii::createObject($config);
     }
+
+    public function getClientInfo($name)
+    {
+        return Provider::find()
+            ->where(['name' => $name])
+            ->asArray()
+            ->one();
+
+    }
+
 }

@@ -87,8 +87,19 @@ class XapiV1Client extends Component {
     public $noSuccessMessageType = "error";
     public $noSuccessCallback;
 
+    /**
+     * @return mixed
+     */
+    public function getApiBaseUrl()
+    {
+        if ($this->_apiBaseUrl === null) {
+            $this->_apiBaseUrl = Yii::$app->authClientCollection->getClientInfo('xapi')['api_base_url'];
+        }
+        return $this->_apiBaseUrl;
+    }
+
     /** Xapiapi */
-    public $apiBaseUrl     = null;
+    private $_apiBaseUrl = null;
     protected $_httpClient = 'yii\httpclient\Client';
 
     public function setHandlerParams($params) {

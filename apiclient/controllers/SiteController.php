@@ -35,7 +35,7 @@ class SiteController extends Controller
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'error'
+                        'index', 'error', 'auth'
                     ],
                     'roles'      => [
                         '@', '?'
@@ -79,7 +79,7 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
             'auth' => [
-                'class' => 'yii\authclient\AuthAction',
+                'class' => 'app\components\AuthAction',
                 'successCallback' => [$this, 'onAuthSuccess'],
             ],
         ];
@@ -88,6 +88,118 @@ class SiteController extends Controller
     public function onAuthSuccess($client)
     {
         $attributes = $client->getUserAttributes();
+        Functions::log('****************************************************');
+        Functions::log('******************************onAuthSuccess   $client:');
+        Functions::log($client);
+        Functions::log('****************************************************');
+        Functions::log('******************************onAuthSuccess   $client->getUserAttributes()');
+        Functions::log($attributes);
+        /*
+         Из фейсбука прдет:
+        ******************************onAuthSuccess   $client:
+app\components\clients\Facebook#1
+(
+    [authUrl] => 'https://www.facebook.com/dialog/oauth'
+    [tokenUrl] => 'https://graph.facebook.com/oauth/access_token'
+    [apiBaseUrl] => 'https://graph.facebook.com'
+    [scope] => 'email'
+    [attributeNames] => [
+        0 => 'name'
+        1 => 'email'
+    ]
+    [autoRefreshAccessToken] => false
+    [autoExchangeAccessToken] => false
+    [clientAuthCodeUrl] => 'https://graph.facebook.com/oauth/client_code'
+    [version] => '2.0'
+    [clientId] => '483951645567912'
+    [clientSecret] => 'bf5e46299b5277c73255282e811f33c0'
+    [validateAuthState] => true
+    [yii\authclient\BaseOAuth:_returnUrl] => null
+    [yii\authclient\BaseOAuth:_accessToken] => yii\authclient\OAuthToken#2
+    (
+        [tokenParamKey] => 'access_token'
+        [tokenSecretParamKey] => 'oauth_token_secret'
+        [createTimestamp] => 1607247454
+        [yii\authclient\OAuthToken:_expireDurationParamKey] => 'expires_in'
+        [yii\authclient\OAuthToken:_params] => [
+            'access_token' => 'EAAG4JsXsK6gBAPtQAjaLjfKMGTZBuIAHMCUDJzItV6HkVNcboLJQZBJn2hA0yabwpUIBbn4wqDAAkatCYDbfdoCgVQAooFFk29wcRoaane2nLfG1hksaRPSzrvEy5oKMvtDjeu49ymG32oASW8bLkq0OwgahceSZCT3SiKvFwZDZD'
+            'token_type' => 'bearer'
+            'expires_in' => 5180972
+        ]
+    )
+    [yii\authclient\BaseOAuth:_signatureMethod] => []
+    [yii\authclient\BaseClient:_id] => 'facebook'
+    [yii\authclient\BaseClient:_name] => null
+    [yii\authclient\BaseClient:_title] => null
+    [yii\authclient\BaseClient:_userAttributes] => [
+        'name' => 'Oleksii Xle'
+        'email' => 'lokoko.xle@ukr.net'
+        'id' => '2537274223260699'
+    ]
+    [yii\authclient\BaseClient:_normalizeUserAttributeMap] => []
+    [yii\authclient\BaseClient:_viewOptions] => null
+    [yii\authclient\BaseClient:_httpClient] => yii\httpclient\Client#3
+    (
+        [baseUrl] => 'https://graph.facebook.com'
+        [formatters] => [
+            'urlencoded' => yii\httpclient\UrlEncodedFormatter#4
+            (
+                [encodingType] => 1
+                [charset] => null
+            )
+        ]
+        [parsers] => [
+            'json' => yii\httpclient\JsonParser#5
+            (
+                [asArray] => true
+            )
+        ]
+        [requestConfig] => []
+        [responseConfig] => []
+        [contentLoggingMaxSize] => 2000
+        [yii\httpclient\Client:_transport] => yii\httpclient\StreamTransport#6
+        (
+            [yii\base\Component:_events] => []
+            [yii\base\Component:_eventWildcards] => []
+            [yii\base\Component:_behaviors] => null
+        )
+        [yii\base\Component:_events] => []
+        [yii\base\Component:_eventWildcards] => []
+        [yii\base\Component:_behaviors] => []
+    )
+    [yii\authclient\BaseClient:_requestOptions] => []
+    [yii\authclient\BaseClient:_stateStorage] => app\components\XapiStateStorage#7
+    (
+        [session] => yii\web\Session#8
+        (
+            [flashParam] => '__flash'
+            [handler] => null
+            [*:_forceRegenerateId] => null
+            [yii\web\Session:_cookieParams] => [
+                'httponly' => true
+            ]
+            [yii\web\Session:frozenSessionData] => null
+            [yii\web\Session:_hasSessionId] => true
+            [yii\base\Component:_events] => []
+            [yii\base\Component:_eventWildcards] => []
+            [yii\base\Component:_behaviors] => null
+        )
+        [yii\base\Component:_events] => []
+        [yii\base\Component:_eventWildcards] => []
+        [yii\base\Component:_behaviors] => null
+    )
+    [yii\base\Component:_events] => []
+    [yii\base\Component:_eventWildcards] => []
+    [yii\base\Component:_behaviors] => null
+)
+****************************************************
+******************************onAuthSuccess   $client->getUserAttributes()
+[
+    'name' => 'Oleksii Xle'
+    'email' => 'lokoko.xle@ukr.net'
+    'id' => '2537274223260699'
+]
+         */
 
         /* @var $auth Auth */
         $auth = Auth::find()->where([
@@ -155,14 +267,28 @@ class SiteController extends Controller
         switch ($mode) {
             case 'withoutSignup':
                 $model = new LoginForm();
-                if ($model->load(Yii::$app->request->post()) && $model->clientLogin()) {
-                    return $this->goBack();
+                if ($model->load(Yii::$app->request->post())) {
+                    if ($model->provider == 'xapi') {
+                        if ($model->clientLogin()) {
+                            return $this->goBack();
+                        } else {
+                            $model->password = '';
+                            return $this->render('login', [
+                                'model' => $model,
+                            ]);
+                        }
+                    } else {
+                        //-- facebok
+                        $tmp = Url::toRoute(['auth', 'authclient' => 'facebook']);
+                        return $this->redirect(Url::toRoute(['auth', 'authclient' => 'facebook']));
+                    }
+
                 } else {
                     $model->password = '';
-
                     return $this->render('login', [
                         'model' => $model,
                     ]);
+
                 }
                 break;
             case 'withSignup':
@@ -259,8 +385,6 @@ class SiteController extends Controller
             ]);
         }
     }
-
-
 
     public function actionSignupConfirm($token)
     {

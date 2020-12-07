@@ -62,6 +62,11 @@ $this->title = Yii::t('app', 'АПИ клиенты');
                         'contentOptions' => ['style' => 'width: 2%; overflow: hidden'],
                     ],
                     [
+                        'attribute' => 'name',
+                        'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
+                        'contentOptions' => ['style' => 'width: 2%; overflow: hidden'],
+                    ],
+                    [
                         'attribute' => 'client_id',
                         'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
                         'contentOptions' => ['style' => 'width: 2%; overflow: hidden'],

@@ -49,7 +49,7 @@ $config = [
         */
         'xapi'  => [
             'class'      => 'app\components\XapiV1Client',
-            'apiBaseUrl' => $providers['xapi']['apiBaseUrl'], //todo брать из authClientCollection
+            //'apiBaseUrl' => $providers['xapi']['api_base_url'], //todo брать из authClientCollection
         ],
         'authManager' => [
             'class' => 'app\components\DbManager', // or use 'yii\rbac\DbManager'

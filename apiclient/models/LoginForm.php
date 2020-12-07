@@ -79,14 +79,6 @@ class LoginForm extends Model
 
     public function clientLogin()
     {
-        /*
-                     if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-         */
         $tmp = 1;
         if ($this->validate()) {
             //--- проверить логин + пароль
