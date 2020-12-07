@@ -1,5 +1,9 @@
 <?php
 $params = require __DIR__ . '/params.php';
+$db = require __DIR__ . '/db.php';
+$backGroundDb = require(__DIR__ . '/backGroundDb.php');
+
+
 /*
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
@@ -63,20 +67,8 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=test_api_server',
-            'username' => 'root',
-            'password' => '111',
-            'charset' => 'utf8',
-        ],
-        'backGroundDb' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=test_api_server',
-            'username' => 'root',
-            'password' => '111',
-            'charset' => 'utf8',
-        ],
+        'db' => $db,
+        'backGroundDb' => $backGroundDb,
         'clientDb' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=xle_client',

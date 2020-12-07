@@ -4,6 +4,10 @@ $params = array_merge(
     require __DIR__ . '/params.php'
 );
 
+$db = require __DIR__ . '/db.php';
+$backGroundDb = require(__DIR__ . '/backGroundDb.php');
+
+
 $config = [
     'id' => 'app-api-server',
     'basePath' => dirname(__DIR__),
@@ -45,13 +49,8 @@ $config = [
             'class' => 'apiserver\components\ApiDbManager',
             'cache' => 'cache'
         ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=test_api_server',
-            'username' => 'root',
-            'password' => '111',
-            'charset' => 'utf8',
-        ],
+        'db' => $db,
+        'backGroundDb' => $backGroundDb,
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

@@ -1,4 +1,7 @@
 <?php
+$db = require __DIR__ . '/db.php';
+$backGroundDb = require(__DIR__ . '/backGroundDb.php');
+
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -9,20 +12,8 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
-            'username' => 'root',
-            'password' => '111',
-            'charset' => 'utf8',
-        ],
-        'backGroundDb' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=four_in_one',
-            'username' => 'root',
-            'password' => '111',
-            'charset' => 'utf8',
-        ],
+        'db' => $db,
+        'backGroundDb' => $backGroundDb,
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',

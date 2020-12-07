@@ -1,4 +1,6 @@
 main-local.php
 params-local.php
 test-local.php
+db.php
+backGroundDb.php
 params.php
