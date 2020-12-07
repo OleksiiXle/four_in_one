@@ -39,9 +39,9 @@ $(document).ready ( function(){
 
     $('.btn-assign').click(function () {
         var $this = $(this);
-        var route = '/adminxx/assignment/assign';
+        var route = _BASE_URL + '/adminxx/assignment/assign';
         if ($this.hasClass('actionRevoke')){
-            route = '/adminxx/assignment/revoke';
+            route = _BASE_URL + '/adminxx/assignment/revoke';
         }
         var target = $this.data('target');
         var roles = $('select.list[data-target="' + target + '"]').val();
