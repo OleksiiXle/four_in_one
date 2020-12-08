@@ -2,6 +2,7 @@
 
 namespace apiadmin\modules\adminxx\controllers;
 
+use apiadmin\modules\adminxx\grids\UsersGrid;
 use Yii;
 use yii\db\Query;
 use yii\filters\VerbFilter;
@@ -19,6 +20,7 @@ use apiadmin\modules\adminxx\models\form\PasswordResetRequestForm;
 use apiadmin\modules\adminxx\models\form\Update;
 use apiadmin\modules\adminxx\models\UserM;
 use yii\helpers\Url;
+use yii\web\Response;
 
 /**
  * Class UserController
@@ -114,58 +116,14 @@ class UserController extends MainController
     public function actionIndex()
     {
       //  $this->layout = '@app/modules/adminxx/views/layouts/adminxx.php';
-
-        $dataProvider = new ActiveDataProviderConserve([
-           // 'searchId' => $id,
-            'filterModelClass' => UserFilter::class,
-            'conserveName' => 'userAdminGrid',
-            'pageSize' => 5,
-            'sort' => ['attributes' => [
-                'id',
-                'username',
-                'nameFam' => [
-                    'asc' => [
-                        'user_data.last_name' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_name' => SORT_DESC,
-                    ],
-                ],
-                'lastRoutTime' => [
-                    'asc' => [
-                        'user_data.last_rout_time' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout_time' => SORT_DESC,
-                    ],
-                ],
-                'lastRout' => [
-                    'asc' => [
-                        'user_data.last_rout' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout' => SORT_DESC,
-                    ],
-                ],
-                'status' => [
-                    'asc' => [
-                        'user.status' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user.status' => SORT_DESC,
-                    ],
-                ],
-            ]],
-
-        ]);
-        $r=1;
-        /*
-        if (\Yii::$app->request->isPost){
-            return $this->redirect('index');
+        $tmp = 1;
+        $usersGrid = new UsersGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $usersGrid->reload();
         }
-        */
-        return $this->render('index',[
-            'dataProvider' => $dataProvider,
+        return $this->render('test', [
+            'usersGrid' => $usersGrid,
         ]);
     }
 

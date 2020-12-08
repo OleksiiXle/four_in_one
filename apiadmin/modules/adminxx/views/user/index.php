@@ -37,7 +37,8 @@ $this->title = Yii::t('app', 'Пользователи');
             ?>
             <div id="users-grid-container" >
                 <?php
-                echo Xlegrid::widget([
+                echo Xlegrid::widget(
+                        [
                     'usePjax' => true,
                     'pjaxContainerId' => 'users-grid-container',
                     'useCheckForRows' => true,

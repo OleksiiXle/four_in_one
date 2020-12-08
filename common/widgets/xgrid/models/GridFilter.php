@@ -1,12 +1,12 @@
 <?php
 
-namespace common\widgets\xlegrid\models;
+namespace common\widgets\xgrid\models;
 
 use yii\base\Model;
 
 class GridFilter extends Model
 {
-    public $checkedIds = [];
+  //  public $checkedIds = [];
     public $checkedIdsJSON = '{}';
     public $showOnlyChecked;
     public $queryModel;

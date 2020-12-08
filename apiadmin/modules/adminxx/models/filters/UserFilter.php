@@ -1,8 +1,6 @@
 <?php
 namespace apiadmin\modules\adminxx\models\filters;
 
-use console\backgroundTasks\models\BackgroundTask;
-use common\helpers\Functions;
 use apiadmin\modules\adminxx\models\UserM;
 use common\widgets\xlegrid\models\GridFilter;
 
@@ -60,6 +58,7 @@ class UserFilter extends GridFilter
             [[ 'showStatusActive', 'showStatusInactive', 'showOnlyChecked'], 'boolean'],
             [['first_name', 'middle_name', 'last_name', 'role', 'username', 'emails'], 'string', 'max' => 50],
             [['checkedIdsJSON'], 'string', 'max' => 1000],
+            [['checkedIds'], 'safe'],
             [['first_name', 'middle_name', 'last_name'],  'match', 'pattern' => UserM::USER_NAME_PATTERN,
                 'message' => \Yii::t('app', UserM::USER_NAME_ERROR_MESSAGE)],
             [['username'],  'match', 'pattern' => UserM::USER_PASSWORD_PATTERN,
@@ -114,9 +113,8 @@ class UserFilter extends GridFilter
         $query = UserM::find()
             ->joinWith(['userDatas']);
         $this->_filterContent = '';
-        if ($this->showOnlyChecked =='1' && !empty($this->checkedIdsJSON)) {
-            $checkedIds = json_decode($this->checkedIdsJSON);
-            $query->andWhere(['IN', 'user.id', $checkedIds]);
+        if ($this->showOnlyChecked =='1' && !empty($this->checkedIds)) {
+            $query->andWhere(['IN', 'user.id', $this->checkedIds]);
             $this->_filterContent .= ' * Только отмеченные*;' ;
             return $query;
         }

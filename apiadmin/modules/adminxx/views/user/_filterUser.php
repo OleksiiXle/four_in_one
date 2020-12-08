@@ -1,19 +1,7 @@
 <?php
-
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use apiadmin\modules\adminxx\assets\AdminxxUserFilterAsset;
-
-AdminxxUserFilterAsset::register($this);
-
-
-$_exportQuery = \yii\helpers\Json::htmlEncode($exportQuery);
-$this->registerJs("
-    var _exportQuery      = {$_exportQuery};
-",\yii\web\View::POS_HEAD);
-
 ?>
-
 
 <div class="container-fluid">
     <?php
@@ -30,9 +18,11 @@ $this->registerJs("
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
                         <?php
+                        /*
                         echo $form->field($filter, 'checkedIdsJSON')->textarea([
                                 'cols' => 30, 'rows' => '3',
                         ])->hiddenInput()->label(false);
+                        */
                         echo $form->field($filter, 'username');
                         echo $form->field($filter, 'last_name');
                         echo $form->field($filter, 'first_name');
