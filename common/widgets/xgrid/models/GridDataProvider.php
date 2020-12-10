@@ -188,6 +188,19 @@ class GridDataProvider extends BaseDataProvider
         return $ret;
     }
 
+    public function addConditionToFilter($condition)
+    {
+        $tmp = 1;
+        if (!empty($this->filterModel)) {
+            foreach ($condition as $key => $value) {
+                $this->filterModel->{$key} = $value;
+            }
+            $tmp = $this->filterModel->getAttributes();
+        }
+        $this->saveFilterToConserve();
+        $this->query = $this->filterModel->getQuery();
+    }
+
 
 
 
@@ -316,6 +329,17 @@ class GridDataProvider extends BaseDataProvider
         }
 
         parent::__clone();
+    }
+
+    public function saveFilterToConserve()
+    {
+        if (!empty($this->conserveName)) {
+            $cJSON = \Yii::$app->conservation->setConserveGridDB(
+                $this->conserveName,
+                'filter',
+                json_encode($this->filterModel->getAttributes())
+            );
+        }
     }
 
 }

@@ -7,6 +7,7 @@ use common\widgets\xlegrid\models\GridFilter;
 class UserFilter extends GridFilter
 {
     public $queryModel = UserM::class;
+    public $checkAll;
 
     public $datetime_range = '';
     public $datetime_min = '';
@@ -54,11 +55,9 @@ class UserFilter extends GridFilter
 
     public function rules()
     {
-        return [
+        $ownRules = [
             [[ 'showStatusActive', 'showStatusInactive', 'showOnlyChecked'], 'boolean'],
             [['first_name', 'middle_name', 'last_name', 'role', 'username', 'emails'], 'string', 'max' => 50],
-            [['checkedIdsJSON'], 'string', 'max' => 1000],
-            [['checkedIds'], 'safe'],
             [['first_name', 'middle_name', 'last_name'],  'match', 'pattern' => UserM::USER_NAME_PATTERN,
                 'message' => \Yii::t('app', UserM::USER_NAME_ERROR_MESSAGE)],
             [['username'],  'match', 'pattern' => UserM::USER_PASSWORD_PATTERN,
@@ -68,10 +67,8 @@ class UserFilter extends GridFilter
             [['datetime_range', 'datetime_min', 'datetime_max'], 'string', 'max' => 100],
             ['emails', 'email'],
            // [['datetime_range'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
-
-
-
         ];
+        return array_merge(parent::rules(), $ownRules);
     }
 
     /**
@@ -113,7 +110,7 @@ class UserFilter extends GridFilter
         $query = UserM::find()
             ->joinWith(['userDatas']);
         $this->_filterContent = '';
-        if ($this->showOnlyChecked =='1' && !empty($this->checkedIds)) {
+        if ($this->showOnlyChecked == '1' && !empty($this->checkedIds)) {
             $query->andWhere(['IN', 'user.id', $this->checkedIds]);
             $this->_filterContent .= ' * Только отмеченные*;' ;
             return $query;

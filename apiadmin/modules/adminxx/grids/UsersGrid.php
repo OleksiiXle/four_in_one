@@ -9,11 +9,13 @@ use common\widgets\xgrid\models\GridDataProvider;
 use common\models\UserM;
 use common\widgets\menuAction\MenuActionWidget;
 use common\widgets\xgrid\Xgrid;
+use yii\web\BadRequestHttpException;
 
 class UsersGrid
 {
-    public $providerConfig =
-        [
+    private $grid = null;
+    private $provider = null;
+    public $providerConfig = [
             // 'searchId' => $id,
             'filterModelClass' => UserFilter::class,
             'conserveName' => 'userAdminGrid',
@@ -57,148 +59,223 @@ class UsersGrid
         ];
     private $gridConfig = null;
 
-    public function __construct()
+
+    public function setGridConfig($reload = false)
     {
-        $this->gridConfig = $this->getGridConfig();
+        if ($this->provider === null) {
+            $this->provider = new GridDataProvider($this->providerConfig);
+        }
+        $this->gridConfig = [
+            'name' => 'usersGrid',
+            'dataProvider' => $this->provider,
+            'useAjax' => true,
+            'useActions' => true,
+            'checkActionList' => [
+                'actions' => [
+                    'action1' => 'action1***',
+                    'action2' => 'action2***',
+                    'action3' => 'action3***',
+                ],
+                'options' => [
+                    'class' => 'checkActionsSelect',
+                    'onchange' => 'actionWithChecked(this);',
+                ],
+            ],
+            'filterView' => '@app/modules/adminxx/views/user/_filterUser',
+            //-------------------------------------------
+            'columns' => [
+                [
+                    'label' => '',
+                    'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 2%; white-space: nowrap; overflow: hidden;'],
+                    'options' => ['class' => 'row-check'],
+                    //'content' => '',
+                ],
+                [
+                    'class' => 'yii\grid\SerialColumn',
+                    'headerOptions' => ['style' => 'width: 3%;'],
+                    'contentOptions' => ['style' => 'width: 3%;'],
+                ],
+                [
+                    'attribute' => 'id',
+                    'headerOptions' => ['style' => 'width: 3%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 3%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'username',
+                    'headerOptions' => ['style' => 'width: 10%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'nameFam',
+                    'headerOptions' => ['style' => 'width: 10%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'nameNam',
+                    'headerOptions' => ['style' => 'width: 7%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'nameFat',
+                    'headerOptions' => ['style' => 'width: 7%; overflow: hidden;'],
+                    'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'userRoles',
+                    'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 8%; overflow: hidden;'],
+                ],
+                [
+                    'attribute' => 'lastVisitTimeTxt',
+                    'label' => 'Час ост. дії',
+                    'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 8%; white-space: nowrap; overflow: hidden;'],
+                ],
+                [
+                    'attribute' => 'created_at_str',
+                    'headerOptions' => ['style' => 'width: 7%; overflow: hidden;'],
+                    'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'status',
+                    'headerOptions' => ['style' => 'width: 6%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 6%; white-space: nowrap; overflow: hidden;'],
+                    'label'=>'Активність',
+                    'content'=>function($data){
+                        return Html::a('<span class="glyphicon glyphicon-star"></span>', false,
+                            [
+                                'style' => ($data->status == UserM::STATUS_ACTIVE)
+                                    ? 'color: red;' : 'color: grey;',
+                                'title' => ($data->status == UserM::STATUS_ACTIVE)
+                                    ? 'Активувати' : 'Деактивувати',
+                                'onclick' => 'changeUserActivity("' . $data->id . '");',
+                                'id' => 'activityIcon_' . $data->id,
+                            ]);
+                    },
+                ],
+                [
+                    'headerOptions' => ['style' => 'width: 3%; '],
+                    'contentOptions' => [
+                        'style' => 'width: 3%; ',
+                    ],
+                    'label'=>'',
+                    'content'=>function($data){
+                        return MenuActionWidget::widget(
+                            [
+                                'items' => [
+                                    'Перегляд інформації' => [
+                                        'icon' => 'glyphicon glyphicon-eye-open',
+                                        'route' => Url::toRoute(['/adminxx/user/view', 'id' => $data['id']]),
+                                    ],
+                                    'Змінити данні' => [
+                                        'icon' => 'glyphicon glyphicon-pencil',
+                                        'route' => Url::toRoute(['/adminxx/user/update-by-admin',
+                                            'mode' => 'update', 'id' => $data['id'],]),
+                                    ],
+                                    'Змінити дозвіли та ролі' => [
+                                        'icon' => 'glyphicon glyphicon-lock',
+                                        'route' => Url::toRoute(['/adminxx/user/update-user-assignments', 'id' => $data['id']]),
+                                    ],
+                                    'Переглянути консерву' => [
+                                        'icon' => 'glyphicon glyphicon-lock',
+                                        'route' => Url::toRoute(['/adminxx/user/conservation', 'user_id' => $data['id']]),
+                                    ],
+
+                                ],
+                                'offset' => -200,
+
+                            ]
+                        );
+                    },
+                ],
+            ],
+        ];
+        if ($this->gridConfig['useActions']) {
+            $this->gridConfig['actionsList'] = $this->getActionsList();
+        }
         $this->gridConfig['class'] = Xgrid::class;
+        if ($reload) {
+            $this->gridConfig['reload'] = true;
+        }
     }
 
-    public function getGridConfig()
+    public function makeGrid()
     {
-        return
-            [
-                'name' => 'usersGrid',
-                'dataProvider' => new GridDataProvider($this->providerConfig),
-                'useAjax' => true,
-                'useCheckForRows' => true,
-                'checkActionList' => [
-                    'actions' => [
-                        'action1' => 'action1***',
-                        'action2' => 'action2***',
-                        'action3' => 'action3***',
-                    ],
-                    'options' => [
-                        'class' => 'checkActionsSelect',
-                        'onchange' => 'actionWithChecked(this);',
-                    ],
-                ],
-                'pager' => [
-                    'firstPageLabel' => '<<<',
-                    'lastPageLabel'  => '>>>'
-                ],
-                'gridTitle' => '',
-                'additionalTitle' => 'qq',
-                'filterView' => '@app/modules/adminxx/views/user/_filterUser',
-                //-------------------------------------------
-                'tableOptions' => [
-                    'class' => 'table table-bordered table-hover table-condensed',
-                    'style' => ' width: 100%; table-layout: fixed;',
-                ],
-                //-------------------------------------------
-                'columns' => [
-                    [
-                        'label' => '',
-                        'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 2%; white-space: nowrap; overflow: hidden;'],
-                        'options' => ['class' => 'row-check'],
-                        //'content' => '',
-                    ],
-                    [
-                        'class' => 'yii\grid\SerialColumn',
-                        'headerOptions' => ['style' => 'width: 3%;'],
-                        'contentOptions' => ['style' => 'width: 3%;'],
-                    ],
-                    [
-                        'attribute' => 'id',
-                        'headerOptions' => ['style' => 'width: 3%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 3%; overflow: hidden'],
-                    ],
-                    [
-                        'attribute' => 'username',
-                        'headerOptions' => ['style' => 'width: 10%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
-                    ],
-                    [
-                        'attribute' => 'nameFam',
-                        'headerOptions' => ['style' => 'width: 10%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
-                    ],
-                    [
-                        'attribute' => 'nameNam',
-                        'headerOptions' => ['style' => 'width: 7%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
-                    ],
-                    [
-                        'attribute' => 'nameFat',
-                        'headerOptions' => ['style' => 'width: 7%; overflow: hidden;'],
-                        'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
-                    ],
-                    [
-                        'attribute' => 'userRoles',
-                        'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 8%; overflow: hidden;'],
-                    ],
-                    [
-                        'attribute' => 'lastVisitTimeTxt',
-                        'label' => 'Час ост. дії',
-                        'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 8%; white-space: nowrap; overflow: hidden;'],
-                    ],
-                    [
-                        'attribute' => 'created_at_str',
-                        'headerOptions' => ['style' => 'width: 7%; overflow: hidden;'],
-                        'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
-                    ],
-                    [
-                        'attribute' => 'status',
-                        'headerOptions' => ['style' => 'width: 6%;overflow: hidden; '],
-                        'contentOptions' => ['style' => 'width: 6%; white-space: nowrap; overflow: hidden;'],
-                        'label'=>'Активність',
-                        'content'=>function($data){
-                            return Html::a('<span class="glyphicon glyphicon-star"></span>', false,
-                                [
-                                    'style' => ($data->status == UserM::STATUS_ACTIVE)
-                                        ? 'color: red;' : 'color: grey;',
-                                    'title' => ($data->status == UserM::STATUS_ACTIVE)
-                                        ? 'Активувати' : 'Деактивувати',
-                                    'onclick' => 'changeUserActivity("' . $data->id . '");',
-                                    'id' => 'activityIcon_' . $data->id,
-                                ]);
-                        },
-                    ],
-                    [
-                        'headerOptions' => ['style' => 'width: 3%; '],
-                        'contentOptions' => [
-                            'style' => 'width: 3%; ',
-                        ],
-                        'label'=>'',
-                        'content'=>function($data){
-                            return MenuActionWidget::widget(
-                                [
-                                    'items' => [
-                                        'Перегляд інформації' => [
-                                            'icon' => 'glyphicon glyphicon-eye-open',
-                                            'route' => Url::toRoute(['/adminxx/user/view', 'id' => $data['id']]),
-                                        ],
-                                        'Змінити данні' => [
-                                            'icon' => 'glyphicon glyphicon-pencil',
-                                            'route' => Url::toRoute(['/adminxx/user/update-by-admin',
-                                                'mode' => 'update', 'id' => $data['id'],]),
-                                        ],
-                                        'Змінити дозвіли та ролі' => [
-                                            'icon' => 'glyphicon glyphicon-lock',
-                                            'route' => Url::toRoute(['/adminxx/user/update-user-assignments', 'id' => $data['id']]),
-                                        ],
-                                    ],
-                                    'offset' => -200,
+        $this->grid = Yii::createObject($this->gridConfig);
+    }
 
-                                ]
-                            );
-                        },
-                    ],
-                ],
+    public function getActions()
+    {
+        $actions = [
+            'checkAll' => [
+              'name' => Yii::t('app', 'Пометить все выбранные строки, как выделенные'),
+                'do' =>  function() {
+                    return $this->checkAllAction();
+                },
+            ],
+            'unCheckAll' => [
+              'name' => Yii::t('app', 'Отменить выделение'),
+              'do' => function(){
+                  return $this->unCheckAllAction();
+              },
+            ],
+            'uploadChecked' => [
+              'name' => Yii::t('app', 'Вывести выделенные в файл'),
+              'do' => function(){
+                  return $this->uploadCheckedAction();
+              },
+            ],
+        ];
 
-            ];
+        return $actions;
+    }
+
+    public function getActionsList()
+    {
+        $ret = [];
+        foreach ($this->getActions() as $key => $action) {
+            $ret[$key] = $action['name'];
+        }
+
+        return $ret;
+    }
+
+    public function doAction($key)
+    {
+        $action = $this->getActions()[$key];
+        if ($action['do'] instanceof \Closure){
+            return call_user_func($action['do']);
+        }
+
+        return false;
+    }
+
+    public function checkAllAction()
+    {
+        $tmp = 1;
+        $this->provider = new GridDataProvider($this->providerConfig);
+        $this->provider->addConditionToFilter([
+            'allRowsAreChecked' => true,
+            'showOnlyChecked' => false,
+            'checkedIds' => [],
+            ]);
+    }
+
+    public function unCheckAllAction()
+    {
+        $tmp = 1;
+        $this->provider = new GridDataProvider($this->providerConfig);
+        $this->provider->addConditionToFilter([
+            'allRowsAreChecked' => false,
+            'showOnlyChecked' => false,
+            'checkedIds' => [],
+        ]);
+    }
+
+    public function uploadCheckedAction()
+    {
+        return true;
     }
 
     /**
@@ -214,9 +291,10 @@ class UsersGrid
         ob_implicit_flush(false);
         try {
             /* @var $widget Widget */
-            $widget = Yii::createObject($this->gridConfig);
-            $result = $widget->run();
-            $out = $widget->afterRun($result);
+            $this->setGridConfig();
+            $this->makeGrid();
+            $result = $this->grid->run();
+            $out = $this->grid->afterRun($result);
         } catch (\Exception $e) {
             // close the output buffer opened above if it has not been closed already
             if (ob_get_level() > 0) {
@@ -228,13 +306,30 @@ class UsersGrid
         return ob_get_clean() . $out;
     }
 
-    public function reload()
+    public function reload($_post)
     {
-        $this->gridConfig['reload'] = true;
-        $widget = Yii::createObject($this->gridConfig);
-        $result = $widget->run();
+        if (!isset($_post['action'])) {
+            throw new BadRequestHttpException('Action not found');
+        }
 
-        return $result;
+        if ($_post['action'] == 'reload') {
+            $this->setGridConfig(true);
+            $this->makeGrid();
+            $result = $this->grid->run();
+            return $result;
+        }
+
+        foreach ($this->getActions() as $key => $action) {
+            if ($_post['action'] == $key) {
+                $this->doAction($key);
+                $this->setGridConfig(true);
+                $this->makeGrid();
+                $result = $this->grid->run();
+                return $result;
+            }
+        }
+
+        return "<h1>Action " . $_post['action'] . " is not declared</h1>";
     }
 
 

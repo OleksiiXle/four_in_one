@@ -15,7 +15,7 @@ var checkedIds = [];
 
 $(document).ready(function(){
     checkedIds = _checkedIdsFromRequest;
-   // console.log(checkedIds);
+//    console.log(checkedIds);
     if (USE_AJAX) {
       //  console.log($(PJAX_CONTAINER_ID + ' a'));
       //  console.log('.gridLink_' + GRID_ID);
@@ -23,23 +23,32 @@ $(document).ready(function(){
         $(document).on('click', '.gridLink_' + GRID_ID, function(event) {
             event.preventDefault();
             event.stopPropagation();
-            doAjax(this.href);
+            doAjax(this.href, 'reload');
         });
     }
 });
 
 
 //-- обработать href с учетом фильтра, пагинации и сортировки и сделать pjax с обработанным href
-function doAjax(href) {
-  //  console.log(checkedIds);
+function doAjax(href, action) {
+   // console.log(checkedIds);
     var hr = getHrefWithFilter(href);
+    switch (action) {
+        case 'checkAll':
+        case 'unCheckAll':
+            checkedIds = [];
+            break;
+    }
   //  console.log(hr);
     $.ajax({
         url: hr,
         type: "POST",
-        data: {'gridName' : GRID_NAME,
-                'checkedIds' : JSON.stringify(checkedIds)},
-        dataType: 'html',
+        data: {
+                'gridName' : GRID_NAME,
+                'checkedIds' : JSON.stringify(checkedIds),
+                'action' : (action != "undefined") ? action : 'none'
+        },
+        dataType: 'json',
         beforeSend: function() {
            // preloader('show', 'mainContainer', 0);
         },
@@ -47,11 +56,13 @@ function doAjax(href) {
            // preloader('hide', 'mainContainer', 0);
         },
         success: function(response){
-          //  console.log(response);
-            $("#" + GRID_ID).html(response);
+         //   console.log(action);
+            $("#" + GRID_ID).html(response['body']);
             history.pushState({}, '', hr);
-            checkedIds = _checkedIdsFromRequest;
-          //  console.log(checkedIds);
+            if (action == 'reload') {
+                checkedIds = response['checkedIds'];
+            }
+        //   console.log(checkedIds);
 
         },
         error: function (jqXHR, error, errorThrown) {
@@ -63,7 +74,7 @@ function doAjax(href) {
 function useFilter() {
   //  checkedIds = [];
  //   console.log(checkedIds);
-    doAjax(window.location.href);
+    doAjax(window.location.href, 'reload');
 }
 
 //-- обновить фильтр, взять пагинацию и сортировку из href, и на их основании сформировать новый href
@@ -270,8 +281,10 @@ function startBackgroundUploadTask() {
 }
 
 function actionWithChecked(action) {
-    console.log(action.value);
- //   console.log(checkedIds);
+ //   console.log(action.value);
+    doAjax(window.location.href, action.value);
+
+    //   console.log(checkedIds);
 }
 
 

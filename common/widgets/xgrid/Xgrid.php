@@ -1,6 +1,7 @@
 <?php
 namespace common\widgets\xgrid;
 
+use Yii;
 use common\assets\BackgroundTaskAsset;
 use common\widgets\xgrid\models\GridUploadWorker;
 use yii\grid\DataColumn;
@@ -14,18 +15,28 @@ use common\widgets\xgrid\models\LinkSorter;
 
 class Xgrid extends GridView
 {
-    public $name;
-    public $reload = false;
-    public $filterPosition = self::FILTER_POS_HEADER;
-    public $filterView;// = '@app/views/dictionary/_search';
-    public $gridTitle = '';
-    public $additionalTitle = null;
+    //-- дефолтніе значения для грида (можно менять)
+    public $pager = [
+        'firstPageLabel' => '<<<',
+        'lastPageLabel'  => '>>>'
+        ];
+    public $tableOptions= [
+        'class' => 'table table-bordered table-hover table-condensed',
+        'style' => ' width: 100%; table-layout: fixed;',
+        ];
+
+
+
+    public $name; //** уникальное, для действия контроллера имя грида, по которому при перезагрузке определяется, какой грид обновлять
+    public $reload = false; //служебное поле, сигнализирующее, выводится ли грид первый раз или обновляется
+    public $filterView;// вьюха для фильтра '@app/views/dictionary/_search';
     public $filterRenderOptions = [
         'class' => 'table table-bordered',
         'style' => 'background: none',
     ];
     public $useAjax = false;
-    public $useCheckForRows = false;
+    public $useActions = false; // добавлять в грид список действий с данными грида (для включения необходимо прописать действия в классе грида)
+    public $actionsList = []; //список действий (формируется автоматически, задавать не надо
     public $checkActionList = [
         /*
         'actions' => [
@@ -38,7 +49,16 @@ class Xgrid extends GridView
         ],
         */
     ];
-   private $checkedIds = [];
+    public $checkedIds = [];
+
+    public function init()
+    {
+        $this->filterPosition = self::FILTER_POS_HEADER;
+        if ($this->useActions) {
+            $this->useAjax = true;
+        }
+        parent::init();
+    }
 
     public function run()
     {
@@ -88,6 +108,11 @@ class Xgrid extends GridView
         if (!$this->reload) {
             echo Html::tag($tag, $content, $options);
         } else {
+            $response = [
+                'body'  => Html::tag($tag, $content, $options),
+                'checkedIds' => $this->checkedIds
+            ];
+            return json_encode($response);
             return Html::tag($tag, $content, $options);
         }
     }
@@ -119,8 +144,16 @@ class Xgrid extends GridView
             } else {
                 $filterContent = $this->dataProvider->filterModel->filterContent;
             }
-            if ($this->useCheckForRows) {
-                $actionsWithChecked = '';
+
+            if ($this->useActions) {
+                $actionsWithChecked = "
+                           <select class='checkActionsSelect' onchange='actionWithChecked(this);'>
+                                <option disabled selected value='label'>" .  Yii::t('app', 'Действия с отмеченными строками') ."</option>" . PHP_EOL;
+                foreach ($this->actionsList as $keyAction => $text) {
+                    $actionsWithChecked .= "<option value='$keyAction'>$text</option>" . PHP_EOL ;
+                }
+                $actionsWithChecked .= "</select>" . PHP_EOL;
+                /*
                 if (isset($this->checkActionList['actions']) && isset($this->checkActionList['options'])) {
                     $actionsWithChecked = "
                            <select class='checkActionsSelect' onchange='" . $this->checkActionList['options']['onchange'] . "'>
@@ -129,23 +162,20 @@ class Xgrid extends GridView
                         $actionsWithChecked .= "<option value='$action'>$text</option>" . PHP_EOL ;
                     }
                     $actionsWithChecked .= "</select>" . PHP_EOL;
-/*
-                    $actionsWithChecked_ = Html::dropDownList(null,
-                        null,$this->checkActionList['actions'], $this->checkActionList['options']);
-*/
                 }
-                $filterBody = '
+                */
+            }
+
+            $filterBody = '
             <tr>
                 <td>
                    <div class="row">
                         <div class="col-lg-3" align="left">
-                            <span>' . $actionsWithChecked . ' ' . $uploadButton . '</span>
+                            <span>' . $actionsWithChecked . '</span>
                         </div>
-                        <div class="col-md-7" align="left" style="font-style: italic;">
-                             <b>' . $this->gridTitle .  '</b>'
-                    . ' '
-                    . $filterContent . ' ' .
-                    '</div>
+                        <div class="col-md-7" align="left" style="font-style: italic;">'
+                            . $filterContent
+                     . '</div>
                         <div class="col-md-1" align="right">
                           ' . $filterButton . '
                         </div>
@@ -153,38 +183,13 @@ class Xgrid extends GridView
                    <div class="row">
                      <div class="col-md-12" style="display: none" id="filterZone">
                       ' . $this->render($this->filterView, [
-                        'filter' => $filter,
-                    ]) . '
-                      </div>
+                         'filter' => $filter,
+                        ]) . '
                     </div>
-                </td>
-            </tr>
-            ';
-            } else {
-                $filterBody = '
-            <tr>
-                <td>
-                   <div class="row">
-                        <div class="col-md-11" align="left" style="font-style: italic;">
-                             <b>' . $this->gridTitle .  '</b>'
-                    . ' '
-                    . $filterContent .
-                    '</div>
-                        <div class="col-md-1" align="right">
-                          ' . $filterButton .  ' 
-                        </div>
                    </div>
-                   <div class="row">
-                     <div class="col-md-12" style="display: none" id="filterZone">
-                      ' . $this->render($this->filterView, [
-                        'filter' => $filter,
-                    ]) . '
-                      </div>
-                    </div>
                 </td>
             </tr>
             ';
-            }
 
         } else {
             $filterBody ='
@@ -192,13 +197,12 @@ class Xgrid extends GridView
                  <td>
                      <div class="row">
                          <div class="col-md-6">
-                           <b>' . $this->gridTitle .  '</b>
+                           <b>No filter</b>
                          </div>
                      </div>
                 </td>
             </tr>
         ';
-
         }
         return $filterBody;
     }
@@ -250,7 +254,7 @@ class Xgrid extends GridView
             }
         } else {
             foreach ($this->columns as $column) {
-                if ($this->useCheckForRows) {
+                if ($this->useActions) {
                     if (isset($column->options['class']) && $column->options['class'] == 'row-check'){
                         $cells[] = $this->renderRowCheckBox($key);
                     } else {
@@ -360,7 +364,9 @@ class Xgrid extends GridView
 
     public function renderRowCheckBox($key)
     {
-        $checked = (is_array($this->checkedIds) && in_array($key, $this->checkedIds)) ? 'checked' : '';
+        $checked = ($this->dataProvider->filterModel->allRowsAreChecked || (is_array($this->checkedIds) && in_array($key, $this->checkedIds)))
+            ? 'checked'
+            : '';
         $checkBox = '<input type="checkbox" id="row-check-' .  $key . '" class="row-check" data-id = "' . $key . '" onChange="checkRow(this);" ' . $checked . '>';
         return Html::tag('td', $checkBox);
     }

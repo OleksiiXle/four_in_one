@@ -52,9 +52,9 @@ use yii\bootstrap\ActiveForm;
             </div>
             <div class="col-md-12 col-lg-6 ">
                 <?php
-                echo $form->field($filter, 'showOnlyChecked')->checkbox([
-                      //  'onchange' => 'checkOnlyChecked(this);'
-                ]);
+                //todo***************** обязательные поля
+                echo $form->field($filter, 'showOnlyChecked')->checkbox();
+                echo $form->field($filter, 'allRowsAreChecked');
                 ?>
             </div>
         </div>

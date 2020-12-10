@@ -65,9 +65,9 @@ class UserController extends MainController
                     'allow'      => true,
                     'actions'    => [
                         'signup-by-admin', 'change-user-activity', 'update-by-admin',
-                        'get-personal-data', 'get-personal-data-by-id', 'get-personal-data-by-fio', 'get-department-name'
+                        'conservation', 'conserve-delete'
                     ],
-                    'roles'      => ['adminUserCreate', 'adminUserUpdate' ],
+                    'roles'      => ['adminUserCreate', 'adminUserUpdate', 'adminSuper' ],
                 ],
                 [
                     'allow'      => true,
@@ -120,7 +120,7 @@ class UserController extends MainController
         $usersGrid = new UsersGrid();
         if (Yii::$app->request->isPost) {
             Yii::$app->getResponse()->format = Response::FORMAT_HTML;
-            return $usersGrid->reload();
+            return $usersGrid->reload(Yii::$app->request->post());
         }
         return $this->render('test', [
             'usersGrid' => $usersGrid,
@@ -312,16 +312,27 @@ class UserController extends MainController
      * @param $id
      * @return string
      */
-    public function actionConservation($id)
+    public function actionConservation($user_id)
     {
         $conservationJson = Conservation::find()
-            ->where(['user_id' => $id])
+            ->where(['user_id' => $user_id])
             ->asArray()
             ->all();
         $conservation = ((isset($conservationJson[0]['conservation'])))
             ? json_decode($conservationJson[0]['conservation'], true)
             : [];
-        return $this->render('conservation' , ['conservation' => $conservation]);
+        return $this->render('conservation' , [
+            'conservation' => $conservation,
+            'user_id' => $user_id]
+        );
+    }
+
+    public function actionConserveDelete($user_id)
+    {
+        if (Yii::$app->request->isPost) {
+            $del = Conservation::deleteAll(['user_id' => $user_id]);
+        }
+        return $this->redirect(Url::toRoute('/adminxx/user'));
     }
 
     /**

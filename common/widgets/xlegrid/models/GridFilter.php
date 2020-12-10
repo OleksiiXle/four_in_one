@@ -7,17 +7,44 @@ use yii\base\Model;
 class GridFilter extends Model
 {
     public $checkedIds = [];
-    public $checkedIdsJSON = '{}';
+    public $allRowsAreChecked;
     public $showOnlyChecked;
     public $queryModel;
+    private $_sqlPrefix;
     public $_filterContent = [];
+
+    /**
+     * @return mixed
+     */
+    public function getSqlPrefix()
+    {
+        if ($this->_sqlPrefix === null) {
+            $this->_sqlPrefix = ($this->queryModel)::tableName();
+        }
+        return $this->_sqlPrefix;
+    }
+
+    public function getQueryIds()
+    {
+        $this->showOnlyChecked = false;
+        $queryIds = $this->getQuery()
+            ->select([$this->sqlPrefix . ".id"])
+            ->asArray()
+            ->indexBy("id")
+            ->all();
+        $this->checkedIds = array_keys($queryIds);
+        $this->showOnlyChecked = true;
+
+        return $queryIds;
+    }
+
 
 
     public function rules()
     {
         return [
-            [['checkedIdsJSON'], 'string', 'max' => 1000],
-            [[ 'showOnlyChecked'], 'boolean'],
+            [['checkedIds'], 'safe'],
+            [[ 'showOnlyChecked', 'allRowsAreChecked'], 'boolean'],
         ];
     }
 
