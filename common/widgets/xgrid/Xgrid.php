@@ -7,8 +7,10 @@ use common\widgets\xgrid\models\GridUploadWorker;
 use yii\grid\DataColumn;
 use yii\grid\GridView;
 use yii\grid\GridViewAsset;
+use yii\grid\SerialColumn;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\helpers\Json;
 use common\widgets\xgrid\models\LinkPager;
 use common\widgets\xgrid\models\LinkSorter;
@@ -28,7 +30,7 @@ class Xgrid extends GridView
 
 
     public $name; //** уникальное, для действия контроллера имя грида, по которому при перезагрузке определяется, какой грид обновлять
-    public $reload = false; //служебное поле, сигнализирующее, выводится ли грид первый раз или обновляется
+    public $renderMode; //служебное поле, определяющее режим вывода (первая загрузка, релоад, вывод в файл)
     public $filterView;// вьюха для фильтра '@app/views/dictionary/_search';
     public $filterRenderOptions = [
         'class' => 'table table-bordered',
@@ -37,19 +39,9 @@ class Xgrid extends GridView
     public $useAjax = false;
     public $useActions = false; // добавлять в грид список действий с данными грида (для включения необходимо прописать действия в классе грида)
     public $actionsList = []; //список действий (формируется автоматически, задавать не надо
-    public $checkActionList = [
-        /*
-        'actions' => [
-            'action1' => 'action1***',
-            'action2' => 'action2***',
-            'action3' => 'action3***',
-        ],
-        'options' => [
-            'onchange' => 'actionWithChecked(this);',
-        ],
-        */
-    ];
     public $checkedIds = [];
+    public $useCustomUploadFunction = true;
+    public $gridModel;
 
     public function init()
     {
@@ -63,13 +55,16 @@ class Xgrid extends GridView
     public function run()
     {
         $view = $this->getView();
-        if (!$this->reload) {
+  //      $this->renderMode = 'upload';
+        if ($this->renderMode == 'draw') {
             $js = "
             const GRID_NAME = '$this->name';
             const GRID_ID = '$this->id';
             const USE_AJAX = '$this->useAjax';
+            const USE_CUSTOM_UPLOAD_FUNCTION = '$this->useCustomUploadFunction';
             var _filterClassShortName = '" . $this->dataProvider->filterClassShortName . "';
-            var _checkedIdsFromRequest = ". json_encode($this->dataProvider->filterModel->checkedIds) . ";";
+            var _checkedIdsFromRequest = ". json_encode($this->dataProvider->filterModel->checkedIds) . ";
+            var _gridModel = '". addcslashes($this->gridModel, '\\') . "';";
             if (!empty($this->dataProvider->filterModel)){
                 $this->checkedIds = $this->dataProvider->filterModel->checkedIds;
                 $js .= PHP_EOL . "var _filterModel = '" . addcslashes($this->dataProvider->filterModelClass, '\\') . "';";
@@ -89,32 +84,104 @@ class Xgrid extends GridView
             if (!empty($this->dataProvider->filterModel)){
                 $this->checkedIds = $this->dataProvider->filterModel->checkedIds;
             }
-
         }
 
-        //-- BaseListView
-        if ($this->showOnEmpty || $this->dataProvider->getCount() > 0) {
-            $content = preg_replace_callback('/{\\w+}/', function ($matches) {
-                $content = $this->renderSection($matches[0]);
+        switch ($this->renderMode) {
+            case 'draw':
+            case 'reload':
+            //-- BaseListView
+            if ($this->showOnEmpty || $this->dataProvider->getCount() > 0) {
+                $content = preg_replace_callback('/{\\w+}/', function ($matches) {
+                    $content = $this->renderSection($matches[0]);
 
-                return $content === false ? $matches[0] : $content;
-            }, $this->layout);
-        } else {
-            $content = $this->renderEmpty();
+                    return $content === false ? $matches[0] : $content;
+                }, $this->layout);
+            } else {
+                $content = $this->renderEmpty();
+            }
+            $options = $this->options;
+            $tag = ArrayHelper::remove($options, 'tag', 'div');
+                break;
+            case 'upload':
+                $content = $this->renderForUpload();
+                break;
+        }
+        switch ($this->renderMode) {
+            case 'draw':
+                echo Html::tag($tag, $content, $options);
+                break;
+            case 'reload':
+                $response = [
+                    'body'  => Html::tag($tag, $content, $options),
+                    'checkedIds' => $this->checkedIds
+                ];
+                return json_encode($response);
+                return Html::tag($tag, $content, $options);
+                break;
+            case 'upload':
+                return $content;
+                break;
+        }
+        return "Bad renderMode";
+    }
+
+    public function renderForUpload()
+    {
+        //--header
+        $result = [];
+        $result[] = $this->renderHeadersForUpload();
+
+        //-- data
+        $models = array_values($this->dataProvider->getModels());
+        $keys = $this->dataProvider->getKeys();
+        foreach ($models as $index => $model) {
+            $key = $keys[$index];
+            $row = [];
+            foreach ($this->columns as $column) {
+                if (($column instanceof SerialColumn) || ($column instanceof DataColumn && $column->label !== '')) {
+                  //  $row[] = strip_tags($column->renderDataCell($model, $key, $index));
+                    if ($column instanceof SerialColumn) {
+                        $row[] = $index + 1;
+                    } elseif ($column instanceof DataColumn && $column->content === null) {
+                        $row[] = Html::encode($column->getDataCellValue($model, $key, $index));
+                    } elseif ($column instanceof DataColumn) {
+                        $row[] = strip_tags(call_user_func($column->content, $model, $key, $index, $this));
+                    } else {
+                        $row[] = '';
+                    }
+                }
+            }
+
+            $result[] = $row;
+        }
+        return $result;
+    }
+
+    private function renderHeadersForUpload()
+    {
+        $row = [];
+        $modelClass = $this->dataProvider->query->modelClass;
+        $model = $modelClass::instance();
+        $labels = $model->attributeLabels();
+
+        foreach ($this->columns as $column) {
+            if ($column instanceof SerialColumn) {
+                $row[] = 'N';
+            }
+            if ($column instanceof DataColumn && $column->label !== '') {
+                if ($column->label !== null) {
+                    $row[] = Html::encode($column->label);
+                } elseif ($column->attribute !== null && isset($labels[$column->attribute])) {
+                    $row[] = $labels[$column->attribute];
+                } elseif ($column->attribute !== null) {
+                    $row[] = Inflector::camel2words($column->attribute);
+                } else {
+                    $row[] = '';
+                }
+            }
         }
 
-        $options = $this->options;
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-        if (!$this->reload) {
-            echo Html::tag($tag, $content, $options);
-        } else {
-            $response = [
-                'body'  => Html::tag($tag, $content, $options),
-                'checkedIds' => $this->checkedIds
-            ];
-            return json_encode($response);
-            return Html::tag($tag, $content, $options);
-        }
+        return $row;
     }
 
     /**
@@ -147,17 +214,6 @@ class Xgrid extends GridView
                     $actionsWithChecked .= "<option value='$keyAction'>$text</option>" . PHP_EOL ;
                 }
                 $actionsWithChecked .= "</select>" . PHP_EOL;
-                /*
-                if (isset($this->checkActionList['actions']) && isset($this->checkActionList['options'])) {
-                    $actionsWithChecked = "
-                           <select class='checkActionsSelect' onchange='" . $this->checkActionList['options']['onchange'] . "'>
-                                <option disabled selected value='label'>Операции с выбранными строками</option>" . PHP_EOL;
-                    foreach ($this->checkActionList['actions'] as $action => $text) {
-                        $actionsWithChecked .= "<option value='$action'>$text</option>" . PHP_EOL ;
-                    }
-                    $actionsWithChecked .= "</select>" . PHP_EOL;
-                }
-                */
             }
 
             $filterBody = '
@@ -287,6 +343,7 @@ class Xgrid extends GridView
         return "<thead>\n" . $content . "\n</thead>";
     }
 
+
     public function renderItems()
     {
         $filter = $this->renderFilters();
@@ -372,10 +429,11 @@ class Xgrid extends GridView
         $count = $this->dataProvider->getCount();
 
         if (isset($this->dataProvider->filterModel)) {
-            if (is_array($this->dataProvider->filterModel->filterContent)) {
-                $filterContent = implode(',', $this->dataProvider->filterModel->filterContent);
+            $filterModelFilterContent = $this->dataProvider->filterModel->filterContent;
+            if (is_array($filterModelFilterContent)) {
+                $filterContent = implode(',', $filterModelFilterContent);
             } else {
-                $filterContent = $this->dataProvider->filterModel->filterContent;
+                $filterContent = $filterModelFilterContent;
             }
         } else {
             $filterContent = '';

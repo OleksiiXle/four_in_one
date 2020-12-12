@@ -20,25 +20,38 @@ class GridUploadWorker extends TaskWorker
         try {
             // throw new \Exception('test exeption');
             $ret = $this->task->setTimeLimit(3600);
-            $arguments = $this->arguments;
-            $filterModel = new $this->arguments['filterModel']();
-          //  $filterModel->setAttributes($this->arguments['attributes']);
-            foreach ($this->arguments['query'] as $item) {
-                $filterModel->{$item['name']} =  $item['value'];
-            }
-            /*
-            if (!empty($this->arguments['checkedIds'])) {
-                $filterModel->checkedIds = $this->arguments['checkedIds'];
-            }
-            */
-
             $pathToFile = Yii::$app->basePath . '/runtime/uploads/';
             if (!is_dir($pathToFile)) {
                 mkdir($pathToFile, 0777, true);
             }
             $fullFileName = $pathToFile . 'report_' . $this->task->user_id . '_' . time() . '.csv';
             $this->task->setResult($fullFileName);
-            $this->prepareFile($filterModel, $fullFileName);
+            switch ($this->arguments['uploadFunction']) {
+                case 'custom':
+                    $filterModel = new $this->arguments['filterModel']();
+                    foreach ($this->arguments['query'] as $item) {
+                        if ($item['name'] == 'checkedIds') {
+                            $filterModel->{$item['name']} = json_decode($item['value'], true);
+                        } else {
+                            $filterModel->{$item['name']} =  $item['value'];
+                        }
+                    }
+                    $this->prepareFileCustom($filterModel, $fullFileName);
+                    break;
+                case 'default':
+                    $consoleFilter = [];
+                    foreach ($this->arguments['query'] as $item) {
+                        if ($item['name'] == 'checkedIds') {
+                            $consoleFilter[$item['name']] = json_decode($item['value'], true);
+                        } else {
+                            $consoleFilter[$item['name']] =  $item['value'];
+                        }
+                    }
+                    $consoleFilter['actionWithChecked'] =  true;
+                    $this->prepareFileDefault($this->arguments['gridModel'], $fullFileName, $consoleFilter);
+                    break;
+            }
+
             if ($this->resultSuccess) {
                 if ($this->resultOperationSuccess) {
                     return true;
@@ -59,7 +72,7 @@ class GridUploadWorker extends TaskWorker
         }
     }
 
-    private function prepareFile($filterModel, $fullFileName)
+    private function prepareFileDefault($gridModel, $fullFileName, $consoleFilter)
     {
         try {
            // throw new \Exception('test exeption');
@@ -67,6 +80,47 @@ class GridUploadWorker extends TaskWorker
             $this->task->setProgress(0);
             $this->task->setCustomStatus('Подготовка данных для выгрузки в файл ...');
 
+            $grid = new $gridModel([
+                'consoleFilter' => $consoleFilter,
+            ]);
+            $dataToUpload = $grid->upload();
+
+            $this->logsInit(count($dataToUpload));
+
+            $fp = fopen($fullFileName, 'w');
+            $this->task->setCustomStatus('Выгрузка в файл ...');
+            foreach ($dataToUpload as $data) {
+                if ($this->done == 5) {
+                //    throw new \Exception('test exeption');
+                }
+             //   $this->doLogs($this->done . '-' . $data->username);
+                $this->doLogs();
+                fputcsv($fp, $data);
+            }
+            $this->resultSuccess = true;
+            $this->resultOperationSuccess = true;
+            $this->task->setProgress(100);
+            $this->task->setCustomStatus('Операция успешно завершена');
+        } catch (\Exception $e) {
+            $this->setResultSuccess($this->reportPortion);
+            $this->resetResult();
+            $errorsArray = $this->prepareErrorStringToHtml($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            $this->setResultError($errorsArray, false);
+            return false;
+        }
+
+        return true;
+    }
+
+    private function prepareFileCustom($filterModel, $fullFileName)
+    {
+        try {
+           // throw new \Exception('test exeption');
+            $this->resetResult();
+            $this->task->setProgress(0);
+            $this->task->setCustomStatus('Подготовка данных для выгрузки в файл ...');
+
+            $filterModel->actionWithChecked = true;
             $dataToUpload = $filterModel->getQuery()->all();
             $this->logsInit(count($dataToUpload));
 

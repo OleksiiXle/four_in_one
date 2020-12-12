@@ -4,29 +4,66 @@ namespace common\widgets\xgrid\models;
 
 use yii\base\Model;
 
-class GridFilter extends Model
+abstract class GridFilter extends Model
 {
-  //  public $checkedIds = [];
-    public $checkedIdsJSON = '{}';
+    public $checkedIds = [];
+    public $allRowsAreChecked =  false;
+    public $actionWithChecked = false;
     public $showOnlyChecked;
     public $queryModel;
-    public $_filterContent = [];
+    public $_filterContent = null;
+    private $_sqlPrefix;
+    private $_defaultQuery;
 
+    abstract public function getCustomQuery();
+    abstract public function getQuery();
 
     public function rules()
     {
         return [
-            [['checkedIdsJSON'], 'string', 'max' => 1000],
-            [[ 'showOnlyChecked'], 'boolean'],
+            [['checkedIds'], 'safe'],
+            [[ 'showOnlyChecked', 'allRowsAreChecked', 'actionWithChecked'], 'boolean'],
         ];
     }
 
-    public function getQuery()
+    /**
+     * @return mixed
+     */
+    public function getDefaultQuery()
     {
-        $query = ($this->queryModel)::find();
-       //    $e = $query->createCommand()->getSql();
+        $this->_defaultQuery = $this->getCustomQuery();
+        if (!$this->actionWithChecked) {
+            if (!$this->allRowsAreChecked && $this->showOnlyChecked == '1' && !empty($this->checkedIds)) {
+                $this->_defaultQuery
+                    ->andWhere(['IN', "$this->sqlPrefix.id", $this->checkedIds]);
+                $this->_filterContent .= Yii::t('app', 'Только отмеченные');
+            }
+        } else {
+            if (!$this->allRowsAreChecked && !empty($this->checkedIds)) {
+                $this->_defaultQuery
+                    ->andWhere(['IN', "$this->sqlPrefix.id", $this->checkedIds]);
+            }
+        }
+        return $this->_defaultQuery;
+    }
 
-        return $query;
+    public function getFilterContent()
+    {
+        $this->_filterContent = '';
+        $this->getQuery();
+
+        return $this->_filterContent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSqlPrefix()
+    {
+        if ($this->_sqlPrefix === null) {
+            $this->_sqlPrefix = ($this->queryModel)::tableName();
+        }
+        return $this->_sqlPrefix;
     }
 
 

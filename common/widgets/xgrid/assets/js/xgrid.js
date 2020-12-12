@@ -3,18 +3,22 @@
 const GRID_ID = '$this->id';
 const GRID_NAME = '$this->name';
 const USE_AJAX = 1 / 0
+const USE_CUSTOM_UPLOAD_FUNCTION = '$this->useCustomUploadFunction';
+var _gridModel = '". addcslashes(static::class, '\\') . "'';";
 var _filterClassShortName = '" . $this->dataProvider->filterClassShortName . "';
 var _filterModel = '......'
 var _workerClass = '......'
 var _checkedIdsFromRequest = ". json_encode($this->dataProvider->filterModel->checkedIds) . ";";
 */
 
+var filterQuery = [];
 var filterQueryJSON = '{}';
 var filterQueryObject = {};
 var checkedIds = [];
 
 $(document).ready(function(){
     checkedIds = _checkedIdsFromRequest;
+   console.log(_gridModel);
 //    console.log(checkedIds);
     if (USE_AJAX) {
       //  console.log($(PJAX_CONTAINER_ID + ' a'));
@@ -62,7 +66,16 @@ function doAjax(href, action) {
             if (action == 'reload') {
                 checkedIds = response['checkedIds'];
             }
-        //   console.log(checkedIds);
+            switch (action) {
+                case 'checkAll':
+                    break;
+                case 'unCheckAll':
+                    break;
+                case 'uploadChecked':
+                    startBackgroundUploadTask();
+                    break;
+            }
+//   console.log(checkedIds);
 
         },
         error: function (jqXHR, error, errorThrown) {
@@ -203,6 +216,7 @@ function cleanFilter(reload){
  //   $('textarea[id^=' + _filterClassShortName.toLowerCase() + '-]').innerHTML('');
     $('input[type="checkbox"][id^=' + _filterClassShortName.toLowerCase() + '-]').prop('checked', false);
     $('select[id^=' + _filterClassShortName.toLowerCase() + '-]').val(0);
+    $("#" + _filterClassShortName.toLowerCase() + "-allrowsarechecked").val(0);
     checkedIds = [];
 //    console.log(checkedIds);
     history.pushState({}, '', window.location.origin +  window.location.pathname);
@@ -252,9 +266,11 @@ function parseUrl(href) {
 
 //-- запуск выгрузки файла со списком в режиме фоновой задачи
 function startBackgroundUploadTask() {
-    getFilterQuery();
+ //   getFilterQuery();
+    filterQuery.push({'name':'checkedIds', 'value' : JSON.stringify(checkedIds)});
+    console.log(filterQuery);
     var params = {
-        'mode' : 'prod',
+        'mode' : 'dev',
         'useSession' : true,
        // 'mode' : 'dev',
         'checkProgressInterval' : 500,
@@ -266,8 +282,9 @@ function startBackgroundUploadTask() {
         'model' : _workerClass,
         'arguments' : {
             'filterModel' : _filterModel,
+            'gridModel' : _gridModel,
             'query' : filterQuery,
-            'checkedIds' : checkedIds
+            'uploadFunction' : (USE_CUSTOM_UPLOAD_FUNCTION) ? 'custom' : 'default'
         },
         'showErrorsArea' : true,
         'doOnSuccessTxt' : "$(this.doneButon).show();",
@@ -276,6 +293,7 @@ function startBackgroundUploadTask() {
                                 "this.uploadResult(true, true, 'result');",
                                 */
     };
+    console.log(filterQuery);
 
     startNewBackgroundTask(params);
 }

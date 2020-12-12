@@ -22,8 +22,24 @@ class GridDataProvider extends BaseDataProvider
     public $hasFilter=false;
     public $searchId = 0; //-- если не 0 - первый раз переход на страницу где этот ид
     public $filterClassShortName = '';
+    public $usePagination = true;
+    public $consoleFilter = [];
+    public $construct = 'web';
 
     public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        switch ($this->construct) {
+            case 'web':
+                $this->webConstruct($config);
+                break;
+            case 'console':
+                $this->consoleConstruct($config);
+                break;
+        }
+    }
+
+    private function webConstruct()
     {
         $session = \Yii::$app->session;
         if ($session->get('searchIid')){
@@ -31,18 +47,19 @@ class GridDataProvider extends BaseDataProvider
             $session->remove('searchIid');
         }
 
-        parent::__construct($config);
         if (!empty($this->conserveName)) {
             $this->getConserves();
         }
-        $this->pagination = [
-            'class'            => 'common\components\conservation\PaginationConserve',
-            'conserveName' => $this->conserveName,
-            'pageSize' => $this->pageSize,
-            'startPage' => $this->conserves['startPage'],
-            'totalCount' => 0,
-            'searchId' => $this->searchId,
-        ];
+        $this->pagination = ($this->usePagination)
+            ? [
+                'class'            => 'common\components\conservation\PaginationConserve',
+                'conserveName' => $this->conserveName,
+                'pageSize' => $this->pageSize,
+                'startPage' => $this->conserves['startPage'],
+                'totalCount' => 0,
+                'searchId' => $this->searchId,
+            ]
+            : false;
         //-- фильтр
         if (isset($this->filterModelClass)){
             if (!$this->filterModel){
@@ -55,9 +72,9 @@ class GridDataProvider extends BaseDataProvider
             $checkedIds = [];
             if(\Yii::$app->request->isPost) {
                 $_post = \Yii::$app->request->post();
-              //  if (isset($_post['checkedIds']) && $this->filterModel->hasProperty('checkedIds')) {
-             //       $this->filterModel->checkedIds =  $_post['checkedIds'];
-              //  }
+                //  if (isset($_post['checkedIds']) && $this->filterModel->hasProperty('checkedIds')) {
+                //       $this->filterModel->checkedIds =  $_post['checkedIds'];
+                //  }
                 if (isset($_post['checkedIds'])) {
                     $checkedIds = json_decode($_post['checkedIds'], true);
                 }
@@ -79,38 +96,39 @@ class GridDataProvider extends BaseDataProvider
 
                 if (!empty($this->conserveName)) {
                     $cJSON = \Yii::$app->conservation->setConserveGridDB(
-                            $this->conserveName,
-                            'filter',
-                            json_encode($this->filterModel->getAttributes())
-                        );
-                    $cJSON = \Yii::$app->conservation->setConserveGridDB($this->conserveName, $this->pagination->pageParam, 1);
+                        $this->conserveName,
+                        'filter',
+                        json_encode($this->filterModel->getAttributes())
+                    );
+                    if ($this->pagination) {
+                        $cJSON = \Yii::$app->conservation->setConserveGridDB($this->conserveName, $this->pagination->pageParam, 1);
+                    }
                 }
-                $this->pagination->startPage = 0;
+                if ($this->pagination) {
+                    $this->pagination->startPage = 0;
+                }
             } elseif(!empty($this->conserveName)) {
                 //-- фильтр не пришел
                 $params = (array) $this->conserves['filter'];
                 $this->filterModel->setAttributes($params);
             }
 
-            /*
-            if (\Yii::$app->request->isPost) { //-- пришел новый фильтр
-                $params = self::prepareParams(\Yii::$app->request->post());
-                $this->filterModel->load($params, '');
-                $cJSON = \Yii::$app->conservation
-                    ->setConserveGridDB(
-                        $this->conserveName,
-                        'filter',
-                        json_encode($this->filterModel->getAttributes())
-                    );
-                $cJSON = \Yii::$app->conservation
-                    ->setConserveGridDB($this->conserveName, $this->pagination->pageParam, 1);
-                $this->pagination->startPage = 0;
-            } elseif (isset($this->conserves['filter'])){ //-- фильтр не пришел, но может быть что нибудь есть в консерве с прошлого раза
-                $params = (array) $this->conserves['filter'];
-                $this->filterModel->setAttributes($params);
-            }
-            */
+            $this->query = $this->filterModel->getQuery();
+        } else {
+            $this->query = $this->baseModel;
+        }
+    }
 
+    private function consoleConstruct()
+    {
+        $this->pagination = false;
+        //-- фильтр
+        if (isset($this->filterModelClass)){
+            if (!$this->filterModel){
+                $this->filterModel = new $this->filterModelClass;
+                $this->filterClassShortName = $this->filterModel->formName();
+                $this->filterModel->setAttributes($this->consoleFilter);
+            }
             $this->query = $this->filterModel->getQuery();
         } else {
             $this->query = $this->baseModel;

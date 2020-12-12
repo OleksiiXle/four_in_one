@@ -54,7 +54,7 @@ use yii\bootstrap\ActiveForm;
                 <?php
                 //todo***************** обязательные поля
                 echo $form->field($filter, 'showOnlyChecked')->checkbox();
-                echo $form->field($filter, 'allRowsAreChecked');
+                echo $form->field($filter, 'allRowsAreChecked')->hiddenInput()->label(false);
                 ?>
             </div>
         </div>
@@ -72,10 +72,6 @@ use yii\bootstrap\ActiveForm;
                     'class' => 'btn btn-danger',
                     'id' => 'cleanBtn',
                     'onclick' => 'cleanFilter(true);',
-                ]) ?>
-                <?= Html::button('В файл', [
-                    'class' => 'btn btn-success',
-                    'onclick' => 'startBackgroundUploadTask();',
                 ]) ?>
             </div>
         </div>

@@ -2,12 +2,11 @@
 namespace apiadmin\modules\adminxx\models\filters;
 
 use apiadmin\modules\adminxx\models\UserM;
-use common\widgets\xlegrid\models\GridFilter;
+use common\widgets\xgrid\models\GridFilter;
 
 class UserFilter extends GridFilter
 {
     public $queryModel = UserM::class;
-    public $checkAll;
 
     public $datetime_range = '';
     public $datetime_min = '';
@@ -24,34 +23,11 @@ class UserFilter extends GridFilter
     public $permission;
     private $_roleDict;
 
-    /**
-     * @return mixed
-     */
-    public function getRoleDict()
-    {
-        $roles = \Yii::$app->authManager->getRoles();
-        $this->_roleDict['0'] = 'Не визначено';
-        foreach ($roles as $role){
-            $this->_roleDict[$role->name] = $role->name;
-        }
-
-        return $this->_roleDict;
-    }
     public $permissionDict;
     public $additionalTitle = '';
 
     public $showStatusActive;
     public $showStatusInactive;
-
-
-    public function getFilterContent()
-    {
-        if ($this->_filterContent === null) {
-            $this->getQuery();
-        }
-
-        return $this->_filterContent;
-    }
 
     public function rules()
     {
@@ -104,17 +80,33 @@ class UserFilter extends GridFilter
         ];
     }
 
+    public function getCustomQuery()
+    {
+        return UserM::find()
+            ->joinWith(['userDatas']);
+        // TODO: Implement getDefaultQuery() method.
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoleDict()
+    {
+        $roles = \Yii::$app->authManager->getRoles();
+        $this->_roleDict['0'] = 'Не визначено';
+        foreach ($roles as $role){
+            $this->_roleDict[$role->name] = $role->name;
+        }
+
+        return $this->_roleDict;
+    }
+
+
     public function getQuery()
     {
+        //Yii::t('app', 'Пометить все выбранные строки, как выделенные')
         $tmp = 1;
-        $query = UserM::find()
-            ->joinWith(['userDatas']);
-        $this->_filterContent = '';
-        if ($this->showOnlyChecked == '1' && !empty($this->checkedIds)) {
-            $query->andWhere(['IN', 'user.id', $this->checkedIds]);
-            $this->_filterContent .= ' * Только отмеченные*;' ;
-            return $query;
-        }
+        $query = $this->defaultQuery;
 
         if (!$this->validate()) {
             return $query;
@@ -123,57 +115,54 @@ class UserFilter extends GridFilter
         if (!empty($this->role)) {
             $query ->innerJoin('auth_assignment aa', 'user.id=aa.user_id')
                 ->innerJoin('auth_item ai', 'aa.item_name=ai.name')
-                ->where(['ai.type' => 1])
+                ->andWhere(['ai.type' => 1])
                 ->andWhere(['aa.item_name' => $this->role])
             ;
-            $this->_filterContent .= ' Роль *' . $this->roleDict[$this->role] . '*;' ;
+            $this->_filterContent .= ' Роль "' . $this->roleDict[$this->role] . '";' ;
         }
 
         if (!empty($this->emails)) {
             $query->andWhere(['LIKE', 'user.emails', $this->emails]);
-            $this->_filterContent .= ' Email *' . $this->emails . '*;' ;
+            $this->_filterContent .= ' Email "' . $this->emails . '";' ;
         }
 
         if (!empty($this->username)) {
             $query->andWhere(['user.username' => $this->username]);
-            $this->_filterContent .= ' Логін *' . $this->username . '*;' ;
+            $this->_filterContent .= ' Логін "' . $this->username . '"*;' ;
         }
 
 
         if (!empty($this->first_name)) {
             $query->andWhere(['like', 'user_data.first_name', $this->first_name]);
-            $this->_filterContent .= ' Ім"я *' . $this->first_name . '*;' ;
+            $this->_filterContent .= ' Ім"я "' . $this->first_name . '";' ;
         }
 
         if (!empty($this->middle_name)) {
             $query->andWhere(['like', 'user_data.middle_name', $this->middle_name]);
-            $this->_filterContent .= ' По-батькові *' . $this->middle_name . '*;' ;
+            $this->_filterContent .= ' По-батькові "' . $this->middle_name . '";' ;
         }
 
         if (!empty($this->last_name)) {
             $query->andWhere(['like', 'user_data.last_name', $this->last_name]);
-            $this->_filterContent .= ' Прізвище *' . $this->last_name . '*;' ;
+            $this->_filterContent .= ' Прізвище "' . $this->last_name . '";' ;
         }
 
         if ($this->showStatusActive =='1'){
             $query->andWhere(['user.status' => UserM::STATUS_ACTIVE]);
-            $this->_filterContent .= ' * Тількі активні*;' ;
+            $this->_filterContent .= ' Тількі активні;' ;
         }
 
         if ($this->showStatusInactive =='1'){
             $query->andWhere(['user.status' => UserM::STATUS_INACTIVE]);
-            $this->_filterContent .= ' * Тількі неактивні*;' ;
+            $this->_filterContent .= ' Тількі неактивні;' ;
         }
 
         if (!empty($this->datetime_min) && !empty($this->datetime_max)) {
-            $tmp = strtotime($this->datetime_min);
             $query->andWhere(['>=','user.created_at', strtotime($this->datetime_min)])
                   ->andWhere(['<=','user.created_at', strtotime($this->datetime_max)]);
-            $this->_filterContent .= ' * Создан ' . $this->datetime_range . ' *;' ;
+            $this->_filterContent .= '  Создан ' . $this->datetime_range . ' ;' ;
         }
-
-
-        $e = $query->createCommand()->getSql();
+//        $e = $query->createCommand()->getSql();
 
         return $query;
 

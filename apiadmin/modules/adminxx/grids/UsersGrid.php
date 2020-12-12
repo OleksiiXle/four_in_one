@@ -1,86 +1,26 @@
 <?php
 namespace apiadmin\modules\adminxx\grids;
 
-use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\widgets\xgrid\models\Grid;
 use apiadmin\modules\adminxx\models\filters\UserFilter;
-use common\widgets\xgrid\models\GridDataProvider;
 use common\models\UserM;
 use common\widgets\menuAction\MenuActionWidget;
-use common\widgets\xgrid\Xgrid;
-use yii\web\BadRequestHttpException;
 
-class UsersGrid
+class UsersGrid extends Grid
 {
-    private $grid = null;
-    private $provider = null;
-    public $providerConfig = [
-            // 'searchId' => $id,
-            'filterModelClass' => UserFilter::class,
-            'conserveName' => 'userAdminGrid',
-            'pageSize' => 5,
-            'sort' => ['attributes' => [
-                'id',
-                'username',
-                'nameFam' => [
-                    'asc' => [
-                        'user_data.last_name' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_name' => SORT_DESC,
-                    ],
-                ],
-                'lastRoutTime' => [
-                    'asc' => [
-                        'user_data.last_rout_time' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout_time' => SORT_DESC,
-                    ],
-                ],
-                'lastRout' => [
-                    'asc' => [
-                        'user_data.last_rout' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout' => SORT_DESC,
-                    ],
-                ],
-                'status' => [
-                    'asc' => [
-                        'user.status' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user.status' => SORT_DESC,
-                    ],
-                ],
-            ]],
-        ];
-    private $gridConfig = null;
-
-
-    public function setGridConfig($reload = false)
+    /**
+     * @return array
+     */
+    public function gridConfig()
     {
-        if ($this->provider === null) {
-            $this->provider = new GridDataProvider($this->providerConfig);
-        }
-        $this->gridConfig = [
+        return [
             'name' => 'usersGrid',
             'dataProvider' => $this->provider,
             'useAjax' => true,
             'useActions' => true,
-            'checkActionList' => [
-                'actions' => [
-                    'action1' => 'action1***',
-                    'action2' => 'action2***',
-                    'action3' => 'action3***',
-                ],
-                'options' => [
-                    'class' => 'checkActionsSelect',
-                    'onchange' => 'actionWithChecked(this);',
-                ],
-            ],
+            'useCustomUploadFunction' => false,
             'filterView' => '@app/modules/adminxx/views/user/_filterUser',
             //-------------------------------------------
             'columns' => [
@@ -191,146 +131,54 @@ class UsersGrid
                 ],
             ],
         ];
-        if ($this->gridConfig['useActions']) {
-            $this->gridConfig['actionsList'] = $this->getActionsList();
-        }
-        $this->gridConfig['class'] = Xgrid::class;
-        if ($reload) {
-            $this->gridConfig['reload'] = true;
-        }
     }
-
-    public function makeGrid()
-    {
-        $this->grid = Yii::createObject($this->gridConfig);
-    }
-
-    public function getActions()
-    {
-        $actions = [
-            'checkAll' => [
-              'name' => Yii::t('app', 'Пометить все выбранные строки, как выделенные'),
-                'do' =>  function() {
-                    return $this->checkAllAction();
-                },
-            ],
-            'unCheckAll' => [
-              'name' => Yii::t('app', 'Отменить выделение'),
-              'do' => function(){
-                  return $this->unCheckAllAction();
-              },
-            ],
-            'uploadChecked' => [
-              'name' => Yii::t('app', 'Вывести выделенные в файл'),
-              'do' => function(){
-                  return $this->uploadCheckedAction();
-              },
-            ],
-        ];
-
-        return $actions;
-    }
-
-    public function getActionsList()
-    {
-        $ret = [];
-        foreach ($this->getActions() as $key => $action) {
-            $ret[$key] = $action['name'];
-        }
-
-        return $ret;
-    }
-
-    public function doAction($key)
-    {
-        $action = $this->getActions()[$key];
-        if ($action['do'] instanceof \Closure){
-            return call_user_func($action['do']);
-        }
-
-        return false;
-    }
-
-    public function checkAllAction()
-    {
-        $tmp = 1;
-        $this->provider = new GridDataProvider($this->providerConfig);
-        $this->provider->addConditionToFilter([
-            'allRowsAreChecked' => true,
-            'showOnlyChecked' => false,
-            'checkedIds' => [],
-            ]);
-    }
-
-    public function unCheckAllAction()
-    {
-        $tmp = 1;
-        $this->provider = new GridDataProvider($this->providerConfig);
-        $this->provider->addConditionToFilter([
-            'allRowsAreChecked' => false,
-            'showOnlyChecked' => false,
-            'checkedIds' => [],
-        ]);
-    }
-
-    public function uploadCheckedAction()
-    {
-        return true;
-    }
-
     /**
-     * Creates a widget instance and runs it.
-     * The widget rendering result is returned by this method.
-     * @param array $config name-value pairs that will be used to initialize the object properties
-     * @return string the rendering result of the widget.
-     * @throws \Exception
+     * @return array
      */
-    public function drawGrid()
+    public function providerConfig()
     {
-        ob_start();
-        ob_implicit_flush(false);
-        try {
-            /* @var $widget Widget */
-            $this->setGridConfig();
-            $this->makeGrid();
-            $result = $this->grid->run();
-            $out = $this->grid->afterRun($result);
-        } catch (\Exception $e) {
-            // close the output buffer opened above if it has not been closed already
-            if (ob_get_level() > 0) {
-                ob_end_clean();
-            }
-            throw $e;
-        }
-
-        return ob_get_clean() . $out;
+        return [
+            // 'searchId' => $id,
+            'filterModelClass' => UserFilter::class,
+            'conserveName' => 'userAdminGrid',
+            'pageSize' => 5,
+            'sort' => ['attributes' => [
+                'id',
+                'username',
+                'nameFam' => [
+                    'asc' => [
+                        'user_data.last_name' => SORT_ASC,
+                    ],
+                    'desc' => [
+                        'user_data.last_name' => SORT_DESC,
+                    ],
+                ],
+                'lastRoutTime' => [
+                    'asc' => [
+                        'user_data.last_rout_time' => SORT_ASC,
+                    ],
+                    'desc' => [
+                        'user_data.last_rout_time' => SORT_DESC,
+                    ],
+                ],
+                'lastRout' => [
+                    'asc' => [
+                        'user_data.last_rout' => SORT_ASC,
+                    ],
+                    'desc' => [
+                        'user_data.last_rout' => SORT_DESC,
+                    ],
+                ],
+                'status' => [
+                    'asc' => [
+                        'user.status' => SORT_ASC,
+                    ],
+                    'desc' => [
+                        'user.status' => SORT_DESC,
+                    ],
+                ],
+            ]],
+            ];
     }
-
-    public function reload($_post)
-    {
-        if (!isset($_post['action'])) {
-            throw new BadRequestHttpException('Action not found');
-        }
-
-        if ($_post['action'] == 'reload') {
-            $this->setGridConfig(true);
-            $this->makeGrid();
-            $result = $this->grid->run();
-            return $result;
-        }
-
-        foreach ($this->getActions() as $key => $action) {
-            if ($_post['action'] == $key) {
-                $this->doAction($key);
-                $this->setGridConfig(true);
-                $this->makeGrid();
-                $result = $this->grid->run();
-                return $result;
-            }
-        }
-
-        return "<h1>Action " . $_post['action'] . " is not declared</h1>";
-    }
-
 
 }
