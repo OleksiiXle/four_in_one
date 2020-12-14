@@ -1,18 +1,9 @@
 <?php
 use yii\helpers\Html;
-use yii\widgets\Pjax;
-use apiadmin\modules\adminxx\models\AuthItemX;
-use common\widgets\xlegrid\Xlegrid;
 use yii\helpers\Url;
-
-?>
-
-<?php
-
-//\app\modules\adminxx\assets\AdminxxUpdateAuthItemAsset::register($this);
+use apiadmin\modules\adminxx\models\AuthItemX;
 
 $this->title =  'Дозвіли, ролі';
-
 ?>
 <div class="row ">
     <div class="xHeader">
@@ -36,64 +27,9 @@ $this->title =  'Дозвіли, ролі';
 </div>
 <div class="row xContent">
     <div class="xCard">
-        <?php Pjax::begin(['id' => 'gridPermission']);
-        echo Xlegrid::widget([
-            'dataProvider' => $dataProvider,
-            'gridTitle' => '',
-            'additionalTitle' => 'qq',
-            'filterView' => '@app/modules/adminxx/views/auth-item/_authItemFilter',
-            //-------------------------------------------
-            'tableOptions' => [
-                'class' => 'table table-bordered table-hover table-condensed',
-            //  'style' => ' width: 100%; table-layout: fixed;',
-            ],
-
-            //-------------------------------------------
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-                [
-                    'label'=>'Тип',
-                    'content'=>function($data){
-                        $ret = '';
-                        switch ($data->type){
-                            case AuthItemX::TYPE_ROLE:
-                                $ret = 'Роль';
-                                break;
-                            case AuthItemX::TYPE_PERMISSION:
-                                $ret =  'Дозвіл';
-                                break;
-                        }
-                        return $ret;
-                    },
-                ],
-
-                'name',
-                'description',
-                'rule_name',
-                ['class' => 'yii\grid\ActionColumn',
-                    'buttons'=>[
-                        'update'=>function($url, $data) {
-                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>',
-                                \yii\helpers\Url::toRoute(['/adminxx/auth-item/update',
-                                    'name' => $data['name'],
-
-                                ]  ),
-                                [
-                                    'title' => \Yii::t('app', 'Редагувати'),
-                                ]);
-
-                        },
-                    ],
-                    'template'=>' {update}',
-
-                ],
-            ],
-            //------------------------------
-
-        ]);
-        Pjax::end() ?>
-
+        <?php
+        echo $authItemGrid->drawGrid();
+        ?>
     </div>
-
 </div>
 

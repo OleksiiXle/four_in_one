@@ -1,35 +1,27 @@
 <?php
 namespace apiadmin\modules\adminxx\models\filters;
 
+use Yii;
 use apiadmin\modules\adminxx\models\AuthItemX;
-use yii\base\Model;
-use common\widgets\xlegrid\models\GridFilter;
+use common\widgets\xgrid\models\GridFilter;
 
 class AuthItemFilter extends GridFilter
 {
+    public $queryModel = AuthItemX::class;
+
     public $name;
     public $type;
     public $description;
     public $rule_name;
 
-    public function getFilterContent()
-    {
-        if ($this->_filterContent === null) {
-            $this->getQuery();
-        }
-
-        return $this->_filterContent;
-    }
-
-
     public function rules()
     {
-        return [
-            [['type'], 'required'],
+        $ownRules = [
             [['type'], 'integer'],
             [['description', 'rule_name' , 'name'], 'string', 'max' => 64]
-
         ];
+
+        return array_merge(parent::rules(), $ownRules);
     }
 
     /**
@@ -42,11 +34,13 @@ class AuthItemFilter extends GridFilter
             'name' => \Yii::t('app', 'Название'),
             'rule_name' => \Yii::t('app', 'Правило'),
             'description' => \Yii::t('app', 'Описание'),
+            'showOnlyChecked' => Yii::t('app', 'Только выбранные'),
         ];
     }
 
-
-    public function getQuery($params = null){
+    public function getCustomQuery()
+    {
+        $tmp = 1;
         switch ($this->type){
             case AuthItemX::TYPE_All:
                 $query = AuthItemX::find();
@@ -70,6 +64,12 @@ class AuthItemFilter extends GridFilter
 
         }
 
+        return $query;
+    }
+
+    public function getQuery()
+    {
+        $query = $this->defaultQuery;
 
         if (!$this->validate()) {
             return $query;
@@ -77,23 +77,14 @@ class AuthItemFilter extends GridFilter
 
         if (!empty($this->name)) {
             $query->andWhere(['like', 'name', $this->name]);
+            $this->_filterContent .= Yii::t('app', 'Название') . '"' . $this->name . '"; ' ;
         }
 
         if (!empty($this->rule_name) && $this->rule_name != \Yii::t('app', 'Без правила')) {
             $query->andWhere(['like', 'rule_name', $this->rule_name]);
+            $this->_filterContent .= Yii::t('app', 'Правило') . '"' . $this->rule_name . '"; ' ;
         }
 
-
         return $query;
-
-
-
-
-
-
-
     }
-
-
-
 }

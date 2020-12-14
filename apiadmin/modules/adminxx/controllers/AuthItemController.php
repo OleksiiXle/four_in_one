@@ -1,6 +1,8 @@
 <?php
 namespace apiadmin\modules\adminxx\controllers;
 
+use apiadmin\modules\adminxx\grids\AuthItemGrid;
+use Yii;
 use apiadmin\controllers\MainController;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
@@ -8,6 +10,7 @@ use apiadmin\modules\adminxx\models\AuthItemX;
 use apiadmin\modules\adminxx\models\filters\AuthItemFilter;
 use yii\rbac\Item;
 use yii\helpers\Url;
+use yii\web\Response;
 
 /**
  * Class AuthItemController
@@ -51,13 +54,15 @@ class AuthItemController extends MainController
     public function actionIndex()
     {
         $q=1;
-        $dataProvider = new ActiveDataProviderConserve([
-            'filterModelClass' => AuthItemFilter::class,
-            'conserveName' => 'authItemAdminGrid',
-            'pageSize' => 15,
-        ]);
-        return $this->render('index',[
-            'dataProvider' => $dataProvider,
+
+        $authItemGrid = new AuthItemGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $authItemGrid->reload(Yii::$app->request->post());
+        }
+
+        return $this->render('index', [
+            'authItemGrid' => $authItemGrid,
         ]);
     }
 
