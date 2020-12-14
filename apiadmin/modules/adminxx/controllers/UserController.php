@@ -116,13 +116,12 @@ class UserController extends MainController
     public function actionIndex()
     {
       //  $this->layout = '@app/modules/adminxx/views/layouts/adminxx.php';
-        $tmp = 1;
         $usersGrid = new UsersGrid();
         if (Yii::$app->request->isPost) {
             Yii::$app->getResponse()->format = Response::FORMAT_HTML;
             return $usersGrid->reload(Yii::$app->request->post());
         }
-        return $this->render('test', [
+        return $this->render('index', [
             'usersGrid' => $usersGrid,
         ]);
     }

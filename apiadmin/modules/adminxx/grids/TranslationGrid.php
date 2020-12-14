@@ -11,7 +11,7 @@ use common\models\UserM;
 use common\widgets\menuAction\MenuActionWidget;
 use common\widgets\menuAction\MenuActionAsset;
 
-class UsersGrid extends Grid
+class TranslationGrid extends Grid
 {
     /**
      * @return array
@@ -50,17 +50,17 @@ class UsersGrid extends Grid
                     'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
                 ],
                 [
-                    'attribute' => 'last_name',
+                    'attribute' => 'nameFam',
                     'headerOptions' => ['style' => 'width: 10%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
                 ],
                 [
-                    'attribute' => 'first_name',
+                    'attribute' => 'nameNam',
                     'headerOptions' => ['style' => 'width: 7%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
                 ],
                 [
-                    'attribute' => 'middle_name',
+                    'attribute' => 'nameFat',
                     'headerOptions' => ['style' => 'width: 7%; overflow: hidden;'],
                     'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
                 ],
@@ -71,6 +71,7 @@ class UsersGrid extends Grid
                 ],
                 [
                     'attribute' => 'lastVisitTimeTxt',
+                    'label' => 'Час ост. дії',
                     'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 8%; white-space: nowrap; overflow: hidden;'],
                 ],
@@ -83,6 +84,7 @@ class UsersGrid extends Grid
                     'attribute' => 'status',
                     'headerOptions' => ['style' => 'width: 6%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 6%; white-space: nowrap; overflow: hidden;'],
+                    'label'=>'Активність',
                     'content'=>function($data){
                         return Html::a('<span class="glyphicon glyphicon-star"></span>', false,
                             [

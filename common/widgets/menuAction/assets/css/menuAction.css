@@ -1,0 +1,18 @@
+.route {
+    cursor: pointer;
+}
+.menu-icon{
+}
+.menu-action{
+    padding: 0!important;
+    margin: 0!important;
+}
+.items{
+    position: absolute;
+    background: #eeeeee;
+    border: 2px solid #bdbdbd; /* Параметры границы */
+    /*   opacity: 1;*/
+    padding: 20px;
+    margin-top: -5px;
+    z-index: 2;
+}

@@ -13,11 +13,16 @@ use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
 use common\widgets\xgrid\models\LinkPager;
-use common\widgets\xgrid\models\LinkSorter;
 
+/**
+ * Class Xgrid
+ * Грид с перезагрузкой таблицы аяксом, фильтром, выводом в файл и пр.
+ *
+ * @package common\widgets\xgrid
+ */
 class Xgrid extends GridView
 {
-    //-- дефолтніе значения для грида (можно менять)
+    //-- дефолтные значения для грида (можно менять)
     public $pager = [
         'firstPageLabel' => '<<<',
         'lastPageLabel'  => '>>>'
@@ -26,8 +31,6 @@ class Xgrid extends GridView
         'class' => 'table table-bordered table-hover table-condensed',
         'style' => ' width: 100%; table-layout: fixed;',
         ];
-
-
 
     public $name; //** уникальное, для действия контроллера имя грида, по которому при перезагрузке определяется, какой грид обновлять
     public $renderMode; //служебное поле, определяющее режим вывода (первая загрузка, релоад, вывод в файл)
@@ -42,6 +45,7 @@ class Xgrid extends GridView
     public $checkedIds = [];
     public $useCustomUploadFunction = true;
     public $gridModel;
+    public $assetsToRegister = [];
 
     public function init()
     {
@@ -73,13 +77,13 @@ class Xgrid extends GridView
             $view->registerJs($js,\yii\web\View::POS_HEAD);
             XgridAsset::register($view);
             BackgroundTaskAsset::register($view);
-
-            //-- gridView
             GridViewAsset::register($view);
             $id = $this->options['id'];
             $options = Json::htmlEncode(array_merge($this->getClientOptions(), ['filterOnFocusOut' => $this->filterOnFocusOut]));
             $view->registerJs("jQuery('#$id').yiiGridView($options);");
-
+            foreach ($this->assetsToRegister as $assetToRegister) {
+                ($assetToRegister)::register($view);
+            }
         } else {
             if (!empty($this->dataProvider->filterModel)){
                 $this->checkedIds = $this->dataProvider->filterModel->checkedIds;
@@ -116,13 +120,13 @@ class Xgrid extends GridView
                     'checkedIds' => $this->checkedIds
                 ];
                 return json_encode($response);
-                return Html::tag($tag, $content, $options);
                 break;
             case 'upload':
                 return $content;
                 break;
+            default:
+                return "Bad renderMode";
         }
-        return "Bad renderMode";
     }
 
     public function renderForUpload()
@@ -151,9 +155,9 @@ class Xgrid extends GridView
                     }
                 }
             }
-
             $result[] = $row;
         }
+
         return $result;
     }
 
@@ -163,7 +167,6 @@ class Xgrid extends GridView
         $modelClass = $this->dataProvider->query->modelClass;
         $model = $modelClass::instance();
         $labels = $model->attributeLabels();
-
         foreach ($this->columns as $column) {
             if ($column instanceof SerialColumn) {
                 $row[] = 'N';
@@ -194,18 +197,9 @@ class Xgrid extends GridView
         if (isset($this->filterView) && isset($this->dataProvider->filterModel)){
             $filter = $this->dataProvider->filterModel;
             $filterButton = Html::button('<span class="glyphicon glyphicon-chevron-down"></span>', [
-              //  'title' => \Yii::t('app', 'Фільтр'),
                 'onclick' => 'buttonFilterShow(this);',
                 'class' => 'show-filter-btn',
             ]);
-            $uploadButton = Html::button('<span class="glyphicon glyphicon-floppy-save"></span>', [
-                'title' => 'В файл',
-                'onclick' => 'startBackgroundUploadTask();',
-                'class' => 'show-filter-btn',
-
-                //  'id' => 'uploadStartBtn',
-            ]);
-
             if ($this->useActions) {
                 $actionsWithChecked = "
                            <select class='checkActionsSelect' onchange='actionWithChecked(this);'>
@@ -269,12 +263,10 @@ class Xgrid extends GridView
             $key = $keys[$index];
             $rows[] = $this->renderTableRow($model, $key, $index);
         }
-        //-- TODO new
         $cJSON = \Yii::$app->conservation
             ->setConserveGridDB($this->dataProvider->conserveName, $this->dataProvider->pagination->pageParam, $this->dataProvider->pagination->getPage());
         $cJSON = \Yii::$app->conservation
             ->setConserveGridDB($this->dataProvider->conserveName, $this->dataProvider->pagination->pageSizeParam, $this->dataProvider->pagination->getPageSize());
-        //-- TODO new
         if (empty($rows) && $this->emptyText !== false) {
             $colspan = count($this->columns);
             return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>";
@@ -314,7 +306,7 @@ class Xgrid extends GridView
                 }
             }
         }
-        if ($this->rowOptions instanceof Closure) {
+        if ($this->rowOptions instanceof \Closure) {
             $options = call_user_func($this->rowOptions, $model, $key, $index, $this);
         } else {
             $options = $this->rowOptions;
@@ -342,7 +334,6 @@ class Xgrid extends GridView
 
         return "<thead>\n" . $content . "\n</thead>";
     }
-
 
     public function renderItems()
     {
@@ -492,5 +483,4 @@ class Xgrid extends GridView
 
         return $ret;
     }
-
 }

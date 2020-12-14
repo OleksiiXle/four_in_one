@@ -6,7 +6,7 @@ use Yii;
 use apiadmin\modules\adminxx\models\UserM;
 use common\widgets\xgrid\models\GridFilter;
 
-class UserFilter extends GridFilter
+class UserFilterExample extends GridFilter
 {
     public $queryModel = UserM::class;
 
@@ -55,43 +55,30 @@ class UserFilter extends GridFilter
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'username' => Yii::t('app', 'Логин'),
-            'auth_key' => Yii::t('app', 'Ключ авторизации'),
-            'password_hash' => Yii::t('app', 'Пароль'),
-            'password_reset_token' => Yii::t('app', 'Токен сброса пароля'),
-            'email' => Yii::t('app', 'Email'),
-            'status' => Yii::t('app', 'Статус'),
-            'created_at' => Yii::t('app', 'Создано'),
-            'updated_at' => Yii::t('app', 'Изменено'),
-            'refresh_permissions' => Yii::t('app', 'Необходимо обновление разоешений'),
-            'invitation' => Yii::t('app', 'С приглашением по Email'),
-            'userRolesToSet' => Yii::t('app', 'Роли'),
+            'username' => 'Логін',
+            'first_name' => 'Імя',
+            'middle_name' => 'По батькові',
+            'last_name' => 'Прізвище',
+            'showOnlyChecked' => 'Только выбранные',
+            'datetime_range' => 'Создан',
 
-            //-- user_data
-            'first_name' => Yii::t('app', 'Имя'),
-            'middle_name' => Yii::t('app', 'Отчество'),
-            'last_name' => Yii::t('app', 'Фамилия'),
-            'phone' => Yii::t('app', 'Телефон'),
-            'last_rout' => Yii::t('app', 'Последний роут'),
-            'last_rout_time' => Yii::t('app', 'Последняя активность'),
-
-            //---- служебные
-            'password' => Yii::t('app', 'Пароль'),
-            'oldPassword' => Yii::t('app', 'Старый пароль'),
-            'retypePassword' => Yii::t('app', 'Подтверждение пароля'),
-
-            //----  геттеры
-            'created_at_str' => Yii::t('app', 'Создано'),
-            'updated_at_str' => Yii::t('app', 'Изменено'),
-
-
-            'showOnlyChecked' => Yii::t('app', 'Только выбранные'),
-            'datetime_range' => Yii::t('app', 'Создано'),
-
+            'phone' => 'Телефон',
+            'auth_key' => 'Ключ авторізації',
+            'password' => 'Пароль',
+            'password_hash' => 'Пароль',
+            'oldPassword' => 'Старий пароль',
+            'retypePassword' => 'Підтвердждення паролю',
+            'password_reset_token' => 'Токен збросу паролю',
             'emails' => 'Email',
-            'role' => Yii::t('app', 'Роль'),
-            'showStatusActive' => Yii::t('app', 'Только активные'),
+            'status' => 'Status',
+            'created_at_str' => 'Створений',
+            'updated_at_str' => 'Змінений',
+            'time_login_str' => 'Увійшов',
+            'time_logout_str' => 'Вийшов',
+            'role' => 'Роль користувача',
+            'showStatusAll' => 'Всі',
+            'showStatusActive' => 'Активні',
+            'showStatusInactive' => 'Не активні',
         ];
     }
 
@@ -120,7 +107,7 @@ class UserFilter extends GridFilter
         }
 
         if (!empty($this->emails)) {
-            $query->andWhere(['LIKE', 'user.email', $this->emails]);
+            $query->andWhere(['LIKE', 'user.emails', $this->emails]);
             $this->_filterContent .= ' Email "' . $this->emails . '";' ;
         }
 
@@ -153,7 +140,7 @@ class UserFilter extends GridFilter
         if (!empty($this->datetime_min) && !empty($this->datetime_max)) {
             $query->andWhere(['>=','user.created_at', strtotime($this->datetime_min)])
                   ->andWhere(['<=','user.created_at', strtotime($this->datetime_max)]);
-            $this->_filterContent .= Yii::t('app', 'Создано') . '"' . $this->datetime_range . '";' ;
+            $this->_filterContent .= Yii::t('app', 'Создан') . '"' . $this->datetime_range . '";' ;
         }
 //        $e = $query->createCommand()->getSql();
 

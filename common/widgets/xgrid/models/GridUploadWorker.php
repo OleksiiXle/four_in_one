@@ -93,7 +93,6 @@ class GridUploadWorker extends TaskWorker
                 if ($this->done == 5) {
                 //    throw new \Exception('test exeption');
                 }
-             //   $this->doLogs($this->done . '-' . $data->username);
                 $this->doLogs();
                 fputcsv($fp, $data);
             }

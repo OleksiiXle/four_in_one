@@ -39,7 +39,6 @@ abstract class Grid
      */
     protected function makeGrid($renderMode)
     {
-      //  if ($renderMode === self::RENDER_MODE_UPLOAD || $renderMode === self::RENDER_MODE_DRAW) {
         if ($renderMode === self::RENDER_MODE_UPLOAD) {
             $providerConfig = $this->providerConfig();
             $providerConfig['usePagination'] = false;
@@ -63,6 +62,7 @@ abstract class Grid
     }
 
     /**
+     * Действия с выделенными строками, можно переопределить и добавить свои действия
      * @return array
      */
     protected function getActions()
@@ -119,7 +119,7 @@ abstract class Grid
     }
 
     /**
-     *
+     * Выделить все строки таблицы с учетом наложенных условий
      */
     public function checkAllAction()
     {
@@ -132,7 +132,7 @@ abstract class Grid
     }
 
     /**
-     *
+     * Отменить выделение
      */
     public function unCheckAllAction()
     {
@@ -145,6 +145,7 @@ abstract class Grid
     }
 
     /**
+     * Вывести выделенные строки в файл
      * @return bool
      */
     public function uploadCheckedAction()
@@ -153,6 +154,7 @@ abstract class Grid
     }
 
     /**
+     * Нарисовать грид в представлении
      * Creates a widget instance and runs it.
      * The widget rendering result is returned by this method.
      * @param array $config name-value pairs that will be used to initialize the object properties
@@ -180,6 +182,7 @@ abstract class Grid
     }
 
     /**
+     * Перегрузить таблицу аяксом на основании изменения фильтра, сортировки или пагинации
      * @param $_post
      * @return string
      * @throws BadRequestHttpException
@@ -209,6 +212,10 @@ abstract class Grid
         return "<h1>Action " . $_post['action'] . " is not declared</h1>";
     }
 
+    /**
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
+     */
     public function upload()
     {
         $this->makeGrid(self::RENDER_MODE_UPLOAD);

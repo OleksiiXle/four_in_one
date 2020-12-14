@@ -34,7 +34,7 @@ switch ($model->type){
         echo $form->field($model, 'name');
         echo $form->field($model, 'description');
         echo $form->field($model, 'rule_name')
-            ->dropDownList(\apiadmin\modules\adminxx\models\AuthItemX::getRulesList(),
+            ->dropDownList(AuthItemX::getRulesList(),
                 ['options' => [ $model->rule_name => ['Selected' => true]],]);
 
         ?>

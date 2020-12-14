@@ -72,7 +72,7 @@ class AuthItemController extends MainController
         $model->type = $type;
         if ($model->load(\Yii::$app->getRequest()->post())) {
             if ($model->save()) {
-                return $this->redirect([Url::toRoute('/adminxx/auth-item/update'), 'name' => $model->name]);
+                return $this->redirect(Url::toRoute(['/adminxx/auth-item/update', 'name' => $model->name]));
             }
         }
         return $this->render('create',

@@ -2,22 +2,60 @@
 
 namespace common\widgets\xgrid\models;
 
+use Yii;
 use yii\base\Model;
 
+/**
+ * Class GridFilter
+ * От этого класса наследуются фильтры для гридов
+ *
+ * @package common\widgets\xgrid\models
+ */
 abstract class GridFilter extends Model
 {
-    public $checkedIds = [];
-    public $allRowsAreChecked =  false;
-    public $actionWithChecked = false;
-    public $showOnlyChecked;
-    public $queryModel;
-    public $_filterContent = null;
+    public $queryModel; //-- основная модель, например  UserM::class;
+    public $checkedIds = []; //-- идентификаторы выбранных строк грида
+    public $allRowsAreChecked =  false; //-- признак, что выбраны все строки с учетом применения условий
+    public $actionWithChecked = false; //-- признак, что операция проводится с выбранными  строками
+    public $showOnlyChecked; //-- показывать только выбранный строки, но с учетом наложенных условий
+    public $_filterContent = null; //-- текстовая строка, говорящая о том, какие условия сейчас применены
     private $_sqlPrefix;
+
+    /**
+     * @var
+     */
     private $_defaultQuery;
 
+    /**
+     * Основа пользовательского запроса, на который потом накладывается фильтр. Например:
+     *         - return UserM::find()->joinWith(['userDatas']);
+     * @return mixed
+     */
     abstract public function getCustomQuery();
+
+    /**
+     * Метод для формирования фильтра
+     * берется $this->defaultQuery, валидируется, накладываются условия, сразу формируется $_filterContent
+     * Например:
+     *      public function getQuery()
+     *      {
+     *          $query = $this->defaultQuery;
+     *          if (!$this->validate()) {
+     *              return $query;
+     *          }
+     *          if ($this->showStatusActive =='1'){
+     *              $query->andWhere(['user.status' => UserM::STATUS_ACTIVE]);
+     *              $this->_filterContent .= Yii::t('app', 'Только активные');
+     *         }
+     *         return $query;
+     *      }
+     * @return mixed
+     */
     abstract public function getQuery();
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -27,6 +65,9 @@ abstract class GridFilter extends Model
     }
 
     /**
+     * Геттер - берется пользовательский getCustomQuery() и,
+     * с учетом значений $allRowsAreChecked, $actionWithChecked, $showOnlyChecked и $checkedIds
+     * формируется  $_defaultQuery, на который потом, в getQuery() накладываются условия
      * @return mixed
      */
     public function getDefaultQuery()
@@ -44,9 +85,13 @@ abstract class GridFilter extends Model
                     ->andWhere(['IN', "$this->sqlPrefix.id", $this->checkedIds]);
             }
         }
+
         return $this->_defaultQuery;
     }
 
+    /**
+     * @return null|string
+     */
     public function getFilterContent()
     {
         $this->_filterContent = '';
@@ -67,14 +112,19 @@ abstract class GridFilter extends Model
     }
 
 
+    /**
+     * Определение столбцов для вывода в файл
+     * @return array
+     */
     public function getDataForUpload()
     {
+        //-- пример:
         return [
-            'attribute' => [
+            'attributeName' => [  //-- в столбец выводится значение attributeName с подписью сверху label
                 'label' => 'Attribute label',
                 'content' => 'value'
             ],
-            'callBack' => [
+            'callBack' => [ //-- в столбец выводится значение function с подписью сверху label
                 'label' => 'Call back label',
                 'content' => function($model)
                 {
@@ -83,5 +133,4 @@ abstract class GridFilter extends Model
             ],
         ];
     }
-
 }

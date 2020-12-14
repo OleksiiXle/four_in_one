@@ -39,6 +39,7 @@ use yii\bootstrap\ActiveForm;
                         <div>
                             <?php
                             echo $form->field($filter, 'showStatusActive')->checkbox(['class' => 'showStatus']);
+                            echo $form->field($filter, 'showStatusInactive')->checkbox(['class' => 'showStatus']);
                             ?>
                         </div>
                     </div>
@@ -56,13 +57,13 @@ use yii\bootstrap\ActiveForm;
             <div class="form-group" align="center" style="padding: 20px">
                 <?php
               //  echo  Html::submitButton('Шукати', ['class' => 'btn btn-primary', 'id' => 'subBtn']);
-                echo  Html::button(Yii::t('app', 'Применить фильтр'), [
+                echo  Html::button('Шукати', [
                     'class' => 'btn btn-primary',
                     'id' => 'subBtn',
                     'onclick' => 'useFilter();'
                     ]);
                 ?>
-                <?= Html::button(Yii::t('app', 'Очистить фильтр'), [
+                <?= Html::button('Очистити фільтр', [
                     'class' => 'btn btn-danger',
                     'id' => 'cleanBtn',
                     'onclick' => 'cleanFilter(true);',

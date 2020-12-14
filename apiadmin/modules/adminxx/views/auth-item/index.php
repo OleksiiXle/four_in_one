@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\Pjax;
 use apiadmin\modules\adminxx\models\AuthItemX;
 use common\widgets\xlegrid\Xlegrid;
+use yii\helpers\Url;
 
 ?>
 
@@ -19,12 +20,12 @@ $this->title =  'Дозвіли, ролі';
         </div>
         <div class="col-md-6" align="right" >
             <?php
-            echo Html::a('Створити роль', [\yii\helpers\Url::toRoute('/adminxx/auth-item/create'), 'type' => AuthItemX::TYPE_ROLE],
+            echo Html::a('Створити роль', Url::toRoute(['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_ROLE]),
                 [
                     'class' =>'btn btn-primary',
                 ]);
             echo '  ';
-            echo Html::a('Створити дозвіл', [\yii\helpers\Url::toRoute('/adminxx/auth-item/create'), 'type' => AuthItemX::TYPE_PERMISSION], [
+            echo Html::a('Створити дозвіл', Url::toRoute(['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_PERMISSION]),  [
                 'class' =>'btn btn-primary',
             ]);
             echo '  ';

@@ -18,12 +18,7 @@ var checkedIds = [];
 
 $(document).ready(function(){
     checkedIds = _checkedIdsFromRequest;
-   console.log(_gridModel);
-//    console.log(checkedIds);
     if (USE_AJAX) {
-      //  console.log($(PJAX_CONTAINER_ID + ' a'));
-      //  console.log('.gridLink_' + GRID_ID);
-     //   console.log($('.gridLink_' + GRID_ID));
         $(document).on('click', '.gridLink_' + GRID_ID, function(event) {
             event.preventDefault();
             event.stopPropagation();
@@ -35,7 +30,6 @@ $(document).ready(function(){
 
 //-- обработать href с учетом фильтра, пагинации и сортировки и сделать pjax с обработанным href
 function doAjax(href, action) {
-   // console.log(checkedIds);
     var hr = getHrefWithFilter(href);
     switch (action) {
         case 'checkAll':
@@ -75,8 +69,6 @@ function doAjax(href, action) {
                     startBackgroundUploadTask();
                     break;
             }
-//   console.log(checkedIds);
-
         },
         error: function (jqXHR, error, errorThrown) {
             errorHandler(jqXHR, error, errorThrown)            }
@@ -85,8 +77,6 @@ function doAjax(href, action) {
 
 //-- запрос на doPjax по кнопке "Применить фильтр"
 function useFilter() {
-  //  checkedIds = [];
- //   console.log(checkedIds);
     doAjax(window.location.href, 'reload');
 }
 
@@ -123,14 +113,6 @@ function getHrefWithFilter(href) {
 function getFilterQuery() {
     filterQuery = [];
     filterQueryJSON = '{}';
-  //  console.log(checkedIds);
-
-    /*
-    if (checkedIds.length > 0) {
-        $('#' + _filterClassShortName.toLowerCase() + '-checkedidsjson').val(JSON.stringify(checkedIds));
-    }
-    */
-
     var bufName;
     $('[id^=' + _filterClassShortName.toLowerCase() + '-]').each(function(index, value) {
         if (value.value.length > 0) {
@@ -207,23 +189,17 @@ function buttonFilterShow(button) {
 
 //-- очистить форму фильтра и перелоадить грид через pjax
 function cleanFilter(reload){
-  //  console.log(parseUrl());
-  //  console.log(window.location);
- //   console.log(window.location.origin +  window.location.pathname);
+    $('input[type="hidden"][ id^=' + _filterClassShortName.toLowerCase() + '-]').val('');
     $('input[type="text"][ id^=' + _filterClassShortName.toLowerCase() + '-]').val('');
-  //  $('textarea').val('');
     $('textarea[id^=' + _filterClassShortName.toLowerCase() + '-]').val('');
- //   $('textarea[id^=' + _filterClassShortName.toLowerCase() + '-]').innerHTML('');
     $('input[type="checkbox"][id^=' + _filterClassShortName.toLowerCase() + '-]').prop('checked', false);
     $('select[id^=' + _filterClassShortName.toLowerCase() + '-]').val(0);
     $("#" + _filterClassShortName.toLowerCase() + "-allrowsarechecked").val(0);
     checkedIds = [];
-//    console.log(checkedIds);
     history.pushState({}, '', window.location.origin +  window.location.pathname);
     if (reload) {
         useFilter();
     }
-   // console.log($('textarea[id^=' + _filterClassShortName.toLowerCase() + '-]'));
 }
 
 //-- распарсить href на path и params
@@ -266,13 +242,11 @@ function parseUrl(href) {
 
 //-- запуск выгрузки файла со списком в режиме фоновой задачи
 function startBackgroundUploadTask() {
- //   getFilterQuery();
     filterQuery.push({'name':'checkedIds', 'value' : JSON.stringify(checkedIds)});
-    console.log(filterQuery);
     var params = {
-        'mode' : 'dev',
+        'mode' : 'prod',
+        // 'mode' : 'dev',
         'useSession' : true,
-       // 'mode' : 'dev',
         'checkProgressInterval' : 500,
         'showProgressArea' : true,
         'windowMode' : 'popup',

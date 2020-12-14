@@ -2,7 +2,6 @@
 
 namespace apiadmin\modules\adminxx\grids;
 
-use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use common\widgets\xgrid\models\Grid;
@@ -11,7 +10,7 @@ use common\models\UserM;
 use common\widgets\menuAction\MenuActionWidget;
 use common\widgets\menuAction\MenuActionAsset;
 
-class UsersGrid extends Grid
+class UsersGridExample extends Grid
 {
     /**
      * @return array
@@ -50,17 +49,17 @@ class UsersGrid extends Grid
                     'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
                 ],
                 [
-                    'attribute' => 'last_name',
+                    'attribute' => 'nameFam',
                     'headerOptions' => ['style' => 'width: 10%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
                 ],
                 [
-                    'attribute' => 'first_name',
+                    'attribute' => 'nameNam',
                     'headerOptions' => ['style' => 'width: 7%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
                 ],
                 [
-                    'attribute' => 'middle_name',
+                    'attribute' => 'nameFat',
                     'headerOptions' => ['style' => 'width: 7%; overflow: hidden;'],
                     'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
                 ],
@@ -71,6 +70,7 @@ class UsersGrid extends Grid
                 ],
                 [
                     'attribute' => 'lastVisitTimeTxt',
+                    'label' => 'Час ост. дії',
                     'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 8%; white-space: nowrap; overflow: hidden;'],
                 ],
@@ -83,6 +83,7 @@ class UsersGrid extends Grid
                     'attribute' => 'status',
                     'headerOptions' => ['style' => 'width: 6%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 6%; white-space: nowrap; overflow: hidden;'],
+                    'label'=>'Активність',
                     'content'=>function($data){
                         return Html::a('<span class="glyphicon glyphicon-star"></span>', false,
                             [
@@ -106,25 +107,27 @@ class UsersGrid extends Grid
                             [
                                 'assetsRegister' => false,
                                 'items' => [
-                                    Yii::t('app', 'Информация') => [
+                                    'Перегляд інформації' => [
                                         'icon' => 'glyphicon glyphicon-eye-open',
                                         'route' => Url::toRoute(['/adminxx/user/view', 'id' => $data['id']]),
                                     ],
-                                    Yii::t('app', 'Изменить данные') => [
+                                    'Змінити данні' => [
                                         'icon' => 'glyphicon glyphicon-pencil',
                                         'route' => Url::toRoute(['/adminxx/user/update-by-admin',
                                             'mode' => 'update', 'id' => $data['id'],]),
                                     ],
-                                    Yii::t('app', 'Изменить разрешения и роли') => [
+                                    'Змінити дозвіли та ролі' => [
                                         'icon' => 'glyphicon glyphicon-lock',
                                         'route' => Url::toRoute(['/adminxx/user/update-user-assignments', 'id' => $data['id']]),
                                     ],
-                                    Yii::t('app', 'Консерва') => [
+                                    'Переглянути консерву' => [
                                         'icon' => 'glyphicon glyphicon-lock',
                                         'route' => Url::toRoute(['/adminxx/user/conservation', 'user_id' => $data['id']]),
                                     ],
+
                                 ],
                                 'offset' => -200,
+
                             ]
                         );
                     },
@@ -138,6 +141,7 @@ class UsersGrid extends Grid
     public function providerConfig()
     {
         return [
+            // 'searchId' => $id,
             'filterModelClass' => UserFilter::class,
             'conserveName' => 'userAdminGrid',
             'pageSize' => 5,
