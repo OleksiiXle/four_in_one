@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\base\BaseObject;
+use yii\web\Application;
 
 class Route extends BaseObject
 {
@@ -11,17 +12,29 @@ class Route extends BaseObject
      * Get list of application routes
      * @return array
      */
-    public function getAppRoutes($module = null) {
+    public function getAppRoutes($module = null)
+    {
+        /*
         if ($module === null) {
             $module = Yii::$app;
         } elseif (is_string($module)) {
             $module = Yii::$app->getModule($module);
         }
-        $result  = [
-            '' => \Yii::t('app', 'Без роута'),
-        ];
-        $this->getRouteRecrusive($module, $result);
-        return $result;
+        */
+        $routes = [];
+        foreach (Yii::$app->params['aliasesForRoutesList'] as $aliaseForRoutesList) {
+            $mainHostPath = dirname(\Yii::getAlias("@$aliaseForRoutesList"));
+            $config = \yii\helpers\ArrayHelper::merge(
+                require $mainHostPath . '/common/config/main.php',
+                require $mainHostPath . "/$aliaseForRoutesList/config/main.php"
+            );
+            $aliaseApp = new Application($config);
+            $this->getRouteRecrusive($aliaseApp, $aliaseRoutes);
+            $routes = array_merge($routes, $aliaseRoutes);
+        }
+        ksort($routes);
+
+        return array_merge(['' => \Yii::t('app', 'Без роута')], $routes);
     }
 
     /**
@@ -43,8 +56,8 @@ class Route extends BaseObject
 
         $namespace = trim($module->controllerNamespace, '\\') . '\\';
         $this->getControllerFiles($module, $namespace, '', $result);
-        $all = '/' . ltrim($module->uniqueId . '/*', '/');
-        $result[$all] = $all;
+    //    $all = '/' . ltrim($module->uniqueId . '/*', '/');
+    //    $result[$all] = $all;
     }
 
     /**
@@ -90,8 +103,8 @@ class Route extends BaseObject
     {
         $controller = Yii::createObject($type, [$id, $module]);
         $this->getActionRoutes($controller, $result);
-        $all = "/{$controller->uniqueId}/*";
-        $result[$all] = $all;
+      //  $all = "/{$controller->uniqueId}/*";
+     //   $result[$all] = $all;
     }
 
     /**

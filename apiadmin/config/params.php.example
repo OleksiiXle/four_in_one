@@ -2,4 +2,8 @@
 return [
   //  'adminEmail' => 'admin@example.com',
     'appAlias' => 'apiadmin',
+    'aliasesForRoutesList' => [
+        'apiadmin',
+        'apiuser',
+    ]
 ];
