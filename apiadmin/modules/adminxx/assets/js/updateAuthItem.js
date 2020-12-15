@@ -12,7 +12,7 @@ $('.btn-assign').click(function () {
     var items = $('select.list[data-target="' + target + '"]').val();
     var route = _BASE_URL + '/adminxx/auth-item/assign';
     if ($this.hasClass('actionRevoke')){
-        route = '/adminxx/auth-item/revoke';
+        route = _BASE_URL + '/adminxx/auth-item/revoke';
     }
 
     //   var route = $this.data('rout');

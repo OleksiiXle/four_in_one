@@ -73,7 +73,7 @@ $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
     </div>
     <div class="row">
         <div class="col-md-12">
-                <h4><b>Дозвіли</b></h4>
+                <h4><b><?=Yii::t('app', 'Разрешения')?></b></h4>
                 <div id="authItems" <?=$showSelects;?>>
                     <div class="col-md-5 userSelect">
                         <h5><?=\Yii::t('app', 'Доступные');?></h5>

@@ -2,6 +2,10 @@
 
 namespace apiadmin\modules\adminxx\controllers;
 
+use apiadmin\modules\adminxx\grids\CheckGrid;
+use Yii;
+use apiadmin\modules\adminxx\grids\UsersGrid;
+use yii\helpers\Url;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
 use apiadmin\controllers\MainController;
@@ -10,7 +14,7 @@ use apiadmin\modules\adminxx\models\filters\UserActivityFilter;
 use apiadmin\modules\adminxx\models\UControl;
 use apiadmin\modules\adminxx\models\UserData;
 use apiadmin\modules\adminxx\models\UserM;
-use yii\helpers\Url;
+use yii\web\Response;
 
 /**
  * Class CheckController
@@ -60,70 +64,14 @@ class CheckController extends MainController
      */
     public function actionGuestControl()
     {
-        $dataProvider = new ActiveDataProviderConserve([
-            'filterModelClass' => UControlFilter::class,
-            'conserveName' => 'guestActivityGrid',
-            'pageSize' => 15,
-            'sort' => ['attributes' => [
-                'user_id' => [
-                    'asc' => [
-                        'uc.user_id' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'uc.user_id' => SORT_DESC,
-                    ],
-                ],
-                'remote_ip' => [
-                    'asc' => [
-                        'uc.remote_ip' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'uc.remote_ip' => SORT_DESC,
-                    ],
-                ],
-                'username' => [
-                    'asc' => [
-                        'user.username' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user.username' => SORT_DESC,
-                    ],
-                ],
-                'createdAt' => [
-                    'asc' => [
-                        'uc.created_at' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'uc.created_at' => SORT_DESC,
-                    ],
-                ],
-                'updatedAt' => [
-                    'asc' => [
-                        'uc.updated_at' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'uc.updated_at' => SORT_DESC,
-                    ],
-                ],
-                'url' => [
-                    'asc' => [
-                        'uc.url' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'uc.url' => SORT_DESC,
-                    ],
-                ],
-            ]],
-
-        ]);
-        if (\Yii::$app->request->isPost){
-            return $this->redirect(Url::toRoute('guest-control'));
+        $checkGrid = new CheckGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $checkGrid->reload(Yii::$app->request->post());
         }
-
-        return $this->render('guestsGrid',[
-            'dataProvider' => $dataProvider,
+        return $this->render('guestsGrid', [
+            'checkGrid' => $checkGrid,
         ]);
-
     }
 
     /**
@@ -157,79 +105,14 @@ class CheckController extends MainController
     public function actionViewUser($id, $timeFix=0)
     {
         $user_id = $id;
-        if (1==1){
-            $user = UserM::findOne($user_id);
-            $userData = UserData::findOne(['user_id' => $user_id]);
-            //-- подразделения
-            $depCreateIds = $userData->getChangedItems('Department', 'created', true, $timeFix);
-            $depUpdateIds = $userData->getChangedItems('Department', 'updated', true, $timeFix);
-            $depDeleteIds = $userData->getChangedItems('Department', 'deleted', true, $timeFix);
-            $depIds = $depCreateIds + $depUpdateIds + $depDeleteIds;
-            $buf = DepartmentCommon::find()
-                ->where(['in', 'id', $depIds ])
-                ->all();
-            $departments = [];
-            $cnt = 1;
-            foreach ($buf as $dep){
-                $departments[]=[
-                    'cnt' => $cnt++,
-                    'id' => $dep->id,
-                    'operation' => $depIds[$dep->id]['operation'],
-                    'name' => $dep->gunpName,
-                ];
-            }
-            //-- должности
-            $depCreateIds = $userData->getChangedItems('Position', 'created', true, $timeFix);
-            $depUpdateIds = $userData->getChangedItems('Position', 'updated', true, $timeFix);
-            $depDeleteIds = $userData->getChangedItems('Position', 'deleted', true, $timeFix);
-            $depIds = $depCreateIds + $depUpdateIds + $depDeleteIds;
-            $buf = PositionCommon::find()
-                ->where(['in', 'id', $depIds ])
-                ->all();
-            $positions = [];
-            $cnt = 1;
-            foreach ($buf as $dep){
-                $positions[]=[
-                    'cnt' => $cnt++,
-                    'id' => $dep->id,
-                    'operation' => $depIds[$dep->id]['operation'],
-                    'name' => $dep->name . ' ' . $dep->department->gunpName,
-                ];
-            }
-
-            //-- персонал
-            $depCreateIds = $userData->getChangedItems('Personal', 'created', true, $timeFix);
-            $depUpdateIds = $userData->getChangedItems('Personal', 'updated', true, $timeFix);
-            $depDeleteIds = $userData->getChangedItems('Personal', 'deleted', true, $timeFix);
-            $depIds = $depCreateIds + $depUpdateIds + $depDeleteIds;
-            $buf = PersonalCommon::find()
-                ->where(['in', 'id', $depIds ])
-                ->all();
-            $personal = [];
-            $cnt = 1;
-            foreach ($buf as $dep){
-                $personal[]=[
-                    'cnt' => $cnt++,
-                    'id' => $dep->id,
-                    'operation' => $depIds[$dep->id]['operation'],
-                    'name' => '<b>' . $dep->name_family . '</b> ' . $dep->positionCommon->department->gunpName,
-                ];
-            }
-
-        }
         $user = UserM::findOne($id);
         $uControl = UControl::findOne(['user_id' => $id]);
         $userProfile = $user->userProfile;
         return $this->render('viewUser', [
             'userProfile' => $userProfile,
             'uControl' => $uControl,
-
-            'departments'=> $departments,
-            'positions' => $positions,
-            'personal' => $personal,
             'user_id' => $user_id,
             'timeFix' => $timeFix,
-
         ]);
     }
 

@@ -15,4 +15,5 @@
     padding: 20px;
     margin-top: -5px;
     z-index: 2;
+    list-style-type: none; /* Убираем маркеры */
 }

@@ -35,7 +35,7 @@ $t = [
                 'children' => []
             ],
             [
-                'name'       => 'Симтемные настройки',
+                'name'       => 'Системные настройки',
                 'route'      => '/adminxx/configs/update',
                 'role' => 'menuAdminConfigUpdate',
                 'access_level' => 2,
@@ -116,7 +116,7 @@ $t = [
         'access_level' => 0,
         'children' => [
             [
-                'name'       => 'Зміна паролю',
+                'name'       => 'Смена пароля',
                 'route'      => '/adminxx/user/change-password',
                 'role' => 'menuAll',
                 'access_level' => 0,

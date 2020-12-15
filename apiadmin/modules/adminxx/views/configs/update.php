@@ -3,7 +3,7 @@ use common\components\models\Configs;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Налаштування';
+$this->title = Yii::t('app', 'Настройки');
 ?>
 
 <div class="container-fluid">

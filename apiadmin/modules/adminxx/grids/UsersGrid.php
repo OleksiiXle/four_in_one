@@ -6,10 +6,10 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use common\widgets\xgrid\models\Grid;
-use apiadmin\modules\adminxx\models\filters\UserFilter;
 use common\models\UserM;
 use common\widgets\menuAction\MenuActionWidget;
 use common\widgets\menuAction\MenuActionAsset;
+use apiadmin\modules\adminxx\grids\filters\UserFilter;
 
 class UsersGrid extends Grid
 {
@@ -25,7 +25,7 @@ class UsersGrid extends Grid
             'useActions' => true,
             'useCustomUploadFunction' => false,
             'assetsToRegister' => [MenuActionAsset::class],
-            'filterView' => '@app/modules/adminxx/views/user/_filterUser',
+            'filterView' => '@app/modules/adminxx/grids/views/_filterUser',
             //-------------------------------------------
             'columns' => [
                 [

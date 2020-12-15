@@ -1,6 +1,6 @@
 <?php
 
-namespace apiadmin\modules\adminxx\models\filters;
+namespace apiadmin\modules\adminxx\grids\filters;
 
 use Yii;
 use apiadmin\modules\adminxx\models\UserM;

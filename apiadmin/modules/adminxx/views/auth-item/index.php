@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use apiadmin\modules\adminxx\models\AuthItemX;
 
-$this->title =  'Дозвіли, ролі';
+$this->title =  Yii::t('app', 'Роли, разрешения');
 ?>
 <div class="row ">
     <div class="xHeader">
@@ -11,12 +11,12 @@ $this->title =  'Дозвіли, ролі';
         </div>
         <div class="col-md-6" align="right" >
             <?php
-            echo Html::a('Створити роль', Url::toRoute(['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_ROLE]),
+            echo Html::a(Yii::t('app', 'Создать роль'), Url::toRoute(['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_ROLE]),
                 [
                     'class' =>'btn btn-primary',
                 ]);
             echo '  ';
-            echo Html::a('Створити дозвіл', Url::toRoute(['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_PERMISSION]),  [
+            echo Html::a(Yii::t('app', 'Создать разрешение'), Url::toRoute(['/adminxx/auth-item/create', 'type' => AuthItemX::TYPE_PERMISSION]),  [
                 'class' =>'btn btn-primary',
             ]);
             echo '  ';

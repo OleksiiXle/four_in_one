@@ -8,7 +8,7 @@ use common\widgets\xgrid\models\Grid;
 use common\widgets\menuAction\MenuActionWidget;
 use common\widgets\menuAction\MenuActionAsset;
 use apiadmin\modules\adminxx\models\AuthItemX;
-use apiadmin\modules\adminxx\models\filters\AuthItemFilter;
+use apiadmin\modules\adminxx\grids\filters\AuthItemFilter;
 
 class AuthItemGrid extends Grid
 {
@@ -25,7 +25,7 @@ class AuthItemGrid extends Grid
             'useCustomUploadFunction' => false,
             'assetsToRegister' => [MenuActionAsset::class],
             'primaryKey' => 'name',
-            'filterView' => '@app/modules/adminxx/views/auth-item/_authItemFilter',
+            'filterView' => '@app/modules/adminxx/grids/views/_authItemFilter',
             //-------------------------------------------
             'columns' => [
                 [
@@ -40,7 +40,7 @@ class AuthItemGrid extends Grid
                     'contentOptions' => ['style' => 'width: 3%;'],
                 ],
                 [
-                    'label'=>'Тип',
+                    'label' => Yii::t('app', 'Тип'),
                     'content'=>function($data){
                         $ret = '';
                         switch ($data->type){
@@ -73,7 +73,7 @@ class AuthItemGrid extends Grid
                                         'route' => Url::toRoute(['/adminxx/auth-item/update', 'name' => $data['name']]),
                                     ],
                                 ],
-                                'offset' => -200,
+                                'offset' => -100,
                             ]
                         );
                     },

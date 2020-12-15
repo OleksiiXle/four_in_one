@@ -5,7 +5,7 @@ use yii\jui\JuiAsset;
 use \yii\helpers\Url;
 
 JuiAsset::register($this);
-$this->title = 'Перевод';
+$this->title = Yii::t('app', 'Переводы');
 $this->registerJs("
     var _dataForAutocompleteRu = {$dataForAutocompleteRu};
     var _dataForAutocompleteEn = {$dataForAutocompleteEn};
@@ -30,8 +30,8 @@ $this->registerJs("
              echo $form->field($model, 'tkey')->hiddenInput()->label(false);
             ?>
             <div class="form-group" align="center">
-                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-                <?= Html::a('Отмена', Url::toRoute('/adminxx/translation'),[
+                <?= Html::submitButton(Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                <?= Html::a(Yii::t('app', 'Отмена'), Url::toRoute('/adminxx/translation'),[
                     'class' => 'btn btn-danger', 'name' => 'reset-button'
                 ]);?>
             </div>

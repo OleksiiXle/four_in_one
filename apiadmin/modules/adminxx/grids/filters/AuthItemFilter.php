@@ -1,5 +1,6 @@
 <?php
-namespace apiadmin\modules\adminxx\models\filters;
+
+namespace apiadmin\modules\adminxx\grids\filters;
 
 use Yii;
 use apiadmin\modules\adminxx\models\AuthItemX;
@@ -80,7 +81,7 @@ class AuthItemFilter extends GridFilter
             $this->_filterContent .= Yii::t('app', 'Название') . '"' . $this->name . '"; ' ;
         }
 
-        if (!empty($this->rule_name) && $this->rule_name != \Yii::t('app', 'Без правила')) {
+        if (!empty($this->rule_name) && $this->rule_name != 'Без правила') {
             $query->andWhere(['like', 'rule_name', $this->rule_name]);
             $this->_filterContent .= Yii::t('app', 'Правило') . '"' . $this->rule_name . '"; ' ;
         }

@@ -2,6 +2,7 @@
 
 namespace apiadmin\modules\adminxx\models;
 
+use Yii;
 use common\helpers\Functions;
 use yii\db\Exception;
 use yii\db\ActiveRecord;
@@ -51,18 +52,18 @@ class UControl extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ident',
-            'user_id' => 'User ID',
-            'remote_ip' => 'Remote Ip',
-            'username' => 'Login',
+            'id' => 'ID',
+            'user_id' => Yii::t('app', 'ИД пользователя'),
+            'remote_ip' => 'IP',
+            'username' => Yii::t('app', 'Логин'),
             'referrer' => 'Referrer',
             'remote_host' => 'Remote Host',
             'absolute_url' => 'Absolute Url',
-            'url' => 'Останній роут',
-            'created_at' => 'time',
-            'updated_at' => 'time',
-            'createdAt' => 'Перший візіт',
-            'updatedAt' => 'Останній візіт',
+            'url' => Yii::t('app', 'Последний роут'),
+            'created_at' => Yii::t('app', 'Первое посещение'),
+            'updated_at' => Yii::t('app', 'Последнее посещение'),
+            'createdAt' => Yii::t('app', 'Первое посещение'),
+            'updatedAt' => Yii::t('app', 'Последнее посещение'),
         ];
     }
 
@@ -88,9 +89,9 @@ class UControl extends ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserDepartments()
+    public function getUsers()
     {
-        return $this->hasMany(UserData::class, ['user_id' => 'user_id']);
+        return $this->hasOne(UserM::class, ['id' => 'user_id']);
     }
 
     /**

@@ -2,15 +2,17 @@
 
 namespace apiadmin\modules\adminxx\controllers;
 
+use Yii;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\FileHelper;
 use yii\helpers\Url;
+use yii\web\Response;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\models\Translation;
 use common\components\AccessControl;
 use apiadmin\controllers\MainController;
-use apiadmin\modules\adminxx\models\filters\TranslationFilter;
+use apiadmin\modules\adminxx\grids\TranslationGrid;
 
 class TranslationController extends MainController
 {
@@ -62,64 +64,13 @@ class TranslationController extends MainController
     public function actionIndex()
     {
      //   $r = Translation::getDictionary('app', 'ru-RU');
-        /*
-            $dataProvider = new ActiveDataProvider([
-                'query' => Translation::find()
-                ->where(['language' => \Yii::$app->language])
-                ,
-                'pagination' => [
-                    'pageSize' => 50,
-                ],
-            ]);
-            */
-        $dataProvider = new ActiveDataProviderConserve([
-            // 'searchId' => $id,
-            'filterModelClass' => TranslationFilter::class,
-            'conserveName' => 'translationGrid',
-            'pageSize' => 10,
-            /*
-            'sort' => ['attributes' => [
-                'id',
-                'username',
-                'nameFam' => [
-                    'asc' => [
-                        'user_data.last_name' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_name' => SORT_DESC,
-                    ],
-                ],
-                'lastRoutTime' => [
-                    'asc' => [
-                        'user_data.last_rout_time' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout_time' => SORT_DESC,
-                    ],
-                ],
-                'lastRout' => [
-                    'asc' => [
-                        'user_data.last_rout' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout' => SORT_DESC,
-                    ],
-                ],
-                'status' => [
-                    'asc' => [
-                        'user.status' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user.status' => SORT_DESC,
-                    ],
-                ],
-            ]],
-            */
-
-        ]);
-
-        return $this->render('index',[
-            'dataProvider' => $dataProvider,
+        $grid = new TranslationGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $grid->reload(Yii::$app->request->post());
+        }
+        return $this->render('index', [
+            'grid' => $grid,
         ]);
     }
 
