@@ -39,6 +39,7 @@ class Xgrid extends GridView
         'class' => 'table table-bordered',
         'style' => 'background: none',
     ];
+    public $primaryKey = 'id'; //-- ключевое поле для определения выделенных строк, если не id - надо указывать
     public $useAjax = false;
     public $useActions = false; // добавлять в грид список действий с данными грида (для включения необходимо прописать действия в классе грида)
     public $actionsList = []; //список действий (формируется автоматически, задавать не надо
@@ -47,6 +48,9 @@ class Xgrid extends GridView
     public $gridModel;
     public $assetsToRegister = [];
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         $this->filterPosition = self::FILTER_POS_HEADER;
@@ -56,6 +60,9 @@ class Xgrid extends GridView
         parent::init();
     }
 
+    /**
+     * @return array|false|null|string|string[]|void
+     */
     public function run()
     {
         $view = $this->getView();
@@ -65,6 +72,7 @@ class Xgrid extends GridView
             const GRID_NAME = '$this->name';
             const GRID_ID = '$this->id';
             const USE_AJAX = '$this->useAjax';
+            const PRIMARY_KEY = '$this->primaryKey';
             const USE_CUSTOM_UPLOAD_FUNCTION = '$this->useCustomUploadFunction';
             var _filterClassShortName = '" . $this->dataProvider->filterClassShortName . "';
             var _checkedIdsFromRequest = ". json_encode($this->dataProvider->filterModel->checkedIds) . ";
@@ -129,6 +137,9 @@ class Xgrid extends GridView
         }
     }
 
+    /**
+     * @return array
+     */
     public function renderForUpload()
     {
         //--header
@@ -161,6 +172,9 @@ class Xgrid extends GridView
         return $result;
     }
 
+    /**
+     * @return array
+     */
     private function renderHeadersForUpload()
     {
         $row = [];
@@ -316,6 +330,9 @@ class Xgrid extends GridView
         return Html::tag('tr', implode('', $cells), $options);
     }
 
+    /**
+     * @return string
+     */
     public function renderTableHeader()
     {
         $cells = [];
@@ -335,6 +352,9 @@ class Xgrid extends GridView
         return "<thead>\n" . $content . "\n</thead>";
     }
 
+    /**
+     * @return string
+     */
     public function renderItems()
     {
         $filter = $this->renderFilters();
@@ -403,6 +423,10 @@ class Xgrid extends GridView
         return $class::widget($pager);
     }
 
+    /**
+     * @param $key
+     * @return string
+     */
     public function renderRowCheckBox($key)
     {
         $checked = ($this->dataProvider->filterModel->allRowsAreChecked || (is_array($this->checkedIds) && in_array($key, $this->checkedIds)))

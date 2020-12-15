@@ -19,6 +19,7 @@ abstract class GridFilter extends Model
     public $actionWithChecked = false; //-- признак, что операция проводится с выбранными  строками
     public $showOnlyChecked; //-- показывать только выбранный строки, но с учетом наложенных условий
     public $_filterContent = null; //-- текстовая строка, говорящая о том, какие условия сейчас применены
+    public $primaryKey = 'id';
     private $_sqlPrefix;
 
     /**
@@ -59,6 +60,7 @@ abstract class GridFilter extends Model
     public function rules()
     {
         return [
+            [[$this->primaryKey], 'safe'],
             [['checkedIds'], 'safe'],
             [[ 'showOnlyChecked', 'allRowsAreChecked', 'actionWithChecked'], 'boolean'],
         ];
@@ -76,16 +78,17 @@ abstract class GridFilter extends Model
         if (!$this->actionWithChecked) {
             if (!$this->allRowsAreChecked && $this->showOnlyChecked == '1' && !empty($this->checkedIds)) {
                 $this->_defaultQuery
-                    ->andWhere(['IN', "$this->sqlPrefix.id", $this->checkedIds]);
+                    ->andWhere(['IN', "$this->sqlPrefix.$this->primaryKey", $this->checkedIds]);
                 $this->_filterContent .= Yii::t('app', 'Только отмеченные');
             }
         } else {
             if (!$this->allRowsAreChecked && !empty($this->checkedIds)) {
                 $this->_defaultQuery
-                    ->andWhere(['IN', "$this->sqlPrefix.id", $this->checkedIds]);
+                    ->andWhere(['IN', "$this->sqlPrefix.$this->primaryKey", $this->checkedIds]);
             }
         }
 
+        $tmp = $this->_defaultQuery->createCommand()->getSql();
         return $this->_defaultQuery;
     }
 

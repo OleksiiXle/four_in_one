@@ -25,6 +25,8 @@ class GridDataProvider extends BaseDataProvider
     public $usePagination = true;
     public $consoleFilter = [];
     public $construct = 'web';
+    public $primaryKey = 'id';
+
 
     public function __construct(array $config = [])
     {
@@ -64,6 +66,7 @@ class GridDataProvider extends BaseDataProvider
         if (isset($this->filterModelClass)){
             if (!$this->filterModel){
                 $this->filterModel = new $this->filterModelClass;
+                $this->filterModel->primaryKey = $this->primaryKey;
                 $this->filterClassShortName = $this->filterModel->formName();
             }
 
@@ -129,7 +132,8 @@ class GridDataProvider extends BaseDataProvider
                 $this->filterClassShortName = $this->filterModel->formName();
                 $this->filterModel->setAttributes($this->consoleFilter);
             }
-            $this->query = $this->filterModel->getQuery();
+            $this->filterModel->primaryKey = $this->primaryKey;
+           $this->query = $this->filterModel->getQuery();
         } else {
             $this->query = $this->baseModel;
         }
@@ -171,7 +175,7 @@ class GridDataProvider extends BaseDataProvider
             }
 
             if ($this->searchId > 0){
-                $idField = (!empty($query->join) || !empty($query->joinWith)) ? $query->modelClass::tableName() . '.id' : 'id';
+                $idField = (!empty($query->join) || !empty($query->joinWith)) ? $query->modelClass::tableName() . ".$this->primaryKey" : $this->primaryKey;
                 $qtmp = clone $query;
                 $qtmp->select = [$idField];
                 $retTmp = $qtmp->createCommand()->queryAll();

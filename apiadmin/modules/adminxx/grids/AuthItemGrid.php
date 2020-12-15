@@ -24,6 +24,7 @@ class AuthItemGrid extends Grid
             'useActions' => true,
             'useCustomUploadFunction' => false,
             'assetsToRegister' => [MenuActionAsset::class],
+            'primaryKey' => 'name',
             'filterView' => '@app/modules/adminxx/views/auth-item/_authItemFilter',
             //-------------------------------------------
             'columns' => [
@@ -53,7 +54,6 @@ class AuthItemGrid extends Grid
                         return $ret;
                     },
                 ],
-
                 'name',
                 'description',
                 'rule_name',
@@ -88,6 +88,7 @@ class AuthItemGrid extends Grid
     {
         return [
             'filterModelClass' => AuthItemFilter::class,
+            'primaryKey' => 'name',
             'conserveName' => 'authItemAdminGrid',
             'pageSize' => 15,
             ];

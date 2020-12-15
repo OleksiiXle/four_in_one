@@ -3,6 +3,7 @@
 const GRID_ID = '$this->id';
 const GRID_NAME = '$this->name';
 const USE_AJAX = 1 / 0
+const PRIMARY_KEY = '$this->primaryKey';
 const USE_CUSTOM_UPLOAD_FUNCTION = '$this->useCustomUploadFunction';
 var _gridModel = '". addcslashes(static::class, '\\') . "'';";
 var _filterClassShortName = '" . $this->dataProvider->filterClassShortName . "';
@@ -152,7 +153,7 @@ function getFilterQuery() {
 //-- модификация checkedIds по нажатию на чекбокс (+ или -)
 function checkRow(checkbox){
    // console.log(checkedIds);
-    var id = parseInt($(checkbox)[0].dataset['id']);
+    var id = (PRIMARY_KEY === 'id') ? parseInt($(checkbox)[0].dataset['id']) : $(checkbox)[0].dataset['id'];
     var ind = checkedIds.indexOf(id);
     if (checkbox.checked) {
        // console.log(id);
@@ -244,6 +245,7 @@ function parseUrl(href) {
 function startBackgroundUploadTask() {
     filterQuery.push({'name':'checkedIds', 'value' : JSON.stringify(checkedIds)});
     var params = {
+
         'mode' : 'prod',
         // 'mode' : 'dev',
         'useSession' : true,
