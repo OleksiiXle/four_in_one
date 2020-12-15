@@ -1,8 +1,9 @@
 <?php
-namespace apiadmin\modules\adminxx\models\filters;
+
+namespace apiadmin\modules\adminxx\grids\filters;
 
 use console\controllers\backgroundTasks\models\BackgroundTask;
-use common\widgets\xlegrid\models\GridFilter;
+use common\widgets\xgrid\models\GridFilter;
 
 class BackgroundTaskFilter extends GridFilter
 {
@@ -21,12 +22,9 @@ class BackgroundTaskFilter extends GridFilter
     public $datetime_create;
     public $datetime_update;
 
-   // private $_filterContent;
-
-
     public function rules()
     {
-        return [
+        $ownRules = [
             [['pid', 'user_id', 'result_file_pointer', 'progress'], 'integer'],
             [['arguments', 'result'], 'string'],
             [['datetime_create', 'datetime_update'], 'safe'],
@@ -34,6 +32,8 @@ class BackgroundTaskFilter extends GridFilter
             [['status'], 'string', 'max' => 10],
             [['result_file'], 'string', 'max' => 256],
         ];
+
+        return array_merge(parent::rules(), $ownRules);
     }
 
     /**
@@ -64,33 +64,26 @@ class BackgroundTaskFilter extends GridFilter
         ], BackgroundTask::getStatusesArray());
     }
 
+    public function getCustomQuery()
+    {
+        $query = BackgroundTask::find();
+
+        return $query;
+    }
+
     public function getQuery($params = null)
     {
         $query = BackgroundTask::find();
-        //   $e = $query->createCommand()->getSql();
-
         if (!$this->validate()) {
             return $query;
         }
 
         if (!empty($this->status)) {
             $query->andWhere(['status' => $this->status]);
+            $this->_filterContent .=  'Statuse "' . $this->status . '"; ' ;
         }
-
+        //   $e = $query->createCommand()->getSql();
 
         return $query;
-
     }
-
-    public function getFilterContent()
-    {
-        $this->_filterContent = '';
-
-        if (!empty($this->status)) {
-            $this->_filterContent .= ' Статус *' . $this->status . '*;' ;
-        }
-
-        return $this->_filterContent;
-    }
-
 }

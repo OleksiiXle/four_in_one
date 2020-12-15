@@ -2,12 +2,14 @@
 
 namespace apiadmin\modules\adminxx\controllers;
 
+use Yii;
 use console\controllers\backgroundTasks\models\BackgroundTask;
 use console\controllers\backgroundTasks\tasks\TestTaskWorker;
-use apiadmin\modules\adminxx\models\filters\BackgroundTaskFilter;
-use apiadmin\controllers\MainController;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
+use apiadmin\modules\adminxx\grids\BackgroundTaskGrid;
+use apiadmin\controllers\MainController;
+use yii\web\Response;
 
 /**
  * Class BackgroundTasksController
@@ -45,16 +47,13 @@ class BackgroundTasksController extends MainController
     public function actionIndex()
     {
       //  $this->layout = '@app/modules/adminxx/views/layouts/adminxx.php';
-
-        $dataProvider = new ActiveDataProviderConserve([
-           // 'searchId' => $id,
-            'filterModelClass' => BackgroundTaskFilter::class,
-            'conserveName' => 'backgroundTasksGrid',
-            'pageSize' => 5,
-        ]);
-        $r=1;
-        return $this->render('index',[
-            'dataProvider' => $dataProvider,
+        $grid = new BackgroundTaskGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $grid->reload(Yii::$app->request->post());
+        }
+        return $this->render('index', [
+            'grid' => $grid,
         ]);
     }
 
@@ -77,19 +76,29 @@ class BackgroundTasksController extends MainController
     public function actionModalOpenBackgroundTask($id, $mode)
     {
         $task = BackgroundTask::findOne($id);
-        $taskResultFileFullName = $task->taskResultFileFullName;
-        $resultContent = (file_exists($taskResultFileFullName))
-            ? file_get_contents($taskResultFileFullName)
-            : '';
-        $resultContent = (!empty($resultContent))
-            ? str_replace(PHP_EOL, '<br>', $resultContent)
-            : 'Results file not found';
+        switch ($mode){
+            case 'view':
+            case 'delete':
+                  $taskResultFileFullName = $task->taskResultFileFullName;
+                  $resultContent = (file_exists($taskResultFileFullName))
+                    ? file_get_contents($taskResultFileFullName)
+                    : '';
+                $resultContent = (!empty($resultContent))
+                    ? str_replace(PHP_EOL, '<br>', $resultContent)
+                    : 'Results file not found';
 
-        return $this->renderAjax('_form_background_task', [
-            'task' => $task,
-            'mode' => $mode,
-            'resultContent' => $resultContent,
-        ]);
+                return $this->renderAjax('_form_background_task', [
+                    'task' => $task,
+                    'mode' => $mode,
+                    'resultContent' => $resultContent,
+                ]);
+            case 'success':
+                break;
+            case 'error':
+                break;
+            case 'deleteUnnecessaryTasks':
+                break;
+        }
     }
 
     /**
@@ -134,12 +143,12 @@ class BackgroundTasksController extends MainController
             }
             $content = (file_exists($logFile))
                 ? file_get_contents($logFile)
+               // ? $content = 'lokoko'
                 : '';
             $content = (!empty($content))
                 ? str_replace(PHP_EOL, '<br>', $content)
                 : 'Log file not found';
         }
-
 
         return $this->renderAjax('_form_background_tasks_logs', [
             'content' => $content,

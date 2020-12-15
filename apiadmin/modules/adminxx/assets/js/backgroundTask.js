@@ -28,22 +28,6 @@ function modalOpenBackgroundTask(id, mode) {
     });
 }
 
-function modalOpenBackgroundTaskDelete___(id) {
-    var url = _BASE_URL + '/adminxx/background-tasks/modal-open-background-task-delete-confirm?id=' + id + '&mode=delete';
-    var title = 'Підтвердження видалення';
-
-    $.ajax({
-        url: url,
-        type: "GET",
-        success: function(response){
-            showModal(1800,850, title, response);
-           // $('#xModalContent').html(response);
-        },
-        error: function (jqXHR, error, errorThrown) {
-            errorHandler(jqXHR, error, errorThrown)            }
-    });
-}
-
 function deleteBackgroundTask(id) {
     $.ajax({
         url: _BASE_URL + '/adminxx/background-tasks/background-task-delete',
@@ -95,7 +79,7 @@ function showLog(mode) {
         url: url,
         type: "GET",
         success: function(response){
-            showModal(2400,850, title, response);
+            showModal(1800,800, title, response);
             // $('#xModalContent').html(response);
         },
         error: function (jqXHR, error, errorThrown) {

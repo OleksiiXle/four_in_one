@@ -40,70 +40,75 @@ $this->registerJs(
         background-color: lightgrey;
     }
 </style>
+<div class="row ">
+    <div class="xHeader">
+        <h3>
+            <b><?=$mode?></b>
+        </h3>
+        <?php
+        if ($mode == 'Run background task processing with waiting with AJAX') {
+            echo \yii\helpers\Html::button('Start task',
+                [
+                    'id' => 'btnStartAjax',
+                    'class' => 'btn btn-primary',
+                    'style' => ' margin: 20px'
+                ]);
+        }
 
-<div class="row">
-    <h3>
-        <b><?=$mode?></b>
-    </h3>
-    <?php
-    if ($mode == 'Run background task processing with waiting with AJAX') {
-        echo \yii\helpers\Html::button('Start task',
-            [
-                'id' => 'btnStartAjax',
-                'class' => 'btn btn-primary',
-                'style' => ' margin: 20px'
-            ]);
-    }
-
-    ?>
-</div>
-
-<div class="row">
-    <div class="col-lg-3">
-        <h4>Progress value</h4>
-        <div class="infoArea" id="progressValueArea"></div>
-    </div>
-    <div class="col-lg-3">
-        <h4>AJAX counter</h4>
-        <div class="infoArea" id="ajaxCounterArea"></div>
-    </div>
-    <div class="col-lg-3">
-        <h4>Background task status</h4>
-        <div class="infoArea" id="taskStatusArea"></div>
-    </div>
-    <div class="col-lg-3">
-        <h4>Custom status</h4>
-        <div class="infoArea" id="customStatusArea"></div>
+        ?>
     </div>
 </div>
+<div class="container-fluid">
+    <div class="xContent">
 
-<div class="row">
-    <h4>Progress bar</h4>
-    <progress id="progressArea" max="100" value="0" style="width: 100%"></progress>
-</div>
+        <div class="row">
+            <div class="col-lg-3">
+                <h4>Progress value</h4>
+                <div class="infoArea" id="progressValueArea"></div>
+            </div>
+            <div class="col-lg-3">
+                <h4>AJAX counter</h4>
+                <div class="infoArea" id="ajaxCounterArea"></div>
+            </div>
+            <div class="col-lg-3">
+                <h4>Background task status</h4>
+                <div class="infoArea" id="taskStatusArea"></div>
+            </div>
+            <div class="col-lg-3">
+                <h4>Custom status</h4>
+                <div class="infoArea" id="customStatusArea"></div>
+            </div>
+        </div>
 
-<div class="row">
-    <h4>Result text</h4>
-    <div id="addResultArea"></div>
-</div>
+        <div class="row">
+            <h4>Progress bar</h4>
+            <progress id="progressArea" max="100" value="0" style="width: 100%"></progress>
+        </div>
 
-<div class="row">
-    <h4>Errors text</h4>
-    <div id="errorArea" style="display: none"></div>
-</div>
+        <div class="row">
+            <h4>Result text</h4>
+            <div id="addResultArea"></div>
+        </div>
 
-<div class="infoArea" class="row">
-    <h4>Task Result</h4>
-    <?php
-    echo var_dump($result);
-    ?>
+        <div class="row">
+            <h4>Errors text</h4>
+            <div id="errorArea" style="display: none"></div>
+        </div>
+
+        <div class="infoArea" class="row">
+            <h4>Task Result</h4>
+            <?php
+            echo var_dump($result);
+            ?>
+        </div>
+    </div>
 </div>
 
 <script>
     var params = {
         checkProgressInterval: 2000,
-        urlStartBackgroundTask: '/background-tasks/start-task',
-        urlGetTaskProgress: '/background-tasks/check-task',
+      //  urlStartBackgroundTask: '/background-tasks/start-task',
+      //  urlGetTaskProgress: '/background-tasks/check-task',
         model: _model ,
         arguments: _arguments,
         _csrf: $('meta[name="csrf-token"]').attr('content'),

@@ -49,7 +49,6 @@ $this->registerJs("
         <div class="row">
             <div class="form-group" align="center" style="padding: 20px">
                 <?php
-                //  echo  Html::submitButton('Шукати', ['class' => 'btn btn-primary', 'id' => 'subBtn']);
                 echo  Html::button(Yii::t('app', 'Применить фильтр'), [
                     'class' => 'btn btn-primary',
                     'id' => 'subBtn',
