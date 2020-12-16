@@ -2,6 +2,7 @@
 
 namespace apiadmin\modules\adminxx\models;
 
+use common\models\UserM;
 use Yii;
 use common\models\MainModel;
 

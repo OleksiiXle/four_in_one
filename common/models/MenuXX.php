@@ -402,6 +402,28 @@ class MenuXX extends MainModel
 
     //*****************************************************************************    ДРУГИЕ МЕТОДЫ
 
+    /**
+     * Записывает в массив $target идентификаторы всех потомков
+     * @param $parent_id
+     * @param $target
+     * @return bool
+     */
+    public static function getChildrenIds($parent_id, &$target)
+    {
+        $children = (new \yii\db\Query)
+            ->select(['id', 'parent_id'])
+            ->from(self::tableName())
+            ->where(['parent_id' => $parent_id])
+            ->all();
+        if (count($children) > 0) {
+            foreach ($children as $child) {
+                $target[] = $child['id'];
+                self::getChildrenIds($child['id'], $target);
+            }
+            return true;
+        }
+    }
+
     public static function getDefaultTree()
     {
         $ret = [];

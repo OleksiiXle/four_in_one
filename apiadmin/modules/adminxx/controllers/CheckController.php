@@ -11,9 +11,9 @@ use common\components\AccessControl;
 use apiadmin\controllers\MainController;
 use apiadmin\modules\adminxx\models\filters\UControlFilter;
 use apiadmin\modules\adminxx\models\filters\UserActivityFilter;
-use apiadmin\modules\adminxx\models\UControl;
-use apiadmin\modules\adminxx\models\UserData;
-use apiadmin\modules\adminxx\models\UserM;
+use common\models\UControl;
+use common\models\UserData;
+use common\models\UserM;
 use yii\web\Response;
 
 /**

@@ -3,9 +3,9 @@
 namespace apiadmin\modules\adminxx\models\form;
 
 use Yii;
-use apiadmin\modules\adminxx\models\UserM;
-use apiadmin\modules\adminxx\models\User;
-use apiadmin\modules\adminxx\models\UserData;
+use common\models\UserM;
+use common\models\User;
+use common\models\UserData;
 
 class Signup extends UserM
 {

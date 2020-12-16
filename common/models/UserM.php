@@ -198,6 +198,8 @@ class UserM extends MainModel
             //----  геттеры
             'created_at_str' => Yii::t('app', 'Создано'),
             'updated_at_str' => Yii::t('app', 'Изменено'),
+            'lastVisitTimeTxt' => Yii::t('app', 'Время последнего посещения'),
+            'userRoles' => Yii::t('app', 'Роли'),
 
         ];
     }
@@ -366,7 +368,6 @@ class UserM extends MainModel
                 }
             }
         }
-        $userDepartments = $this->userDepartmentsData;
 
         //---------------------
         $this->_userProfile = [
@@ -392,11 +393,6 @@ class UserM extends MainModel
             'firstVisitTimeTxt' => $this->firstVisitTimeTxt,
             'lastVisitTimeTxt' => $this->lastVisitTimeTxt,
             'lastRoute' => $this->lastRoute,
-
-            //-- user_data
-            'personal_id' => (isset($userDatas)) ? $userDatas->personal_id : 0,
-
-            //-- personal
         ];
 
 
@@ -608,7 +604,7 @@ class UserM extends MainModel
                     if (!$create){
                         //--- сброс имевшихся, но удаленных ролей
                         foreach ($userRolesOld as $name => $role){
-                            if (!isset($userRoles[$name])){
+                            if (!in_array($name, $userRoles)){
                                 $ret = $auth->revoke($role,$this->id);
                             }
                         }

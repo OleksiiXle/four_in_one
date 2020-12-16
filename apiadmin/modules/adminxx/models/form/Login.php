@@ -4,7 +4,7 @@ namespace apiadmin\modules\adminxx\models\form;
 
 use Yii;
 use common\helpers\AccessHelper;
-use apiadmin\modules\adminxx\models\UserM;
+use common\models\UserM;
 
 /**
  * Login form

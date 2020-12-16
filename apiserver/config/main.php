@@ -37,13 +37,14 @@ $config = [
 
         ],
         'user' => [
-            'class' => 'apiserver\modules\oauth2\models\UserYii',
-         //   'class' => 'common\components\UserX',
-            'identityClass' => 'apiserver\modules\oauth2\models\UserIdenty',
+            //'class' => 'apiserver\modules\oauth2\models\UserYii',
+            'class' => 'common\components\UserX',
+           // 'identityClass' => 'apiserver\modules\oauth2\models\UserIdenty',
+            'identityClass' => 'common\models\User',
             'loginUrl' => ['site/login'],
             'enableAutoLogin' => false,
             'enableSession' => false,
-            'identityCookie' => ['name' => '_identity-apiuser', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity-apiserver', 'httpOnly' => true],
         ],
         'authManager' => [
             'class' => 'apiserver\components\ApiDbManager',

@@ -2,8 +2,8 @@
 namespace apiadmin\modules\adminxx\models\form;
 
 use Yii;
-use apiadmin\modules\adminxx\models\UserM;
-use apiadmin\modules\adminxx\models\UserData;
+use common\models\UserM;
+use common\models\UserData;
 
 /**
  * Signup form
@@ -76,8 +76,8 @@ class Signup extends UserM
             ['phone',  'match', 'pattern' => self::USER_PHONE_PATTERN,
                 'message' => self::USER_PHONE_ERROR_MESSAGE],
             //------------------------------------------------------------------------ УНИКАЛЬНОСТЬ
-            ['username', 'unique', 'targetClass' => 'apiadmin\modules\adminxx\models\User', 'on' => self::SCENARIO_CREATE],
-            ['email', 'unique', 'targetClass' => 'apiadmin\modules\adminxx\models\User', 'on' => self::SCENARIO_CREATE],
+            ['username', 'unique', 'targetClass' => 'common\models\User', 'on' => self::SCENARIO_CREATE],
+            ['email', 'unique', 'targetClass' => 'common\models\User', 'on' => self::SCENARIO_CREATE],
         ];
     }
 

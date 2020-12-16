@@ -1,8 +1,8 @@
 <?php
 namespace apiadmin\modules\adminxx\models\filters;
 
-use apiadmin\modules\adminxx\models\UserData;
-use apiadmin\modules\adminxx\models\UserM;
+use common\models\UserData;
+use common\models\UserM;
 use yii\base\Model;
 
 class UserActivityFilter extends Model

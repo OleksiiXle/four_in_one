@@ -3,7 +3,7 @@
 namespace apiadmin\modules\adminxx\models\filters;
 
 use Yii;
-use apiadmin\modules\adminxx\models\UserM;
+use common\models\UserM;
 use common\widgets\xgrid\models\GridFilter;
 
 class UserFilterExample extends GridFilter

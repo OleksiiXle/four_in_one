@@ -18,7 +18,7 @@ use apiadmin\modules\adminxx\models\form\ForgetPassword;
 use apiadmin\modules\adminxx\models\form\Login;
 use apiadmin\modules\adminxx\models\form\PasswordResetRequestForm;
 use apiadmin\modules\adminxx\models\form\Update;
-use apiadmin\modules\adminxx\models\UserM;
+use common\models\UserM;
 use yii\helpers\Url;
 use yii\web\Response;
 

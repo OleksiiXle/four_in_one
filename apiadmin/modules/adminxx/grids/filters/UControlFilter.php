@@ -3,9 +3,9 @@
 namespace apiadmin\modules\adminxx\grids\filters;
 
 use Yii;
-use apiadmin\modules\adminxx\models\UControl;
-use apiadmin\modules\adminxx\models\UserData;
-use apiadmin\modules\adminxx\models\UserM;
+use common\models\UControl;
+use common\models\UserData;
+use common\models\UserM;
 use common\widgets\xgrid\models\GridFilter;
 
 class UControlFilter extends GridFilter

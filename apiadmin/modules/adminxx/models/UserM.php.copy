@@ -399,6 +399,28 @@ class UserM extends MainModel
         return $this->_userProfile;
     }
 
+    public function getUserProfileForApi()
+    {
+        $this->_userProfileForApi = [];
+
+        //---------------------
+        $this->_userProfileForApi = [
+            'id' => $this->id,
+            'status' => $this->status,
+            'username' => $this->username,
+            'last_name' => $this->last_name,
+            'first_name' => $this->first_name,
+            'middle_name' => $this->middle_name,
+            'email' => $this->email,
+            'permissions' =>  \Yii::$app->authManager->getUserRolesPermissions(),
+            'userRBACVersion' => time(),
+            'updated_at' => $this->updated_at,
+        ];
+
+        return $this->_userProfileForApi;
+    }
+
+
     /**
      * @return mixed
      */

@@ -5,6 +5,17 @@ namespace common\models;
 use Yii;
 use common\helpers\Functions;
 
+/**
+ * This is the model class for table "user_data".
+ *
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $first_name
+ * @property string $middle_name
+ * @property string $last_name
+ *
+ * @property User $user
+ */
 class UserData extends MainModel
 {
     public static $activityIntervalArray=[
@@ -54,14 +65,36 @@ class UserData extends MainModel
     {
         return [
             'id' => 'ID',
-            'user_id' => 'ІД',
-            'emails' => 'Emails',
-            'first_name' => 'Імя',
-            'middle_name' => 'По батькові',
-            'last_name' => 'Прізвище',
-            'phone' => 'Телефон',
-            'last_rout' => 'Останній роут',
-            'last_rout_time' => 'Остання активність',
+            'username' => Yii::t('app', 'Логин'),
+            'auth_key' => Yii::t('app', 'Ключ авторизации'),
+            'password_hash' => Yii::t('app', 'Пароль'),
+            'password_reset_token' => Yii::t('app', 'Токен сброса пароля'),
+            'email' => Yii::t('app', 'Email'),
+            'status' => Yii::t('app', 'Статус'),
+            'created_at' => Yii::t('app', 'Создано'),
+            'updated_at' => Yii::t('app', 'Изменено'),
+            'refresh_permissions' => Yii::t('app', 'Необходимо обновление разоешений'),
+            'invitation' => Yii::t('app', 'С приглашением по Email'),
+            'userRolesToSet' => Yii::t('app', 'Роли'),
+
+            //-- user_data
+            'first_name' => Yii::t('app', 'Имя'),
+            'middle_name' => Yii::t('app', 'Отчество'),
+            'last_name' => Yii::t('app', 'Фамилия'),
+            'phone' => Yii::t('app', 'Телефон'),
+            'last_rout' => Yii::t('app', 'Последний роут'),
+            'last_rout_time' => Yii::t('app', 'Последняя активность'),
+
+            //---- служебные
+            'password' => Yii::t('app', 'Пароль'),
+            'oldPassword' => Yii::t('app', 'Старый пароль'),
+            'retypePassword' => Yii::t('app', 'Подтверждение пароля'),
+
+            //----  геттеры
+            'created_at_str' => Yii::t('app', 'Создано'),
+            'updated_at_str' => Yii::t('app', 'Изменено'),
+
+
             'lastRoutTime' => 'Остання активність',
             'userLogin' => 'Логін',
             'activityInterval' => 'Змінити інтервал',

@@ -126,7 +126,7 @@ $this->registerJs("
                     <?= $form->field($model, 'phone'); ?>
                     <?= $form->field($model, 'direction', ['inputOptions' =>
                         ['class' => 'form-control', 'tabindex' => '4']])
-                        ->dropDownList(\apiadmin\modules\adminxx\models\UserData::$directionArray,
+                        ->dropDownList(\common\models\UserData::$directionArray,
                             ['options' => [ $model->direction => ['Selected' => true]],]);?>
                     <?= $form->field($model, 'job_name')->textarea([
                         'rows' => '5'

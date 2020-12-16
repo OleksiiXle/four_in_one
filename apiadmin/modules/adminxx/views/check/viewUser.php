@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use apiadmin\modules\adminxx\models\UserM;
+use common\models\UserM;
 use yii\jui\JuiAsset;
 use yii\helpers\Url;
 

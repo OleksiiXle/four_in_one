@@ -4,7 +4,7 @@ namespace apiadmin\modules\adminxx\controllers;
 
 use apiadmin\controllers\MainController;
 use common\components\AccessControl;
-use apiadmin\modules\adminxx\models\MenuXX;
+use common\models\MenuXX;
 use common\models\Route;
 
 /**
