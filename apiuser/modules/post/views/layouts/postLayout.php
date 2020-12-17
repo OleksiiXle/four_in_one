@@ -136,7 +136,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoI
             <?php
             echo MenuXWidget::widget([
                 'showLevel' => '1',
-                'accessLevels' => [0,2]
+                'accessLevels' => [0,1]
             ]) ;
             ?>
         </div>

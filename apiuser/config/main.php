@@ -14,7 +14,7 @@ $config = [
     'components' => [
         'request' => [
           //  'csrfParam' => '_csrf-apiuser',
-            'cookieValidationKey' => 'aHdm_vwbUjfbe0OTPD8mpoBGDd5V-x0K',
+            'cookieValidationKey' => 'aHdm_vwbUjfbe0OvbncvbnTPD8mpoBGDd5V-x0K',
             'baseUrl'=>'/dstest/apiuser', //todo раскомментировать в случае одного хоста
 
         ],

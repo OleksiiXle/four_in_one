@@ -1,108 +1,159 @@
 <?php
-
 namespace common\controllers;
 
 use Yii;
-use common\components\AccessControl;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
-use app\modules\adminxx\models\form\Login;
+use common\components\AccessControl;
+use common\models\form\Login;
+use common\models\form\Signup;
+use yii\helpers\Url;
 
-class SiteController extends Controller
+/**
+ * Site controller
+ */
+class SiteController extends MainController
 {
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
-        $behaviors['access'] = [
-            'class' => AccessControl::class,
-            'rules' => [
-                [
-                    'allow'      => true,
-                    'actions'    => [
-                        'index', 'error'
-                    ],
-                    'roles'      => [
-                        '@', '?'
-                    ],
-                ],
-                [
-                    'allow' => true,
-                    'actions' => ['login', 'signup', 'signup-confirm' ],
-                    'roles' => ['?'],
-                ],
-                [
-                    'allow' => true,
-                    'actions' => ['logout'],
-                    'roles' => ['@'],
-                ],
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['login', 'signup', 'signup-email', 'verify-email', 'error'],
+                        'allow' => true,
+                        'roles' => ['?'],
 
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => [ 'index'],
+                        'allow' => true,
+                        'roles' => ['@', '?'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
             ],
         ];
-        $behaviors['verbs'] = [
-            'class' => VerbFilter::className(),
-            'actions' => [
-                'logout' => ['post'],
-            ],
-
-        ];
-
-        return $behaviors;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
 
+    /**
+     * Displays homepage.
+     *
+     * @return string
+     */
     public function actionIndex()
     {
         return $this->render('index');
     }
 
-
+    /**
+     * Login action.
+     *
+     * @return string
+     */
     public function actionLogin()
     {
-        //  $this->layout = '@app/views/layouts/commonLayout.php';
+        $this->layout = '@common/views/layouts/loginLayout.php';
+        //   $this->layout = false;
+
         $model = new Login();
         if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
-            $query = 'SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY,", ""))';
-            Yii::$app->db->createCommand($query)->execute();
-
             return $this->goBack();
         } else {
-            return $this->render('login', [
+        //    return $this->render('login', [
+            return $this->render('@common/views/site/login', [
                 'model' => $model,
             ]);
         }
     }
 
+    /**
+     * Logout action.
+     *
+     * @return string
+     */
     public function actionLogout()
     {
-        Yii::$app->getUser()->logout();
-        return $this->redirect('/site/index');
+        Yii::$app->userProfile->language = Yii::$app->language;
+
+        Yii::$app->user->logout();
+
+        return $this->goHome();
     }
 
     /**
-     * +++ Регистрация нового пользователя с подтверждением Емейла
-     * @return string
+     * Signs user up.
+     *
+     * @return mixed
      */
     public function actionSignup()
     {
+        $this->layout = '@common/views/layouts/loginLayout.php';
         $model = new Signup();
-        if (\Yii::$app->getRequest()->isPost) {
-            $data = \Yii::$app->getRequest()->post('Signup');
-            $model->setAttributes($data);
-            $model->first_name = $data['first_name'];
-            $model->middle_name =  $data['middle_name'];
-            $model->last_name =  $data['last_name'];
-
-            if ($user = $model->signup(true)) {
-                \Yii::$app->session->setFlash('success', \Yii::t('app', 'Check your email to confirm the registration'));
-                return $this->goHome();
+        $model->scenario = Signup::SCENARIO_SIGNUP_BY_HIMSELF;
+        if (Yii::$app->request->isPost) {
+            $_post = Yii::$app->request->post();
+            if (!isset($_post['reset-btn'])) {
+                if ($model->load($_post) && $model->signup(false)) {
+                    return $this->redirect(Url::toRoute('/site/login'));
+                }
             } else {
-                \Yii::$app->session->setFlash('error', \Yii::t('app', 'Ошибка отправки токена'));
+                return $this->goBack();
             }
         }
-        return $this->render('signup', [
+
+        return $this->render('@common/views/site/signup', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Signs user up with email confirmation.
+     *
+     * @return mixed
+     */
+    public function actionSignupEmail()
+    {
+        $this->layout = '@common/views/layouts/loginLayout.php';
+        $model = new Signup();
+        $model->scenario = Signup::SCENARIO_SIGNUP_BY_HIMSELF_WITH_CONFIRMATION;
+        if (Yii::$app->request->isPost) {
+            $_post = Yii::$app->request->post();
+            if (!isset($_post['reset-btn'])) {
+                if ($model->load($_post) && $model->signup(true)) {
+                    Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+                    return $this->goHome(); }
+            } else {
+                return $this->goBack();
+            }
+        }
+
+        return $this->render('@common/views/site/signup', [
             'model' => $model,
         ]);
     }
@@ -111,34 +162,17 @@ class SiteController extends Controller
      * +++ Подтверждение регистрации по токену
      * @return string
      */
-    public function actionSignupConfirm($token)
+    public function actionVerifyEmail($token)
     {
         $signupService = new Signup();
-
         try{
-            $signupService->confirmation($token);
-            \Yii::$app->session->setFlash('success', \Yii::t('app', 'Регистрация успешно подтверждена'));
+            if ($signupService->confirmation($token)) {
+                \Yii::$app->session->setFlash('success', \Yii::t('app', 'Регистрация успешно подтверждена'));
+            }
         } catch (\Exception $e){
             \Yii::$app->session->setFlash('error', $e->getMessage());
         }
 
         return $this->goHome();
     }
-
-
-
-    public function actionError()
-    {
-       // $this->layout = '@app/views/layouts/commonLayout.php';
-
-        $exception = \Yii::$app->errorHandler->exception;
-        if ($exception !== null) {
-            return $this->render('error',
-                [
-                    'exception' => $exception,
-                     'message' => $exception->getMessage(),
-                    ]);
-        }
-    }
-
 }

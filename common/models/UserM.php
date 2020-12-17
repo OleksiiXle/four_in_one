@@ -116,50 +116,44 @@ class UserM extends MainModel
      */
     public function rules()
     {
+        $scenarioRules = [];
+        $rules = [
+            [['status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'invitation',], 'integer'],
+            [['first_name', 'middle_name', 'last_name', 'phone', 'email', 'email_confirm_token' ], 'string', 'max' => 255],
+            [['first_name', 'middle_name', 'last_name'],  'match', 'pattern' => self::USER_NAME_PATTERN,
+                'message' => Yii::t('app', self::USER_NAME_ERROR_MESSAGE)],
+            ['phone',  'match', 'pattern' => self::USER_PHONE_PATTERN,
+                'message' => Yii::t('app', self::USER_PHONE_ERROR_MESSAGE)],
+            [['password', 'retypePassword', 'oldPassword' , 'newPassword'],  'string', 'min' => 3, 'max' => 20],
+
+            [['username', 'email'], 'filter', 'filter' => 'trim'],
+            [['username', 'email', 'auth_key'], 'string', 'min' => 5, 'max' => 32],
+            ['email', 'validateEmail'],
+            [['username', 'password', 'oldPassword', 'retypePassword',  'newPassword' ], 'match', 'pattern' => self::USER_PASSWORD_PATTERN,
+                'message' => Yii::t('app', self::USER_PASSWORD_ERROR_MESSAGE)],
+            [['status'], 'default', 'value' => self::STATUS_ACTIVE],
+            ['rememberMe',  'boolean'],
+            ['email', 'email'],
+            [['password_hash', 'password_reset_token', 'email' ], 'string', 'max' => 255],
+            ['username', 'validateUsername'],
+        ];
         switch ($this->scenario) {
             case self::SCENARIO_SIGNUP_BY_ADMIN:
-                return [
+                $scenarioRules = [
                     //------------------------------------------------------------------------- user
                     [['username' , 'email', 'password', 'retypePassword'], 'required'],
-                    [['username', 'email'], 'filter', 'filter' => 'trim'],
-                    [['status', 'created_at', 'updated_at', 'created_by', 'updated_by', 'invitation',], 'integer'],
-                    [['password_hash', 'password_reset_token', 'email' ], 'string', 'max' => 255],
-                    ['rememberMe',  'boolean'],
-                    ['email', 'email'],
-                    [['username', 'auth_key'], 'string', 'min' => 5, 'max' => 32],
-                    [['password', 'retypePassword', 'oldPassword' , 'newPassword'],  'string', 'min' => 3, 'max' => 20],
-                    ['username', 'validateUsername'],
-                    ['email', 'validateEmail'],
-                    [['username', 'password', 'oldPassword', 'retypePassword',  'newPassword' ], 'match', 'pattern' => self::USER_PASSWORD_PATTERN,
-                        'message' => Yii::t('app', self::USER_PASSWORD_ERROR_MESSAGE)],
-                    [['status'], 'default', 'value' => self::STATUS_ACTIVE],
-
                     //------------------------------------------------------------------------- user_data
                     [['first_name', 'last_name'], 'required',],
-                    [['first_name', 'middle_name', 'last_name', 'phone', 'email' ], 'string', 'max' => 255],
-                    [['first_name', 'middle_name', 'last_name'],  'match', 'pattern' => self::USER_NAME_PATTERN,
-                        'message' => Yii::t('app', self::USER_NAME_ERROR_MESSAGE)],
-                    ['phone',  'match', 'pattern' => self::USER_PHONE_PATTERN,
-                        'message' => Yii::t('app', self::USER_PHONE_ERROR_MESSAGE)],
                 ];
+                break;
             case self::SCENARIO_UPDATE:
-                return [
+                $scenarioRules = [
                     //------------------------------------------------------------------------- user_data
                     [['first_name', 'last_name'], 'required',],
-                    [['first_name', 'middle_name', 'last_name', 'phone'], 'string', 'max' => 255],
-                    [['first_name', 'middle_name', 'last_name'],  'match', 'pattern' => self::USER_NAME_PATTERN,
-                        'message' => Yii::t('app', self::USER_NAME_ERROR_MESSAGE)],
-                    ['phone',  'match', 'pattern' => self::USER_PHONE_PATTERN,
-                        'message' => Yii::t('app', self::USER_PHONE_ERROR_MESSAGE)],
                 ];
-            case self::SCENARIO_ACTIVATE:
-            case self::SCENARIO_DEACTIVATE:
-            case self::SCENARIO_CONFIRM_INVITATION:
-            return [
-                    //------------------------------------------------------------------------- user
-                    [['status', 'updated_at', 'updated_by',], 'integer'],
-                ];
+                break;
         }
+        return array_merge($rules, $scenarioRules);
     }
 
     /**
@@ -677,7 +671,7 @@ class UserM extends MainModel
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, \Yii::t('app', 'Невірний логін або пароль'));
             } elseif ($user->status != self::STATUS_ACTIVE) {
-                $this->addError($attribute, 'Ваш статус - ' . self::STATUS_DICT[$user->status]);
+                $this->addError($attribute, 'Ваш статус - ' . self::getStatusDict()[$user->status]);
             }
         }
     }

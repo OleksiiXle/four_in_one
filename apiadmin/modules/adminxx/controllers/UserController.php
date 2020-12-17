@@ -12,10 +12,8 @@ use common\components\conservation\models\Conservation;
 use common\components\AccessControl;
 use apiadmin\controllers\MainController;
 use apiadmin\modules\adminxx\models\Assignment;
-use apiadmin\modules\adminxx\models\filters\UserFilter;
 use apiadmin\modules\adminxx\models\form\ChangePassword;
 use apiadmin\modules\adminxx\models\form\ForgetPassword;
-use apiadmin\modules\adminxx\models\form\Login;
 use apiadmin\modules\adminxx\models\form\PasswordResetRequestForm;
 use apiadmin\modules\adminxx\models\form\Update;
 use common\models\UserM;
@@ -235,40 +233,6 @@ class UserController extends MainController
     }
 
     /**
-     * +++ Login
-     * @return string
-     */
-    public function actionLogin()
-    {
-      //  $this->layout = '@app/views/layouts/commonLayout.php';
-
-        $model = new Login();
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
-            $query = 'SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY,", ""))';
-            Yii::$app->db->createCommand($query)->execute();
-
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     *+++ Logout
-     * @return string
-     */
-    public function actionLogout()
-    {
-        Yii::$app->userProfile->language = Yii::$app->language;
-
-        \Yii::$app->getUser()->logout();
-        return $this->goHome();
-     //   return $this->redirect('/site/index');
-    }
-
-    /**
      * Change password
      * @return string
      */
@@ -433,169 +397,6 @@ class UserController extends MainController
 
     }
 
-    /**
-     * +++ АЯКС- получение данных пользователя по жетону get-personal-data
-     * @return false|string
-     */
-    public function actionGetPersonalData(){
-        // 0082166
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['spec_document'])){
-            $spec_document = $_post['spec_document'];
-        }
-        if (isset($spec_document)){
-            $personal = PersonalCommon::find()
-                ->where(['spec_document' => $spec_document])
-                ->one();
-            if (isset($personal)){
-                $personal_id = $personal->id;
-                $positionFullName =$personal->positionCommon->revertSemiFullName;
-                $response['data'] = [
-                    'personal_id' => $personal_id,
-                    'positionFullName' => $positionFullName,
-                    'name_family' => $personal->name_family,
-                    'name_first' => $personal->name_first,
-                    'name_last' => $personal->name_last,
-                ];
-                $response['status'] = true;
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение данных пользователя по ИД get-personal-data-by-id
-     * @return false|string
-     */
-    public function actionGetPersonalDataById(){
-        // 0082166
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['id'])){
-            $id = $_post['id'];
-        }
-        if (isset($id)){
-            $personal = PersonalCommon::find()
-                ->where(['id' => $id])
-                ->one();
-            if (isset($personal)){
-                $personal_id = $personal->id;
-                $positionFullName =$personal->positionCommon->revertSemiFullName;
-                $response['data'] = [
-                    'personal_id' => $personal_id,
-                    'positionFullName' => $positionFullName,
-                    'name_family' => $personal->name_family,
-                    'name_first' => $personal->name_first,
-                    'name_last' => $personal->name_last,
-                    'spec_document' => $personal->spec_document,
-                ];
-                $response['status'] = true;
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение данных пользователя по ФИО get-personal-data-by-fio
-     * @return false|string
-     */
-    public function actionGetPersonalDataByFio(){
-        /*
-                    'last_name': last_name,
-            'first_name': first_name,
-            'middle_name': middle_name
-
-         */
-        // 0082166
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['last_name']) && !empty($_post['last_name'])){
-            $last_name = $_post['last_name'];
-        }
-        if (isset($last_name)){
-           // $query = PersonalCommon::find()
-            $query = (new Query())
-                ->select('id, name_family, name_first, name_last, ')
-                ->from('personal')
-                ->where(['name_family' => $last_name]);
-            if (isset($_post['first_name']) && !empty($_post['first_name'])){
-                $first_name = $_post['first_name'];
-                $query->andWhere(['name_first' => $first_name]);
-            }
-            if (isset($_post['middle_name']) && !empty($_post['middle_name'])){
-                $middle_name= $_post['middle_name'];
-                $query->andWhere(['name_last' => $middle_name]);
-            }
-            $rr = 1;
-            $personal = $query
-                ->orderBy('name_first')
-                ->all();
-            if (!empty($personal)){
-                $response['data'] = [];
-           //    foreach ($personal as $persona){
-                for ($i = 0; $i < count($personal); $i++){
-                    $persona = PersonalCommon::find()
-                    ->where(['id' => $personal[$i]['id']])
-                    ->one();
-                    $personal_id = $persona->id;
-                    $positionFullName =$persona->positionCommon->revertSemiFullName;;
-                    $response['data'][] =
-                        [
-                            'id' => $personal_id,
-                            'name' => $persona->name_family
-                                . ' ' . $persona->name_first . ' ' . $persona->name_last
-                                . ' *** ' . $positionFullName . ' *** ' ]
-                        ;
-
-                }
-                $response['status'] = true;
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение реверсного полного названия подразделения по $department_id get-department-full-name
-     * @return false|string
-     */
-    public function actionGetDepartmentFullName(){
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['department_id'])){
-            $department_id = $_post['department_id'];
-        }
-        if (isset($department_id)){
-            $department = DepartmentCommon::findOne($department_id);
-            if (isset($department)){
-                $response['status'] = true;
-                $response['data'] = $department->getFullNameRevert(DepartmentCommon::ROOT_ID);
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение полного названия подразделения по $department_id get-department-name
-     * @return string
-     */
-    public function actionGetDepartmentName($department_id = 0)
-    {
-        $department = DepartmentCommon::findOne($department_id);
-        if (isset($department)){
-            $this->result['status'] = true;
-            $this->result['data'] = $department->gunpName;
-        }
-        return $this->asJson($this->result);
-    }
 
     //******************************************************************************************* ВЫВОД СПИСКА В ФАЙЛ
 

@@ -6,7 +6,7 @@ return [
     'mode' => 'dev',
     //-- for configs component
     'menuType' => 'horizontal',
-    'adminEmail' => 'lokoko.xle@ukr.net',
+    'adminEmail' => 'oleksii.xle.fish@gmail.com',
     'userControl' => '1',
     'guestControl' => '1',
     'guestControlDuration' => '3600',
