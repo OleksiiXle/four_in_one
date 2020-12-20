@@ -54,8 +54,7 @@ class UserController extends MainController
                     'allow'      => true,
                     'actions'    => [
                         'index', 'view',
-                        'export-to-exel-count', 'export-to-exel-get-partition', 'upload-report', 'get-department-full-name',
-                        'get-department-name'
+                        'export-to-exel-count', 'export-to-exel-get-partition', 'upload-report',
                     ],
                     'roles'      => ['adminUsersView'],
                 ],
@@ -63,7 +62,7 @@ class UserController extends MainController
                     'allow'      => true,
                     'actions'    => [
                         'signup-by-admin', 'change-user-activity', 'update-by-admin',
-                        'conservation', 'conserve-delete'
+                        'conservation', 'conserve-delete', 'delete-by-admin'
                     ],
                     'roles'      => ['adminUserCreate', 'adminUserUpdate', 'adminSuper' ],
                 ],
@@ -98,7 +97,7 @@ class UserController extends MainController
         $behaviors['verbs'] = [
             'class' => VerbFilter::class,
             'actions' => [
-                'delete' => ['post'],
+                'delete-by-admin' => ['post'],
                 'logout' => ['post'],
                 'activate' => ['post'],
             ],
@@ -154,12 +153,6 @@ class UserController extends MainController
             'userRoles' => [],
         ]);
     }
-
-
-
-
-
-
 
     /**
      * +++ Редактирование профиля пользователя администратором update-by-admin
@@ -341,20 +334,19 @@ class UserController extends MainController
         return $this->render('test');
     }
 
-    public function actionChangeSort()
+    /**
+     * Удаление профиля пользователя администратором
+     * @return string
+     */
+    public function actionDeleteByAdmin($id)
     {
-        $this->layout = '@app/views/layouts/commonLayout.php';
-
-        $model = new UserProfile();
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->save();
+        if (\Yii::$app->request->isPost){
+            $userDel = UserM::findOne($id)->delete();
+            if ($userDel === 0){
+                \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
+            }
         }
-
-        return $this->render('changeSort', [
-            'model' => $model,
-        ]);
-
+        return $this->redirect(Url::toRoute('index'));
 
     }
 
@@ -609,21 +601,4 @@ class UserController extends MainController
 
         }
     }
-
-    /**
-     * --- Удаление профиля пользователя
-     * @return string
-     */
-    public function actionDelete($id)
-    {
-        if (\Yii::$app->request->isPost){
-            $userDel = UserM::findOne($id)->delete();
-            if ($userDel === 0){
-                \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
-            }
-        }
-        return $this->redirect(Url::toRoute('index'));
-
-    }
-
 }

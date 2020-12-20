@@ -11,6 +11,14 @@ class MenuActionWidget extends Widget
     public $items = [
         'text' => 'route',
     ];
+    /*
+     Yii::t('app', 'Удалить') => [
+              'icon' => 'glyphicon glyphicon-trash',
+              'route' => Url::toRoute(['/adminxx/user/delete-by-admin', 'user_id' => $data['id']]),
+              'confirm' => Yii::t('app', 'Подтвердите удаление пользователя'),
+          ],
+
+     */
     public $offset = 0;
     public $confirm = '';
 

@@ -123,6 +123,11 @@ class UsersGrid extends Grid
                                         'icon' => 'glyphicon glyphicon-lock',
                                         'route' => Url::toRoute(['/adminxx/user/conservation', 'user_id' => $data['id']]),
                                     ],
+                                    Yii::t('app', 'Удалить') => [
+                                        'icon' => 'glyphicon glyphicon-trash',
+                                        'route' => Url::toRoute(['/adminxx/user/delete-by-admin', 'id' => $data['id']]),
+                                        'confirm' => Yii::t('app', 'Подтвердите удаление пользователя'),
+                                    ],
                                 ],
                                 'offset' => -200,
                             ]
