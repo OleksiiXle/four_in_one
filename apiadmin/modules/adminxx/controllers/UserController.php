@@ -35,12 +35,12 @@ class UserController extends MainController
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => [ 'forget-password', 'test', 'login' ],
+                    'actions' => [ 'error', 'forget-password', 'test', 'login', 'invitation-confirm' ],
                     'roles' => ['?'],
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['test', 'change-password', 'update-profile', 'conservation', 'logout'],
+                    'actions' => ['error', 'test', 'change-password', 'update-profile', 'conservation', 'logout', 'invitation-confirm' ],
                     'roles' => ['@'],
                 ],
                 [
@@ -127,14 +127,12 @@ class UserController extends MainController
      * +++ Регистрация нового пользователя Администратором singup-by-admin
      * @return string
      */
-    public function actionSignupByAdmin($invitation = false)
+    public function actionSignupByAdmin()
     {
         $model = new UserM();
         $model->scenario = UserM::SCENARIO_SIGNUP_BY_ADMIN;
         $defaultRoles = $model->defaultRoles;
-        $userRoles = $model->userRolesToSet;
         if ($model->load(Yii::$app->request->post())) {
-            $tmp = json_decode($model->userRolesToSet, true);
             if ($model->updateUser()) {
                 $session = \Yii::$app->session;
                 if ($session->get('searchIid')){
@@ -321,6 +319,21 @@ class UserController extends MainController
         return $this->render('passwordResetRequest', [
             'model' => $model,
         ]);
+    }
+
+    public function actionInvitationConfirm($token)
+    {
+        $user = new UserM();
+        try{
+            if ($user->confirmation($token)) {
+                \Yii::$app->session->setFlash('success', \Yii::t('app', 'Регистрация успешно подтверждена'));
+            }
+        } catch (\Exception $e){
+            \Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+
+        return $this->goHome();
+
     }
 
     /**
