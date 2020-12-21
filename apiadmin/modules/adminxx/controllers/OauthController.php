@@ -2,6 +2,7 @@
 
 namespace apiadmin\modules\adminxx\controllers;
 
+use apiadmin\modules\adminxx\grids\OauthClientGrid;
 use apiadmin\modules\adminxx\models\oauth\OauthAccessToken;
 use apiadmin\modules\adminxx\models\oauth\OauthAuthorizationCode;
 use apiadmin\modules\adminxx\models\oauth\OauthCient;
@@ -32,7 +33,7 @@ class OauthController extends MainController
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index',
+                        'index', 'create-oauth-client', 'update-oauth-client', 'delete-oauth-client'
                     ],
                     'roles'      => ['adminSuper', ],
                 ],
@@ -46,12 +47,7 @@ class OauthController extends MainController
      */
     public function actionIndex()
     {
-        $dataProviderClient = new ActiveDataProvider([
-            'query' => OauthCient::find(),
-            'pagination' => [
-                'pageSize' => 20,
-            ],
-        ]);
+        $oauthClientGrid = new OauthClientGrid();
         $dataProviderAccessToken = new ActiveDataProvider([
             'query' => OauthAccessToken::find(),
             'pagination' => [
@@ -71,7 +67,7 @@ class OauthController extends MainController
             ],
         ]);
         return $this->render('index', [
-            'dataProviderClient' => $dataProviderClient,
+            'oauthClientGrid' => $oauthClientGrid,
             'dataProviderAuthCode' => $dataProviderAuthCode,
             'dataProviderAccessToken' => $dataProviderAccessToken,
             'dataProviderRefreshToken' => $dataProviderRefreshToken,
@@ -79,26 +75,39 @@ class OauthController extends MainController
     }
 
     /**
-     * +++ Создание нового правила create
+     * +++ Создание нового
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreateOauthClient()
     {
-        $model = new RuleX();
-        $rulesClasses = RuleX::getRulesClasses();
-        if (Yii::$app->request->isPost){
-            $_post = Yii::$app->request->post();
-            if (!empty($_post['doAction'])){
-                if ($model->load(Yii::$app->request->post())  ) {
-                    if (!$model->addRule()){
-                        return $this->render('update', ['model' => $model, 'rulesClasses' => $rulesClasses]);
-                    }
-                    // Helper::invalidate();
-                }
+        $model = new OauthCient();
+        if ($model->load(\Yii::$app->getRequest()->post())) {
+            if ($model->save()) {
+                return $this->redirect(Url::toRoute(['/adminxx/oauth']));
             }
-            return $this->redirect(Url::toRoute('index'));
         }
-        return $this->render('update', ['model' => $model, 'rulesClasses' => $rulesClasses]);
+        return $this->render('create',
+            [
+                'model' => $model,
+            ]);
+    }
+
+    /**
+     * +++ Создание нового
+     * @return mixed
+     */
+    public function actionUpdateOauthClient($client_id)
+    {
+        $model = OauthCient::findOne($client_id);
+        if ($model->load(\Yii::$app->getRequest()->post())) {
+            if ($model->save()) {
+                return $this->redirect(Url::toRoute(['/adminxx/oauth']));
+            }
+        }
+        return $this->render('update',
+            [
+                'model' => $model,
+            ]);
     }
 
 
@@ -107,10 +116,10 @@ class OauthController extends MainController
      * @param  string $id
      * @return string
      */
-    public function actionDelete($id)
+    public function actionDeleteOauthClient($client_id)
     {
-        if (Yii::$app->request->isPost){
-            $model = RuleX::getRule($id);
+        if (Yii::$app->request->isPost) {
+            $model = OauthCient::findOne($client_id);
             $model->delete();
         }
         return $this->redirect(Url::toRoute('index'));

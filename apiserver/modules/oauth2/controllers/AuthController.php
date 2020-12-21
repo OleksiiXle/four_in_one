@@ -2,7 +2,7 @@
 
 namespace apiserver\modules\oauth2\controllers;
 
-use apiserver\modules\oauth2\models\UserM;
+use common\models\UserM;
 use yii\web\Controller;
 use common\helpers\Functions;
 use apiserver\modules\oauth2\AuthorizeFilter;

@@ -214,6 +214,7 @@ class Xgrid extends GridView
                 'onclick' => 'buttonFilterShow(this);',
                 'class' => 'show-filter-btn',
             ]);
+            $actionsWithChecked = '';
             if ($this->useActions) {
                 $actionsWithChecked = "
                            <select class='checkActionsSelect' onchange='actionWithChecked(this);'>

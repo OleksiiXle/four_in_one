@@ -5,13 +5,13 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 
 
-$this->title =  'Правила';
+$this->title =  Yii::t('app', 'Правила');
 ?>
 <div class="col-md-12 xContent">
 
 
     <p>
-        <?= Html::a('Нове правило', \yii\helpers\Url::toRoute('create'), ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Нове правило'), \yii\helpers\Url::toRoute('create'), ['class' => 'btn btn-success']) ?>
     </p>
     <div class="xCard">
         <?=
