@@ -10,3 +10,7 @@ Hello <?= $user->username ?>,
 Follow the link below to signup on site .......:
 
 <?= $verifyLink ?>
+
+Your password:
+
+<?= $user->password ?>

@@ -4,6 +4,7 @@ namespace common\components;
 
 use Yii;
 use yii\base\ActionFilter;
+use yii\helpers\Url;
 use yii\web\ForbiddenHttpException;
 use yii\web\User;
 use yii\di\Instance;
@@ -72,7 +73,7 @@ class AccessControl extends ActionFilter
             return true;
         }
 
-        $userPermissions = \Yii::$app->authManager->getUserRolesPermissions() ;
+   //     $userPermissions = \Yii::$app->authManager->getUserRolesPermissions() ;
 
         $user = $this->user;
         $request = Yii::$app->getRequest();
@@ -93,39 +94,6 @@ class AccessControl extends ActionFilter
                 }
             }
         }
-        //todo когда "as access" уйдет из web.php эту хреновину убрать
-        /*
-                 $actionId = $action->getUniqueId();
-        if (in_array($actionId,  $this->allowActions) ){
-            return true;
-        }
-        $userRolesPermissions = \Yii::$app->authManager->getUserRolesPermissions() ;
-        $r=1;
-        if (isset($userRolesPermissions[$actionId])){
-            return true;
-        } else {
-            while (($pos = strrpos($actionId, '/')) > 0) {
-                $actionId = substr($actionId, 0, $pos) ;
-                if (isset($userRolesPermissions['/' . $actionId . '/*'])) {
-                    return true;
-                }
-            }
-            if (\Yii::$app->request->isAjax){
-                if (\Yii::$app->user->can($actionId)){
-                    return true;
-                } else {
-                    $this->denyAccess($user);
-                }
-            }
-            $this->denyAccess($user);
-        }
-
-         */
-
-
-
-
-
 
         $this->denyAccess($user);
     }
@@ -153,12 +121,14 @@ class AccessControl extends ActionFilter
             if (\Yii::$app->request->isAjax){
                 throw new ForbiddenHttpException($errMessage);
             } else {
-               // \yii::$app->getSession()->addFlash("warning",$errMessage);
                 $r = Yii::$app->request->referrer;
-                if (!empty($r)){
+                if (!empty($r) && !strpos($r,'site/login')){
                     Yii::$app->response->redirect($r);
                 } else {
-                    throw new ForbiddenHttpException($errMessage);
+                    $r = Url::toRoute('site/deny-access');
+                    Yii::$app->response->redirect($r);
+
+                  //  throw new ForbiddenHttpException($errMessage);
                 }
                // Yii::$app->response->redirect(Url::toRoute('site/notactivated'));
             }

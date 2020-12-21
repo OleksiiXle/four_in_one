@@ -224,21 +224,6 @@ class UserController extends MainController
     }
 
     /**
-     * Change password
-     * @return string
-     */
-    public function actionChangePassword()
-    {
-        $model = new ChangePassword();
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->change()) {
-            return $this->goHome();
-        }
-        return $this->render('changePassword', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Set new password
      * @return string
      */
@@ -327,6 +312,8 @@ class UserController extends MainController
         try{
             if ($user->confirmation($token)) {
                 \Yii::$app->session->setFlash('success', \Yii::t('app', 'Регистрация успешно подтверждена'));
+                return $this->redirect($this->getUserLoginUrl());
+
             }
         } catch (\Exception $e){
             \Yii::$app->session->setFlash('error', $e->getMessage());
@@ -334,6 +321,15 @@ class UserController extends MainController
 
         return $this->goHome();
 
+    }
+
+    private function getUserLoginUrl()
+    {
+        $adminHostName = Yii::$app->params['adminHostName'];
+        $userHostName = Yii::$app->params['userHostName'];
+        $absoluteBaseUrl = Url::base(true);
+
+        return str_replace($adminHostName, $userHostName, $absoluteBaseUrl) . '/site/login';
     }
 
     /**

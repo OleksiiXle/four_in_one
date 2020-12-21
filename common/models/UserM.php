@@ -106,6 +106,12 @@ class UserM extends MainModel
             'status'
         ];
         $ret[self::SCENARIO_CONFIRM_INVITATION] = [
+            'username', 'email', 'status',
+            'created_at', 'updated_at', 'created_by', 'updated_by', 'password_hash',
+            'password', 'retypePassword', 'password_reset_token', 'auth_key', 'rememberMe', 'invitation',
+            'userRolesToSet',
+            //------------------------------------------------------------------------- user_data
+            'first_name', 'middle_name', 'last_name', 'phone',
         ];
         return $ret ;
     }
@@ -142,6 +148,14 @@ class UserM extends MainModel
                 $scenarioRules = [
                     //------------------------------------------------------------------------- user
                     [['username' , 'email', 'password', 'retypePassword'], 'required'],
+                    //------------------------------------------------------------------------- user_data
+                    [['first_name', 'last_name'], 'required',],
+                ];
+                break;
+            case self::SCENARIO_CONFIRM_INVITATION:
+                $scenarioRules = [
+                    //------------------------------------------------------------------------- user
+                    [['username' , 'email'], 'required'],
                     //------------------------------------------------------------------------- user_data
                     [['first_name', 'last_name'], 'required',],
                 ];
@@ -209,7 +223,7 @@ class UserM extends MainModel
 
     public function validateUsername()
     {
-        $checkCondition = ($this->isNewRecord) ? ['username' => $this->username] : 'username = ' . $this->username . ' AND id != ' . $this->id;
+        $checkCondition = ($this->isNewRecord) ? ['username' => $this->username] : 'username = "' . $this->username . '" AND id != ' . $this->id;
         $check = self::find()->where($checkCondition)->count();
         if (!empty($check)) {
             $this->addError('username', Yii::t('app', 'Логин уже занято'));
@@ -628,7 +642,7 @@ class UserM extends MainModel
                     }
                     //------------------------------- все ок
                     if ($this->invitation) {
-                        $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['adminxx/invitation-confirm', 'token' => $this->email_confirm_token]);
+                     //   $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['adminxx/invitation-confirm', 'token' => $this->email_confirm_token]);
                         if (!$this->sentInvitationConfirm($this)) {
                             $this->addError('id', "Email confirmation is not sent");
                             $transaction->rollBack();
@@ -685,27 +699,27 @@ class UserM extends MainModel
 
     public function confirmation($token)
     {
+      //  return true;
         $tmp = 1;
         if (empty($token)) {
-            throw new \DomainException('Empty confirm token.');
+            \Yii::$app->session->setFlash('error', \Yii::t('app', 'Empty confirm token.'));
+            return false;
         }
 
         $user = self::findOne(['email_confirm_token' => $token]);
         if (!$user) {
-            throw new \DomainException('User is not found.');
+            \Yii::$app->session->setFlash('error', \Yii::t('app', 'User is not found.'));
+            return false;
         }
 
+        $user->scenario = self::SCENARIO_CONFIRM_INVITATION;
         $user->email_confirm_token = null;
         $user->status = UserM::STATUS_ACTIVE;
 
         if (!$user->save()) {
-            throw new \RuntimeException('Saving error.');
+            \Yii::$app->session->setFlash('error', \Yii::t('app', 'User is not saved.'));
+            return false;
         }
-
-        if (!\Yii::$app->getUser()->login($user)) {
-            throw new \RuntimeException('Error authentication.');
-        }
-
 
         return true;
     }

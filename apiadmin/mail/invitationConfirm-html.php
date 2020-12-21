@@ -12,4 +12,8 @@ $verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['adminxx/user/invitation
     <p>Follow the link below to signup on site .......:</p>
 
     <p><?= Html::a(Html::encode($verifyLink), $verifyLink) ?></p>
+
+    <p>Your password:</p>
+
+    <p><?= Html::encode($user->password) ?></p>
 </div>

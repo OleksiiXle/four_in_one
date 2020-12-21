@@ -5,5 +5,5 @@ return [
     'aliasesForRoutesList' => [
         'apiadmin',
         'apiuser',
-    ]
+    ],
 ];

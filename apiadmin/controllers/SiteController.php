@@ -9,4 +9,5 @@ use common\components\AccessControl;
  */
 class SiteController extends \common\controllers\SiteController
 {
+    public $layout = '@apiadmin/modules/adminxx/views/layouts/adminxxLayout.php';
 }
