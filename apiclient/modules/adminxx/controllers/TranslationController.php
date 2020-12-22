@@ -10,7 +10,7 @@ use yii\helpers\Url;
 use yii\web\Response;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\models\Translation;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use app\controllers\MainController;
 use app\modules\adminxx\grids\TranslationGrid;
 

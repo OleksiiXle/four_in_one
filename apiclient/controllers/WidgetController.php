@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use common\models\MenuXX;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use yii\web\Controller;
 
 class WidgetController extends Controller

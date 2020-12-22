@@ -1,8 +1,10 @@
 <?php
 
-namespace common\models;
+namespace app\modules\adminxx\models;
 
+use app\models\UserToken;
 use Yii;
+use app\models\MainModel;
 use common\helpers\Functions;
 
 /**
@@ -73,6 +75,7 @@ class UserM extends MainModel
     private $_userUpdater;
 
     private $_firstVisitTime;
+
     private $_lastVisitTime;
     private $_firstVisitTimeTxt;
     private $_lastVisitTimeTxt;
@@ -255,7 +258,7 @@ class UserM extends MainModel
      */
     public function getUserToken()
     {
-        return $this->hasMany(\app\models\UserToken::class, ['client_id' => 'id']);
+        return $this->hasMany(UserToken::class, ['client_id' => 'id']);
     }
 
 //*********************************************************************************************** ГЕТТЕРЫ-СЕТТЕРЫ

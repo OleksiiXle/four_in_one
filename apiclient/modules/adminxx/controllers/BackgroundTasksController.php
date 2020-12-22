@@ -6,7 +6,7 @@ use Yii;
 use console\controllers\backgroundTasks\models\BackgroundTask;
 use console\controllers\backgroundTasks\tasks\TestTaskWorker;
 use common\components\conservation\ActiveDataProviderConserve;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use app\modules\adminxx\grids\BackgroundTaskGrid;
 use app\controllers\MainController;
 use yii\web\Response;

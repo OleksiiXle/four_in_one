@@ -4,7 +4,7 @@ namespace app\modules\post\controllers;
 
 use app\modules\post\models\Post;
 use Yii;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use yii\filters\VerbFilter;
 use yii\httpclient\Client;
 use yii\helpers\Url;

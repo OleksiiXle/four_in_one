@@ -16,6 +16,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@common'   => dirname(dirname(__DIR__)) . '/common',
+        '@console'   => dirname(dirname(__DIR__)) . '/console',
 ],
     'components' => [
         'request' => [
@@ -130,7 +131,7 @@ $config = [
         ],
     ],
     'as access' => [
-        'class' => 'app\components\AccessControl',
+        'class' => 'common\components\AccessControl',
         /*
         'allowActions' => [
             'site/error',

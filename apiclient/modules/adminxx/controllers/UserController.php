@@ -9,7 +9,7 @@ use yii\filters\VerbFilter;
 use common\helpers\Functions;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\conservation\models\Conservation;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use app\controllers\MainController;
 use app\modules\adminxx\models\Assignment;
 use app\modules\adminxx\models\form\ChangePassword;

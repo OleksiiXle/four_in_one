@@ -5,7 +5,7 @@ namespace app\modules\adminxx\controllers;
 use common\components\conservation\ActiveDataProviderConserve;
 use app\components\models\Provider;
 use app\components\models\Translation;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use app\modules\adminxx\models\filters\ProviderFilter;
 use yii\helpers\FileHelper;
 use app\modules\adminxx\models\filters\TranslationFilter;

@@ -5,7 +5,7 @@ use app\modules\adminxx\grids\AuthItemGrid;
 use Yii;
 use app\controllers\MainController;
 use common\components\conservation\ActiveDataProviderConserve;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use app\modules\adminxx\models\AuthItemX;
 use app\modules\adminxx\models\filters\AuthItemFilter;
 use yii\rbac\Item;

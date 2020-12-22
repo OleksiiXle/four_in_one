@@ -7,7 +7,7 @@ use Yii;
 use app\modules\adminxx\grids\UsersGrid;
 use yii\helpers\Url;
 use common\components\conservation\ActiveDataProviderConserve;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use app\controllers\MainController;
 use app\modules\adminxx\models\filters\UControlFilter;
 use app\modules\adminxx\models\filters\UserActivityFilter;

@@ -4,8 +4,8 @@ namespace app\controllers;
 use app\helpers\Functions;
 use yii\helpers\FileHelper;
 use yii\web\Controller;
-use \app\components\AccessControl;
-use app\commands\backgroundTasks\models\BackgroundTask;
+use common\components\AccessControl;
+use console\controllers\backgroundTasks\models\BackgroundTask;
 
 /**
  * Class BackgroundTasksController

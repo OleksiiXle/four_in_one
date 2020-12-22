@@ -3,7 +3,7 @@ namespace app\modules\post\controllers;
 
 use app\modules\post\models\Post;
 use Yii;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use yii\data\ActiveDataProvider;
 
 class DefaultController extends MainController

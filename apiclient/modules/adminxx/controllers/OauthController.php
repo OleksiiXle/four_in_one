@@ -9,7 +9,7 @@ use app\modules\adminxx\models\oauth\OauthCient;
 use app\modules\adminxx\models\oauth\OauthRefreshToken;
 use Yii;
 use yii\data\ActiveDataProvider;
-use app\components\AccessControl;
+use common\components\AccessControl;
 use app\controllers\MainController;
 use app\modules\adminxx\models\RuleX;
 use yii\helpers\Url;

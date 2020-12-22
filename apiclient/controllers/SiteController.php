@@ -5,7 +5,7 @@ use app\models\form\LoginWithoutApi;
 use app\modules\adminxx\models\UserM;
 use common\helpers\Functions;
 use Yii;
-use app\components\AccessControl;
+use common\components\AccessControl;
 //use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -36,7 +36,7 @@ class SiteController extends Controller
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'error', 'auth'
+                        'index', 'error', 'auth', 'deny-access'
                     ],
                     'roles'      => [
                         '@', '?'
@@ -436,4 +436,10 @@ app\components\clients\Facebook#1
                     ]);
         }
     }
+
+    public function actionDenyAccess()
+    {
+        return $this->render('denyAccess');
+    }
+
 }
