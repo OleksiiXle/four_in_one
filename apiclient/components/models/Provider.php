@@ -9,9 +9,6 @@ use yii\db\Query;
 
 class Provider extends MainModel
 {
-    const SCENARIO_INSTALL = 'install';
-    const SCENARIO_UPDATE = 'update';
-
     static $propertyAttributes = [
         'class' => 'class',
         'clientId' => 'client_id',
@@ -41,19 +38,6 @@ class Provider extends MainModel
 
     private $_properties = null;
 
-    public function scenarios()
-    {
-        $ret[self::SCENARIO_INSTALL] = [
-            'id', 'class', 'client_id', 'client_secret', 'token_url', 'auth_url',
-            'signup_url', 'api_base_url', 'scope', 'state_storage_class',
-        ];
-        $ret[self::SCENARIO_UPDATE] = [
-            'id', 'class', 'client_id', 'client_secret', 'token_url', 'auth_url',
-            'signup_url', 'api_base_url', 'scope', 'state_storage_class',
-        ];
-        return $ret ;
-    }
-
     public function rules()
     {
         $rules =  [
@@ -65,17 +49,8 @@ class Provider extends MainModel
             [['scope', ], 'string', 'max' => 10000],
             [['class', 'client_id', 'client_secret', 'state_storage_class'], 'string', 'min' => 3, 'max' => 255],
             [['token_url', 'auth_url', 'signup_url', 'api_base_url'], 'string', 'min' => 3, 'max' => 500],
+            [['token_url', 'auth_url', 'signup_url', 'api_base_url'], 'url',]
         ];
-        switch ($this->scenario) {
-            case self::SCENARIO_INSTALL:
-                break;
-            case self::SCENARIO_UPDATE:
-                $ret[] =
-                    [['client_id', 'client_secret',], 'required',];
-                $ret[] =
-                    [['token_url', 'auth_url', 'signup_url', 'api_base_url'], 'url',];
-                break;
-        }
 
         return $rules;
     }
@@ -84,6 +59,7 @@ class Provider extends MainModel
     {
         return [
             'id' => 'ID',
+            'name' => Yii::t('app', 'Имя'),
             'class' => Yii::t('app', 'Класс'),
             'client_id' => Yii::t('app', 'ИД клиента'),
             'client_secret' => Yii::t('app', 'Секрет клиента'),

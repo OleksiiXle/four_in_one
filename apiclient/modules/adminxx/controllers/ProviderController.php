@@ -2,6 +2,7 @@
 
 namespace app\modules\adminxx\controllers;
 
+use app\modules\adminxx\grids\ProviderGrid;
 use common\components\conservation\ActiveDataProviderConserve;
 use app\components\models\Provider;
 use app\components\models\Translation;
@@ -50,11 +51,7 @@ class ProviderController extends MainController
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProviderConserve([
-            'filterModelClass' => ProviderFilter::class,
-            'conserveName' => 'providerGrid',
-            'pageSize' => 10,
-        ]);
+        $dataProvider = new ProviderGrid();
 
         return $this->render('index',[
             'dataProvider' => $dataProvider,

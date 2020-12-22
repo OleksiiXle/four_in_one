@@ -28,7 +28,7 @@ $this->title = 'Апи провайдер';
              echo $form->field($model, 'id')->hiddenInput()->label(false);
             ?>
             <div class="form-group" align="center">
-                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
                 <?= Html::a('Отмена', \yii\helpers\Url::toRoute('/adminxx/provider'),[
                     'class' => 'btn btn-danger', 'name' => 'reset-button'
                 ]);?>

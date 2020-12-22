@@ -23,11 +23,9 @@ use yii\bootstrap\ActiveForm;
             echo $form->field($model, 'api_base_url');
             echo $form->field($model, 'scope');
             echo $form->field($model, 'state_storage_class');
-             echo $form->field($model, 'category')->hiddenInput()->label(false);
-             echo $form->field($model, 'tkey')->hiddenInput()->label(false);
             ?>
             <div class="form-group" align="center">
-                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
                 <?= Html::a('Отмена', \yii\helpers\Url::toRoute('/adminxx/provider'),[
                     'class' => 'btn btn-danger', 'name' => 'reset-button'
                 ]);?>

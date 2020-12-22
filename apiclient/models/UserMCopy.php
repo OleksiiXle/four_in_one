@@ -11,7 +11,7 @@ use common\helpers\Functions;
  * User - модель с правилами, геттерами, сеттерами и пр. данными
  *
  */
-class UserM extends MainModel
+class UserMCopy extends MainModel
 {
     const STATUS_ACTIVE = 10;
     const STATUS_INACTIVE = 0;
