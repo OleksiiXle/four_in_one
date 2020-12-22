@@ -57,7 +57,7 @@ $config = [
             'cache' => 'cache'
         ],
         'user' => [
-            'class' => 'common\components\UserX',
+            'class' => 'app\models\UserX',
             'identityClass' => 'common\models\User',
             'loginUrl' => ['site/login'],
             'enableAutoLogin' => true,
