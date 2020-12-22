@@ -2,7 +2,7 @@
 
 namespace app\components;
 
-use app\components\models\Configs;
+use common\components\models\Configs;
 use yii\base\Component;
 
 class ConfigsComponent extends Component

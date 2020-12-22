@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \app\modules\adminxx\models\AuthItemX;
+use yii\helpers\Url;
 
 switch ($model->type){
     case AuthItemX::TYPE_ROLE:
@@ -33,13 +34,13 @@ switch ($model->type){
         echo $form->field($model, 'name');
         echo $form->field($model, 'description');
         echo $form->field($model, 'rule_name')
-            ->dropDownList(\app\modules\adminxx\models\AuthItemX::getRulesList(),
+            ->dropDownList(AuthItemX::getRulesList(),
                 ['options' => [ $model->rule_name => ['Selected' => true]],]);
 
         ?>
         <div class="form-group" align="center">
             <?= Html::submitButton(\Yii::t('app', 'Создать'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-            <?= Html::a(\Yii::t('app', 'Отмена'), \yii\helpers\Url::toRoute('/adminxx/auth-item'),[
+            <?= Html::a(\Yii::t('app', 'Отмена'), Url::toRoute('/adminxx/auth-item'),[
                 'class' => 'btn btn-danger', 'name' => 'reset-button'
             ]);?>
         </div>

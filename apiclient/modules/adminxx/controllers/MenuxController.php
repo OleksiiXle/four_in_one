@@ -2,9 +2,10 @@
 
 namespace app\modules\adminxx\controllers;
 
+use app\controllers\MainController;
 use app\components\AccessControl;
-use app\modules\adminxx\models\MenuXX;
-use app\modules\adminxx\models\Route;
+use common\models\MenuXX;
+use common\models\Route;
 
 /**
  * Class MenuxController

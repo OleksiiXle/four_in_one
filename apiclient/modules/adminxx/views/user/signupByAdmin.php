@@ -4,7 +4,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use app\modules\adminxx\assets\AdminxxUpdateUserAsset;
-use app\widgets\selectMultiXle\SelectMultiXleWidget;
+use common\widgets\selectMultiXle\SelectMultiXleWidget;
 
 AdminxxUpdateUserAsset::register($this);
 
@@ -46,7 +46,7 @@ if ($model->isNewRecord){
                     'modelName' => 'UserM',
                     'textAreaAttribute' => 'userRolesToSet',
                     'label' => Yii::t('app', 'Роли'),
-                    'itemsArray' => $defaultRoles,
+                    'itemsArrayToSelect' => $defaultRoles,
                 ]);?>
                 <?= $form->field($model, 'username')->textInput([]); ?>
                 <?php

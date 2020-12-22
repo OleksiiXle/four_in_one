@@ -1,8 +1,8 @@
 <?php
 namespace app\modules\adminxx\models\form;
 
-use app\modules\adminxx\models\UserM;
-use app\modules\adminxx\models\UserData;
+use common\models\UserM;
+use common\models\UserData;
 
 
 /**

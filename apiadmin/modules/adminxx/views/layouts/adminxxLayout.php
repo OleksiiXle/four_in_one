@@ -7,6 +7,7 @@ use common\widgets\changeLanguage\ChangeLanguageWidget;
 use common\assets\BackgroundTaskAsset;
 use common\helpers\DateHelper;
 use apiadmin\modules\adminxx\assets\AdminxxLayoutAsset;
+use common\models\MenuXX;
 
 $absoluteBaseUrl = Url::base(true);
 $this->registerJs("
@@ -127,7 +128,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoI
             <?php
             echo MenuXWidget::widget([
                 'showLevel' => '1',
-                'accessLevels' => [0,2]
+                'accessLevels' => [0,2],
+                'menuClass' => MenuXX::class,
             ]) ;
             ?>
         </div>

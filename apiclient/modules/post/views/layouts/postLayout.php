@@ -1,13 +1,14 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
-use app\widgets\menuX\MenuXWidget;
-use app\widgets\changeLanguage\ChangeLanguageWidget;
+use common\widgets\menuX\MenuXWidget;
+use common\widgets\changeLanguage\ChangeLanguageWidget;
 use app\modules\post\assets\PostLayoutAsset;
 use app\assets\AppAsset;
 //use app\assets\BackgroundTaskAsset;
 use yii\jui\JuiAsset;
 use app\helpers\DateHelper;
+use common\models\MenuXX;
 
 
 $absoluteBaseUrl = Url::base(true);
@@ -146,7 +147,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoI
             <?php
             echo MenuXWidget::widget([
                 'showLevel' => '1',
-                'accessLevels' => [0,2]
+                'accessLevels' => [0,1],
+                'menuClass' => MenuXX::class,
             ]) ;
             ?>
         </div>

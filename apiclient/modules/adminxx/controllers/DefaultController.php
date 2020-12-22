@@ -3,6 +3,7 @@ namespace app\modules\adminxx\controllers;
 
 use Yii;
 use app\components\AccessControl;
+use app\controllers\MainController;
 use yii\helpers\Url;
 
 class DefaultController extends MainController
@@ -37,7 +38,7 @@ class DefaultController extends MainController
                 ? [
                     'show' => true,
                     'name' => Yii::t('app', 'Пользователи'),
-                    'route' => Url::toRoute('/adminxx/user')
+                    'route' => Url::toRoute('/adminxx/user'),
                 ]
                 : [
                     'show' => false,

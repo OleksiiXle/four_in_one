@@ -2,23 +2,23 @@
 
 namespace app\modules\adminxx\controllers;
 
+use app\modules\adminxx\grids\UsersGrid;
 use Yii;
-use app\helpers\Functions;
-use app\components\UserProfile;
-use app\components\conservation\ActiveDataProviderConserve;
-use app\components\conservation\models\Conservation;
-use app\components\AccessControl;
-use app\modules\adminxx\models\Assignment;
-use app\modules\adminxx\models\filters\UserFilter;
-use app\modules\adminxx\models\form\ChangePassword;
-use app\modules\adminxx\models\form\ForgetPassword;
-use app\modules\adminxx\models\form\Login;
-use app\modules\adminxx\models\form\PasswordResetRequestForm;
-use app\modules\adminxx\models\form\Update;
-use app\modules\adminxx\models\UserM;
 use yii\db\Query;
 use yii\filters\VerbFilter;
+use common\helpers\Functions;
+use common\components\conservation\ActiveDataProviderConserve;
+use common\components\conservation\models\Conservation;
+use app\components\AccessControl;
+use app\controllers\MainController;
+use app\modules\adminxx\models\Assignment;
+use app\modules\adminxx\models\form\ChangePassword;
+use app\modules\adminxx\models\form\ForgetPassword;
+use app\modules\adminxx\models\form\PasswordResetRequestForm;
+use app\modules\adminxx\models\form\Update;
+use common\models\UserM;
 use yii\helpers\Url;
+use yii\web\Response;
 
 /**
  * Class UserController
@@ -35,12 +35,12 @@ class UserController extends MainController
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => [ 'forget-password', 'test', 'login' ],
+                    'actions' => [ 'error', 'forget-password', 'test', 'login', 'invitation-confirm' ],
                     'roles' => ['?'],
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['test', 'change-password', 'update-profile', 'conservation', 'logout'],
+                    'actions' => ['error', 'test', 'change-password', 'update-profile', 'conservation', 'logout', 'invitation-confirm' ],
                     'roles' => ['@'],
                 ],
                 [
@@ -54,8 +54,7 @@ class UserController extends MainController
                     'allow'      => true,
                     'actions'    => [
                         'index', 'view',
-                        'export-to-exel-count', 'export-to-exel-get-partition', 'upload-report', 'get-department-full-name',
-                        'get-department-name'
+                        'export-to-exel-count', 'export-to-exel-get-partition', 'upload-report',
                     ],
                     'roles'      => ['adminUsersView'],
                 ],
@@ -63,9 +62,9 @@ class UserController extends MainController
                     'allow'      => true,
                     'actions'    => [
                         'signup-by-admin', 'change-user-activity', 'update-by-admin',
-                        'get-personal-data', 'get-personal-data-by-id', 'get-personal-data-by-fio', 'get-department-name'
+                        'conservation', 'conserve-delete', 'delete-by-admin'
                     ],
-                    'roles'      => ['adminUserCreate', 'adminUserUpdate' ],
+                    'roles'      => ['adminUserCreate', 'adminUserUpdate', 'adminSuper' ],
                 ],
                 [
                     'allow'      => true,
@@ -98,7 +97,7 @@ class UserController extends MainController
         $behaviors['verbs'] = [
             'class' => VerbFilter::class,
             'actions' => [
-                'delete' => ['post'],
+                'delete-by-admin' => ['post'],
                 'logout' => ['post'],
                 'activate' => ['post'],
             ],
@@ -114,58 +113,13 @@ class UserController extends MainController
     public function actionIndex()
     {
       //  $this->layout = '@app/modules/adminxx/views/layouts/adminxx.php';
-
-        $dataProvider = new ActiveDataProviderConserve([
-           // 'searchId' => $id,
-            'filterModelClass' => UserFilter::class,
-            'conserveName' => 'userAdminGrid',
-            'pageSize' => 5,
-            'sort' => ['attributes' => [
-                'id',
-                'username',
-                'nameFam' => [
-                    'asc' => [
-                        'user_data.last_name' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_name' => SORT_DESC,
-                    ],
-                ],
-                'lastRoutTime' => [
-                    'asc' => [
-                        'user_data.last_rout_time' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout_time' => SORT_DESC,
-                    ],
-                ],
-                'lastRout' => [
-                    'asc' => [
-                        'user_data.last_rout' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user_data.last_rout' => SORT_DESC,
-                    ],
-                ],
-                'status' => [
-                    'asc' => [
-                        'user.status' => SORT_ASC,
-                    ],
-                    'desc' => [
-                        'user.status' => SORT_DESC,
-                    ],
-                ],
-            ]],
-
-        ]);
-        $r=1;
-        /*
-        if (\Yii::$app->request->isPost){
-            return $this->redirect('index');
+        $usersGrid = new UsersGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $usersGrid->reload(Yii::$app->request->post());
         }
-        */
-        return $this->render('index',[
-            'dataProvider' => $dataProvider,
+        return $this->render('index', [
+            'usersGrid' => $usersGrid,
         ]);
     }
 
@@ -173,13 +127,12 @@ class UserController extends MainController
      * +++ Регистрация нового пользователя Администратором singup-by-admin
      * @return string
      */
-    public function actionSignupByAdmin($invitation = false)
+    public function actionSignupByAdmin()
     {
         $model = new UserM();
         $model->scenario = UserM::SCENARIO_SIGNUP_BY_ADMIN;
         $defaultRoles = $model->defaultRoles;
         if ($model->load(Yii::$app->request->post())) {
-            $tmp = json_decode($model->userRolesToSet, true);
             if ($model->updateUser()) {
                 $session = \Yii::$app->session;
                 if ($session->get('searchIid')){
@@ -195,22 +148,15 @@ class UserController extends MainController
         return $this->render('signupByAdmin', [
             'model' => $model,
             'defaultRoles' => $defaultRoles,
-            'userDepartments' => [],
             'userRoles' => [],
         ]);
     }
-
-
-
-
-
-
 
     /**
      * +++ Редактирование профиля пользователя администратором update-by-admin
      * @return string
      */
-    public function actionUpdateByAdmin($id)
+    public function actionUpdateByAdmin($mode, $id = 0, $invitation = false)
     {
         $model = UserM::findOne($id);
         $model->scenario = UserM::SCENARIO_UPDATE;
@@ -219,11 +165,8 @@ class UserController extends MainController
         $roles = $auth->getRolesByUser($id);
         $userRoles = [];
         if (!empty($roles)){
-            foreach ($roles as $key => $role){
-                $userRoles[] = [
-                    'id' => $key,
-                    'name' => $role->description,
-                ];
+            foreach ($roles as $key => $role) {
+                $userRoles[$key] = $role->description;
             }
         }
         $defaultRoles = $model->defaultRoles;
@@ -234,7 +177,7 @@ class UserController extends MainController
             }
         }
 
-        return $this->render('updateUser', [
+        return $this->render('update', [
             'model' => $model,
             'userRoles' => $userRoles,
             'defaultRoles' => $defaultRoles,
@@ -281,55 +224,6 @@ class UserController extends MainController
     }
 
     /**
-     * +++ Login
-     * @return string
-     */
-    public function actionLogin()
-    {
-      //  $this->layout = '@app/views/layouts/commonLayout.php';
-
-        $model = new Login();
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
-            $query = 'SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY,", ""))';
-            Yii::$app->db->createCommand($query)->execute();
-
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     *+++ Logout
-     * @return string
-     */
-    public function actionLogout()
-    {
-        Yii::$app->userProfile->language = Yii::$app->language;
-
-        \Yii::$app->getUser()->logout();
-        return $this->goHome();
-     //   return $this->redirect('/site/index');
-    }
-
-    /**
-     * Change password
-     * @return string
-     */
-    public function actionChangePassword()
-    {
-        $model = new ChangePassword();
-        if ($model->load(\Yii::$app->getRequest()->post()) && $model->change()) {
-            return $this->goHome();
-        }
-        return $this->render('changePassword', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Set new password
      * @return string
      */
@@ -357,16 +251,27 @@ class UserController extends MainController
      * @param $id
      * @return string
      */
-    public function actionConservation($id)
+    public function actionConservation($user_id)
     {
         $conservationJson = Conservation::find()
-            ->where(['user_id' => $id])
+            ->where(['user_id' => $user_id])
             ->asArray()
             ->all();
         $conservation = ((isset($conservationJson[0]['conservation'])))
             ? json_decode($conservationJson[0]['conservation'], true)
             : [];
-        return $this->render('conservation' , ['conservation' => $conservation]);
+        return $this->render('conservation' , [
+            'conservation' => $conservation,
+            'user_id' => $user_id]
+        );
+    }
+
+    public function actionConserveDelete($user_id)
+    {
+        if (Yii::$app->request->isPost) {
+            $del = Conservation::deleteAll(['user_id' => $user_id]);
+        }
+        return $this->redirect(Url::toRoute('/adminxx/user'));
     }
 
     /**
@@ -401,6 +306,32 @@ class UserController extends MainController
         ]);
     }
 
+    public function actionInvitationConfirm($token)
+    {
+        $user = new UserM();
+        try{
+            if ($user->confirmation($token)) {
+                \Yii::$app->session->setFlash('success', \Yii::t('app', 'Регистрация успешно подтверждена'));
+                return $this->redirect($this->getUserLoginUrl());
+
+            }
+        } catch (\Exception $e){
+            \Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+
+        return $this->goHome();
+
+    }
+
+    private function getUserLoginUrl()
+    {
+        $adminHostName = Yii::$app->params['adminHostName'];
+        $userHostName = Yii::$app->params['userHostName'];
+        $absoluteBaseUrl = Url::base(true);
+
+        return str_replace($adminHostName, $userHostName, $absoluteBaseUrl) . '/site/login';
+    }
+
     /**
      * @return string
      */
@@ -412,20 +343,19 @@ class UserController extends MainController
         return $this->render('test');
     }
 
-    public function actionChangeSort()
+    /**
+     * Удаление профиля пользователя администратором
+     * @return string
+     */
+    public function actionDeleteByAdmin($id)
     {
-        $this->layout = '@app/views/layouts/commonLayout.php';
-
-        $model = new UserProfile();
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->save();
+        if (\Yii::$app->request->isPost){
+            $userDel = UserM::findOne($id)->delete();
+            if ($userDel === 0){
+                \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
+            }
         }
-
-        return $this->render('changeSort', [
-            'model' => $model,
-        ]);
-
+        return $this->redirect(Url::toRoute('index'));
 
     }
 
@@ -468,169 +398,6 @@ class UserController extends MainController
 
     }
 
-    /**
-     * +++ АЯКС- получение данных пользователя по жетону get-personal-data
-     * @return false|string
-     */
-    public function actionGetPersonalData(){
-        // 0082166
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['spec_document'])){
-            $spec_document = $_post['spec_document'];
-        }
-        if (isset($spec_document)){
-            $personal = PersonalCommon::find()
-                ->where(['spec_document' => $spec_document])
-                ->one();
-            if (isset($personal)){
-                $personal_id = $personal->id;
-                $positionFullName =$personal->positionCommon->revertSemiFullName;
-                $response['data'] = [
-                    'personal_id' => $personal_id,
-                    'positionFullName' => $positionFullName,
-                    'name_family' => $personal->name_family,
-                    'name_first' => $personal->name_first,
-                    'name_last' => $personal->name_last,
-                ];
-                $response['status'] = true;
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение данных пользователя по ИД get-personal-data-by-id
-     * @return false|string
-     */
-    public function actionGetPersonalDataById(){
-        // 0082166
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['id'])){
-            $id = $_post['id'];
-        }
-        if (isset($id)){
-            $personal = PersonalCommon::find()
-                ->where(['id' => $id])
-                ->one();
-            if (isset($personal)){
-                $personal_id = $personal->id;
-                $positionFullName =$personal->positionCommon->revertSemiFullName;
-                $response['data'] = [
-                    'personal_id' => $personal_id,
-                    'positionFullName' => $positionFullName,
-                    'name_family' => $personal->name_family,
-                    'name_first' => $personal->name_first,
-                    'name_last' => $personal->name_last,
-                    'spec_document' => $personal->spec_document,
-                ];
-                $response['status'] = true;
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение данных пользователя по ФИО get-personal-data-by-fio
-     * @return false|string
-     */
-    public function actionGetPersonalDataByFio(){
-        /*
-                    'last_name': last_name,
-            'first_name': first_name,
-            'middle_name': middle_name
-
-         */
-        // 0082166
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['last_name']) && !empty($_post['last_name'])){
-            $last_name = $_post['last_name'];
-        }
-        if (isset($last_name)){
-           // $query = PersonalCommon::find()
-            $query = (new Query())
-                ->select('id, name_family, name_first, name_last, ')
-                ->from('personal')
-                ->where(['name_family' => $last_name]);
-            if (isset($_post['first_name']) && !empty($_post['first_name'])){
-                $first_name = $_post['first_name'];
-                $query->andWhere(['name_first' => $first_name]);
-            }
-            if (isset($_post['middle_name']) && !empty($_post['middle_name'])){
-                $middle_name= $_post['middle_name'];
-                $query->andWhere(['name_last' => $middle_name]);
-            }
-            $rr = 1;
-            $personal = $query
-                ->orderBy('name_first')
-                ->all();
-            if (!empty($personal)){
-                $response['data'] = [];
-           //    foreach ($personal as $persona){
-                for ($i = 0; $i < count($personal); $i++){
-                    $persona = PersonalCommon::find()
-                    ->where(['id' => $personal[$i]['id']])
-                    ->one();
-                    $personal_id = $persona->id;
-                    $positionFullName =$persona->positionCommon->revertSemiFullName;;
-                    $response['data'][] =
-                        [
-                            'id' => $personal_id,
-                            'name' => $persona->name_family
-                                . ' ' . $persona->name_first . ' ' . $persona->name_last
-                                . ' *** ' . $positionFullName . ' *** ' ]
-                        ;
-
-                }
-                $response['status'] = true;
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение реверсного полного названия подразделения по $department_id get-department-full-name
-     * @return false|string
-     */
-    public function actionGetDepartmentFullName(){
-        $response['status'] = false;
-        $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
-        if (isset($_post['department_id'])){
-            $department_id = $_post['department_id'];
-        }
-        if (isset($department_id)){
-            $department = DepartmentCommon::findOne($department_id);
-            if (isset($department)){
-                $response['status'] = true;
-                $response['data'] = $department->getFullNameRevert(DepartmentCommon::ROOT_ID);
-            }
-        }
-        return json_encode($response);
-
-    }
-
-    /**
-     *  +++ АЯКС- получение полного названия подразделения по $department_id get-department-name
-     * @return string
-     */
-    public function actionGetDepartmentName($department_id = 0)
-    {
-        $department = DepartmentCommon::findOne($department_id);
-        if (isset($department)){
-            $this->result['status'] = true;
-            $this->result['data'] = $department->gunpName;
-        }
-        return $this->asJson($this->result);
-    }
 
     //******************************************************************************************* ВЫВОД СПИСКА В ФАЙЛ
 
@@ -843,21 +610,4 @@ class UserController extends MainController
 
         }
     }
-
-    /**
-     * --- Удаление профиля пользователя
-     * @return string
-     */
-    public function actionDelete($id)
-    {
-        if (\Yii::$app->request->isPost){
-            $userDel = UserM::findOne($id)->delete();
-            if ($userDel === 0){
-                \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
-            }
-        }
-        return $this->redirect(Url::toRoute('index'));
-
-    }
-
 }

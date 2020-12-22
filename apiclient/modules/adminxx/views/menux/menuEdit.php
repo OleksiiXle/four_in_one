@@ -1,7 +1,7 @@
 <?php
 
 use \yii\helpers\Html;
-use app\widgets\menuUpdate\MenuUpdateWidget;
+use common\widgets\menuUpdate\MenuUpdateWidget;
 
 //\app\components\widgets\menuUpdate\MenuUpdateAssets::register($this);
 \app\modules\adminxx\assets\AdminxxMenuAsset::register($this);

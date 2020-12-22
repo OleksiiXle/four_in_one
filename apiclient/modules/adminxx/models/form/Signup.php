@@ -3,9 +3,9 @@
 namespace app\modules\adminxx\models\form;
 
 use Yii;
-use app\modules\adminxx\models\UserM;
-use app\modules\adminxx\models\User;
-use app\modules\adminxx\models\UserData;
+use common\models\UserM;
+use common\models\User;
+use common\models\UserData;
 
 class Signup extends UserM
 {
@@ -48,8 +48,6 @@ class Signup extends UserM
         ];
         return $ret ;
     }
-
-
 
     /**
      * @inheritdoc

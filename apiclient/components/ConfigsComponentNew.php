@@ -2,8 +2,8 @@
 
 namespace app\components;
 
-use app\components\models\Configs;
-use app\components\models\Customization;
+use common\components\models\Configs;
+use common\components\models\Customization;
 use Yii;
 use yii\base\Component;
 

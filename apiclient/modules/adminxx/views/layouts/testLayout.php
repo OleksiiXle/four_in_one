@@ -1,8 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use app\assets\AppAsset;
-use \app\components\widgets\menuX\MenuXWidget;
+use common\assets\AppAsset;
+use common\widgets\menuX\MenuXWidget;
 
 //AppAsset::register($this);
 \app\modules\adminxx\assets\AdminxxLayoutAsset::register($this);
@@ -63,7 +63,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => \yii\h
         <div class="menuTree">
             <?php
             if (1==0){
-                echo \app\widgets\menuX\MenuXWidget::widget([
+                echo \common\widgets\menuX\MenuXWidget::widget([
                     'model' => '',
                     'attribute' => 'kjgh',
                     'name' => '',

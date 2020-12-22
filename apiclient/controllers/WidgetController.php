@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\widgets\menuUpdate\models\MenuX;
+use common\models\MenuXX;
 use app\components\AccessControl;
 use yii\web\Controller;
 
@@ -54,7 +54,7 @@ class WidgetController extends Controller
         try {
             $this->result =[
                 'status' => true,
-                'data'=> MenuX::getDefaultTree()
+                'data'=> MenuXX::getDefaultTree()
                 ];
         } catch (\Exception $e) {
             $this->result['data'] = $e->getMessage();
@@ -67,7 +67,7 @@ class WidgetController extends Controller
         try {
             $id = \Yii::$app->request->post('id');
         //    $menu_id = \Yii::$app->request->post('menu_id');
-            $menux = MenuX::findOne($id);
+            $menux = MenuXX::findOne($id);
             $this->result =[
                 'status' => true,
                 'data'=> $menux->childrenArray,
@@ -85,15 +85,15 @@ class WidgetController extends Controller
      * @return string
      */
     public function actionMenuxModalOpenMenuUpdate($id, $menu_id, $nodeAction){
-        $routes = MenuX::getRoutesDict();
-        $permissions = MenuX::getPermissionsDict();
+        $routes = MenuXX::getRoutesDict();
+        $permissions = MenuXX::getPermissionsDict();
         switch ($nodeAction){
             case 'update':
-                $model = MenuX::findOne($id);
+                $model = MenuXX::findOne($id);
                 break;
             case 'appendChild':
             case 'appendBrother':
-                $model = new MenuX();
+                $model = new MenuXX();
                 $model->node1 = $id; //-- кому добавлять потомка или брата
                 break;
                 break;
@@ -101,7 +101,7 @@ class WidgetController extends Controller
         if (isset($model)){
             $model->menu_id = $menu_id;
             $model->nodeAction = $nodeAction;
-            return $this->renderAjax('@app/widgets/menuUpdate/views/_form_menu', [
+            return $this->renderAjax('@common/widgets/menuUpdate/views/_form_menu', [
                 'model' => $model,
                 'routes' => $routes,
                 'permissions' => $permissions,
@@ -118,10 +118,10 @@ class WidgetController extends Controller
     public function actionMenuxMenuUpdate()
     {
         $r=2;
-        if ($menuData = \Yii::$app->request->post('MenuX')){
+        if ($menuData = \Yii::$app->request->post('MenuXX')){
             switch ($menuData['nodeAction']){
                 case 'update':
-                    $model = MenuX::findOne($menuData['id']);
+                    $model = MenuXX::findOne($menuData['id']);
                     if (isset($model)){
                         $model->setAttributes($menuData);
                         if ($model->save()){
@@ -135,7 +135,7 @@ class WidgetController extends Controller
                     }
                     break;
                 case 'appendChild':
-                    $model = MenuX::findOne($menuData['node1']);
+                    $model = MenuXX::findOne($menuData['node1']);
                     if (isset($model)){
                         if ($model->appendChild($menuData)){
                             $this->result = $model->result;
@@ -145,7 +145,7 @@ class WidgetController extends Controller
                     }
                     break;
                 case 'appendBrother':
-                    $model = MenuX::findOne($menuData['node1']);
+                    $model = MenuXX::findOne($menuData['node1']);
                     if (isset($model)){
                         if ($model->appendBrother($menuData)){
                             $this->result = $model->result;
@@ -168,7 +168,7 @@ class WidgetController extends Controller
         $node1_id = $_post['node1_id'];
         $node2_id = $_post['node2_id'];
         $nodeAction = $_post['nodeAction'];
-        $node1 = MenuX::findOne($node1_id);
+        $node1 = MenuXX::findOne($node1_id);
         if(isset($node1)){
             switch ($nodeAction){
                 case 'moveUp':  //--- move up
@@ -210,7 +210,7 @@ class WidgetController extends Controller
     {
         $_post = \Yii::$app->request->post();
         $node1_id = $_post['node1_id'];
-        $this->result = MenuX::deleteWithChildren($node1_id);
+        $this->result = MenuXX::deleteWithChildren($node1_id);
         return $this->asJson($this->result);
     }
 

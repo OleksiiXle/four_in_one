@@ -1,9 +1,10 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-use app\components\models\Translation;
+use common\components\models\Translation;
+use \yii\helpers\Url;
 
-$this->title = 'Перевод';
+$this->title = $this->title = Yii::t('app', 'Переводы');
 
 ?>
 
@@ -28,8 +29,8 @@ $this->title = 'Перевод';
 
             ?>
             <div class="form-group" align="center">
-                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-                <?= Html::a('Отмена', \yii\helpers\Url::toRoute('/adminxx/translation'),[
+                <?= Html::submitButton(Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                <?= Html::a(Yii::t('app', 'Отмена'), Url::toRoute('/adminxx/translation'),[
                     'class' => 'btn btn-danger', 'name' => 'reset-button'
                 ]);?>
             </div>

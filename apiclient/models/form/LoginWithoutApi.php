@@ -1,15 +1,15 @@
 <?php
 
-namespace app\modules\adminxx\models\form;
+namespace app\models\form;
 
 use Yii;
-use app\helpers\AccessHelper;
-use app\modules\adminxx\models\UserM;
+use common\helpers\AccessHelper;
+use common\models\UserM;
 
 /**
  * Login form
  */
-class Login extends UserM
+class LoginWithoutApi extends UserM
 {
 
     public $username;
@@ -36,6 +36,15 @@ class Login extends UserM
          //   [['reCaptcha'], \himiklab\yii2\recaptcha\ReCaptchaValidator::className(), 'secret' => '6LfU-p8UAAAAAJIytAMOw7CMnd8K5HmVaP0vT49-']
         ];
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'username' => Yii::t('app', 'Логин'),
+            'password' => Yii::t('app', 'Пароль'),
+        ];
+    }
+
 
 
     /**

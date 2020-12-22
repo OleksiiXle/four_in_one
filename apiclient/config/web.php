@@ -52,12 +52,12 @@ $config = [
             //'apiBaseUrl' => $providers['xapi']['api_base_url'], //todo брать из authClientCollection
         ],
         'authManager' => [
-            'class' => 'app\components\DbManager', // or use 'yii\rbac\DbManager'
+            'class' => 'common\components\DbManager', // or use 'yii\rbac\DbManager'
             'cache' => 'cache'
         ],
         'user' => [
-            'class' => 'app\models\UserX',
-            'identityClass' => 'app\models\User',
+            'class' => 'common\components\UserX',
+            'identityClass' => 'common\models\User',
             'loginUrl' => ['site/login'],
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-apiuser', 'httpOnly' => true],
@@ -67,13 +67,13 @@ $config = [
             'name' => 'apiclient',
         ],
         'configs' => [
-            'class' => 'app\components\ConfigsComponent',
+            'class' => 'common\components\ConfigsComponent',
         ],
         'conservation' => [
-            'class' => 'app\components\conservation\ConservationComponent',
+            'class' => 'common\components\conservation\ConservationComponent',
         ],
         'userProfile' => [
-            'class' => 'app\components\UserProfileComponent',
+            'class' => 'common\components\UserProfileComponent',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

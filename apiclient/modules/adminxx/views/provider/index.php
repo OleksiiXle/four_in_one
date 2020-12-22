@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
-use app\widgets\xlegrid\Xlegrid;
-use app\widgets\menuAction\MenuActionWidget;
+use common\widgets\xlegrid\Xlegrid;
+use common\widgets\menuAction\MenuActionWidget;
 use yii\helpers\Url;
 use app\modules\adminxx\assets\AdminxxTranslationsAsset;
 

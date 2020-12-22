@@ -2,7 +2,7 @@
 
 namespace app\modules\adminxx\controllers;
 
-use app\components\conservation\ActiveDataProviderConserve;
+use common\components\conservation\ActiveDataProviderConserve;
 use app\components\models\Provider;
 use app\components\models\Translation;
 use app\components\AccessControl;
@@ -13,6 +13,8 @@ use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
+use app\controllers\MainController;
+
 
 class ProviderController extends MainController
 {

@@ -2,7 +2,7 @@
 
 namespace app\components\conservation\models;
 
-use app\modules\adminxx\models\UserM;
+use common\models\UserM;
 use yii\db\ActiveRecord;
 
 /**

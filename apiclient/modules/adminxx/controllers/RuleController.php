@@ -3,10 +3,11 @@
 namespace app\modules\adminxx\controllers;
 
 use Yii;
-use app\components\AccessControl;
-use app\modules\adminxx\models\RuleX;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
+use app\components\AccessControl;
+use app\controllers\MainController;
+use app\modules\adminxx\models\RuleX;
 
 /**
  * Class RuleController

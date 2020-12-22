@@ -2,8 +2,9 @@
 
 namespace app\modules\adminxx\controllers;
 
+use app\controllers\MainController;
 use app\components\AccessControl;
-use app\components\models\Configs;
+use common\components\models\Configs;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;

@@ -2,8 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \yii\helpers\Url;
-use \app\widgets\changePosDep\ChangePosDepWidget;
-use \app\modules\adminxx\assets\AdminxxUpdateUserAsset;
+use app\modules\adminxx\assets\AdminxxUpdateUserAsset;
 
 AdminxxUpdateUserAsset::register($this);
 //\app\modules\adminxx\assets\AdminxxMdlAsset::register($this);
@@ -19,10 +18,8 @@ if ($model->isNewRecord){
 }
 
 
-$_userDepartments = \yii\helpers\Json::htmlEncode($userDepartments);
 $_userRoles = \yii\helpers\Json::htmlEncode($userRoles);
 $this->registerJs("
-    var _userDepartments = {$_userDepartments};
     var _userRoles = {$_userRoles};
 ",\yii\web\View::POS_HEAD);
 //$this->registerJs($this->render('signup.js'));
@@ -129,7 +126,7 @@ $this->registerJs("
                     <?= $form->field($model, 'phone'); ?>
                     <?= $form->field($model, 'direction', ['inputOptions' =>
                         ['class' => 'form-control', 'tabindex' => '4']])
-                        ->dropDownList(\app\modules\adminx\models\UserData::$directionArray,
+                        ->dropDownList(\common\models\UserData::$directionArray,
                             ['options' => [ $model->direction => ['Selected' => true]],]);?>
                     <?= $form->field($model, 'job_name')->textarea([
                         'rows' => '5'
@@ -171,7 +168,7 @@ $this->registerJs("
                     <div class="row">
                         <div class="col-md-10">
                             <div id="selectTree" class="simpleBlock" style=" height: 50vh; width: auto; overflow: auto">
-                                <?= \app\widgets\tree\TreeWidget::widget([
+                                <?= \common\widgets\tree\TreeWidget::widget([
                                     'showFilter' => false,
                                     'useConserve' => false,
                                     'noShowPositions' => 1,

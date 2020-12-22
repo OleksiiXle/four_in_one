@@ -1,14 +1,14 @@
 <?php
 use yii\helpers\Html;
-use yii\widgets\DetailView;
-use app\modules\adminxx\models\UserM;
+use \yii\widgets\DetailView;
+use common\models\UserM;
 use yii\jui\JuiAsset;
-use app\modules\adminxx\assets\AdminxxUserAsset;
+use \app\modules\adminxx\assets\AdminxxUserAsset;
 
 JuiAsset::register($this);
 AdminxxUserAsset::register($this);
 
-$this->title = 'Профіль користувача';
+$this->title = Yii::t('app', 'Профиль пользователя');
 
 ?>
 <style>
@@ -60,7 +60,7 @@ $this->title = 'Профіль користувача';
                 <h4><?= UserM::getStatusDict()[$userProfile['status']]  ?></h4>
             </div>
             <div class="col-md-12 col-lg-2">
-                <h4><?= Html::a('До списку користувачів', \yii\helpers\Url::toRoute('index'), ['style' => 'color:red']);?></h4>
+                <h4><?= Html::a(Yii::t('app', 'Вернуться'), \yii\helpers\Url::toRoute('index'), ['style' => 'color:red']);?></h4>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@ $this->title = 'Профіль користувача';
                         'id',
                         [
                             'attribute' => 'username',
-                            'label' => 'Логін',
+                            'label' => Yii::t('app', 'Логин'),
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['username'];
@@ -91,23 +91,15 @@ $this->title = 'Профіль користувача';
                         ],
                         [
                             'attribute' => 'phone',
-                            'label' => 'Телефон',
+                            'label' => Yii::t('app', 'Телефон'),
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['phone'];
                             }
                         ],
                         [
-                            'attribute' => 'username',
-                            'label' => 'Логін',
-                            'format' => 'raw',
-                            'value' => function($data){
-                                return $data['username'];
-                            }
-                        ],
-                        [
                             'attribute' => 'created_at',
-                            'label' => 'Зареєстрований',
+                            'label' => Yii::t('app', 'Зарегистрирован'),
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['created_at'] . ' ' . $data['userCreater'];
@@ -115,7 +107,7 @@ $this->title = 'Профіль користувача';
                         ],
                         [
                             'attribute' => 'updated_at',
-                            'label' => 'Остання зміна',
+                            'label' => Yii::t('app', 'Изменен'),
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['updated_at'] . ' ' . $data['userUpdater'];
@@ -123,7 +115,7 @@ $this->title = 'Профіль користувача';
                         ],
                         [
                             'attribute' => 'firstVisitTimeTxt',
-                            'label' => 'Перший візіт',
+                            'label' => Yii::t('app', 'Первое посещение'),
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['firstVisitTimeTxt'];
@@ -131,7 +123,7 @@ $this->title = 'Профіль користувача';
                         ],
                         [
                             'attribute' => 'lastVisitTimeTxt',
-                            'label' => 'Останній візіт',
+                            'label' => Yii::t('app', 'Последнее посещение'),
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['lastVisitTimeTxt'];
@@ -139,7 +131,7 @@ $this->title = 'Профіль користувача';
                         ],
                         [
                             'attribute' => 'lastRoute',
-                            'label' => 'Останній роут',
+                            'label' => Yii::t('app', 'Последний роут'),
                             'format' => 'raw',
                             'value' => function($data){
                                 return $data['lastRoute'];
@@ -156,9 +148,8 @@ $this->title = 'Профіль користувача';
             <div id="tabsl" class="userRightSide ">
                 <!--*************************************************************************** МЕНЮ -->
                 <ul>
-                    <li><a href="#tabsl-2">Ролі</a></li>
-                    <li><a href="#tabsl-3">Дозвіли</a></li>
-                    <li><a href="#tabsl-4">Роути</a></li>
+                    <li><a href="#tabsl-2"><?=Yii::t('app', 'Роли')?></a></li>
+                    <li><a href="#tabsl-3"><?=Yii::t('app', 'Разрешения')?></a></li>
                 </ul>
                 <div id="tabsl-2">
                     <div>
@@ -166,8 +157,8 @@ $this->title = 'Профіль користувача';
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <td>Роль</td>
-                                    <td>Коментар</td>
+                                    <td><?=Yii::t('app', 'Роль')?></td>
+                                    <td><?=Yii::t('app', 'Комментарий')?></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -191,8 +182,8 @@ $this->title = 'Профіль користувача';
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <td>Дозвіл</td>
-                                    <td>Коментар</td>
+                                    <td><?=Yii::t('app', 'Разрешение')?></td>
+                                    <td><?=Yii::t('app', 'Комментарий')?></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -200,31 +191,6 @@ $this->title = 'Профіль користувача';
                                     <tr>
                                         <td><?= $permission['id'];?></td>
                                         <td><?= $permission['name'];?></td>
-                                    </tr>
-
-                                <?php endforeach;?>
-                                </tbody>
-                            </table>
-
-                        <?php endif;?>
-
-                    </div>
-                </div>
-                <div id="tabsl-4">
-                    <div>
-                        <?php if (!empty($userProfile['userRoutes'])): ?>
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <td>Роут</td>
-                                    <td>Коментар</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($userProfile['userRoutes'] as $route):?>
-                                    <tr>
-                                        <td><?= $route['id'];?></td>
-                                        <td><?= $route['name'];?></td>
                                     </tr>
 
                                 <?php endforeach;?>

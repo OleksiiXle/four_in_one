@@ -5,6 +5,7 @@ use common\widgets\menuX\MenuXWidget;
 use common\widgets\changeLanguage\ChangeLanguageWidget;
 use apiuser\modules\post\assets\PostLayoutAsset;
 use yii\helpers\Url;
+use common\models\MenuXX;
 
 //use common\assets\AppAsset;
 //use app\assets\BackgroundTaskAsset;
@@ -136,8 +137,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoI
             <?php
             echo MenuXWidget::widget([
                 'showLevel' => '1',
-                'accessLevels' => [0,1]
-            ]) ;
+                'accessLevels' => [0,1],
+                'menuClass' => MenuXX::class,
+ ]) ;
             ?>
         </div>
 

@@ -169,7 +169,7 @@ $this->registerJs("
                     <div class="row">
                         <div class="col-md-10">
                             <div id="selectTree" class="simpleBlock" style=" height: 50vh; width: auto; overflow: auto">
-                                <?= \app\widgets\tree\TreeWidget::widget([
+                                <?= \common\widgets\tree\TreeWidget::widget([
                                     'showFilter' => false,
                                     'useConserve' => false,
                                     'noShowPositions' => 1,

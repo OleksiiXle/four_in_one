@@ -3,7 +3,7 @@
 namespace app\components\models;
 
 use Yii;
-use app\models\MainModel;
+use common\models\MainModel;
 use yii\base\Exception;
 
 /**

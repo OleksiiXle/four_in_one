@@ -2,8 +2,9 @@
 
 namespace app\modules\adminxx\models;
 
+use common\models\UserM;
 use Yii;
-use app\models\MainModel;
+use common\models\MainModel;
 
 /**
  * This is the model class for table "auth_item".
@@ -28,20 +29,19 @@ class AuthItemX extends \yii\db\ActiveRecord
 
 
     public static $typeDict = [
-       self::TYPE_ROLE => 'Роли',
+        self::TYPE_All => 'Все типы',
+        self::TYPE_ROLE => 'Роли',
        self::TYPE_PERMISSION => 'Разрешения',
       // self::TYPE_ROUTE => 'Маршрути',
-       self::TYPE_All => 'Все типы',
 
     ];
 
     public static function getTypeDict()
     {
         return [
+            self::TYPE_All => \Yii::t('app', 'Все типы'),
             self::TYPE_ROLE => \Yii::t('app', 'Роли'),
             self::TYPE_PERMISSION => \Yii::t('app', 'Разрешения'),
-            self::TYPE_All => \Yii::t('app', 'Все типы'),
-
         ];
     }
 

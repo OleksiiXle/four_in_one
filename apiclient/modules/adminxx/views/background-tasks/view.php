@@ -49,7 +49,7 @@ $this->title = 'Фонове завдання';
 <div class="container-fluid">
    <div class="row">
         <!--*************************************************************************** ЛЕВАЯ ПОЛОВИНА -->
-       <h4><?= Html::a('До списку завдань', \yii\helpers\Url::toRoute('index'), ['style' => 'color:red']);?></h4>
+       <h4><?= Html::a('До списку завдань', 'index', ['style' => 'color:red']);?></h4>
 
        <div class="col-md-12 col-lg-4">
             <div class="ui-corner-all userDataArea xCard">

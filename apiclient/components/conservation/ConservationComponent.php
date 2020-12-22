@@ -2,7 +2,7 @@
 
 namespace app\components\conservation;
 
-use app\components\conservation\models\Conservation;
+use common\components\conservation\models\Conservation;
 use yii\base\Component;
 use yii\base\Exception;
 

@@ -4,7 +4,7 @@ use yii\bootstrap\ActiveForm;
 
 \app\modules\adminxx\assets\AdminxxUpdateUserAssignmentsAsset::register($this);
 
-$this->title = 'Зміна ролей та дозвілів користувача ' . $model->username;
+$this->title = Yii::t('app', 'Изменение ролей и разрешений') . $model->username;
 
 $_assigments = \yii\helpers\Json::htmlEncode($assigments);
 $this->registerJs("
@@ -19,7 +19,7 @@ $this->registerJs("
                 <div class="col-md-5">
                     <div id="roles">
                         <div class="col-md-5 userSelect">
-                            <h5>Доступні ролі</h5>
+                            <h5><?=Yii::t('app', 'Доступные роли')?></h5>
                             <select multiple size="25" class="form-control list" data-target="avaliableRoles"></select>
                         </div>
                         <div class="col-md-2 userSelect">
@@ -29,18 +29,18 @@ $this->registerJs("
                                 'data-rout' => \yii\helpers\Url::toRoute('/adminxx/assignment/assign'),
                                 'data-user_id' => $user_id,
                                 'data-target' => 'avaliableRoles',
-                                'title' => 'Додати'
+                                'title' => Yii::t('app', 'Добавить')
                             ]) ?><br><br>
                             <?= Html::a('&lt;&lt;' , false, [
                                 'class' => 'btn btn-danger btn-assign actionRevoke',
                                 'data-rout' => \yii\helpers\Url::toRoute('/adminxx/assignment/revoke'),
                                 'data-user_id' => $user_id,
                                 'data-target' => 'assignedRoles',
-                                'title' =>'Скасувати'
+                                'title' => Yii::t('app', 'Убрать')
                             ]) ?>
                         </div>
                         <div class="col-md-5 userSelect">
-                            <h5><b>Призначені ролі</b></h5>
+                            <h5><b><?=Yii::t('app', 'Назначенные роли')?></b></h5>
                             <select multiple size="25" class="form-control list" data-target="assignedRoles"></select>
                         </div>
                         <?php
@@ -51,7 +51,7 @@ $this->registerJs("
                 <div class="col-md-7">
                     <div id="permissions">
                         <div class="col-md-5 userSelect">
-                            <h5>Доступні дозвіли</h5>
+                            <h5><?=Yii::t('app', 'Доступные разрешения')?></h5>
                             <select multiple size="25" class="form-control list" data-target="avaliablePermissions"></select>
                         </div>
                         <div class="col-md-1 userSelect">
@@ -61,18 +61,18 @@ $this->registerJs("
                                 //  'data-rout' => '/adminxx/assignment/assign',
                                 'data-user_id' => $user_id,
                                 'data-target' => 'avaliablePermissions',
-                                'title' =>  'Додати'
+                                'title' => Yii::t('app', 'Добавить')
                             ]) ?><br><br>
                             <?= Html::a('&lt;&lt;' ,  false, [
                                 'class' => 'btn btn-danger btn-assign actionRevoke',
                                 // 'data-rout' => '/adminxx/assignment/revoke',
                                 'data-user_id' => $user_id,
                                 'data-target' => 'assignedPermissions',
-                                'title' => 'Скасувати'
+                                'title' => Yii::t('app', 'Убрать')
                             ]) ?>
                         </div>
                         <div class="col-md-6 userSelect">
-                            <h5><b>Призначені дозвіли</b></h5>
+                            <h5><b><?=Yii::t('app', 'Назначенные разрешения')?></b></h5>
                             <select multiple size="25" class="form-control list" data-target="assignedPermissions"></select>
                         </div>
                         <?php
@@ -94,12 +94,12 @@ $this->registerJs("
                 <?php
                 echo $form->field($model, 'status', ['inputOptions' =>
                     ['class' => 'form-control', 'tabindex' => '1']])
-                    ->dropDownList(\app\modules\adminxx\models\UserM::getStatuses(),
-                        ['options' => [ $model->status => ['Selected' => true]],])->label('Змінити статус') ;
+                    ->dropDownList(common\models\UserM::getStatuses(),
+                        ['options' => [ $model->status => ['Selected' => true]],]) ;
                 ?>
                 <div class="form-group" align="center">
-                    <?= Html::submitButton('Зберігти', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-                    <?= Html::a('Відміна', \yii\helpers\Url::toRoute('/adminxx/user'),[
+                    <?= Html::submitButton(Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
+                    <?= Html::a(Yii::t('app', 'Отмена'), \yii\helpers\Url::toRoute('/adminxx/user'),[
                         'class' => 'btn btn-danger', 'name' => 'reset-button'
                     ]);?>
                 </div>

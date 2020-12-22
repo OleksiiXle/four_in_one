@@ -4,7 +4,7 @@ function actionWithCheckedTranslations(action) {
     console.log('action =' + action.value);
     console.log(checkedIds);
     $.ajax({
-        url: '/adminxx/translation/delete-translations',
+        url: _BASE_URL + '/adminxx/translation/delete-translations',
         type: "POST",
         data:  {
             '_csrf' : _csrf,

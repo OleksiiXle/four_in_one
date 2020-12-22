@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \app\modules\adminxx\models\AuthItemX;
+use yii\helpers\Url;
 
 switch ($model->type){
     case AuthItemX::TYPE_ROLE:
@@ -56,7 +57,7 @@ $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
         <div class="col-md-3">
             <div class="form-group" align="center">
                 <?= Html::submitButton( \Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary', 'name' => 'update-button']) ?>
-                <?= Html::a(\Yii::t('app', 'Отмена'), \yii\helpers\Url::toRoute('/adminxx/auth-item'),[
+                <?= Html::a(\Yii::t('app', 'Отмена'), Url::toRoute('/adminxx/auth-item'),[
                     'class' => 'btn btn-success', 'name' => 'reset-button'
                 ]);?>
                 <?= Html::submitButton(\Yii::t('app', 'Удалить'), [
@@ -72,7 +73,7 @@ $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
     </div>
     <div class="row">
         <div class="col-md-12">
-                <h4><b>Дозвіли</b></h4>
+                <h4><b><?=Yii::t('app', 'Разрешения')?></b></h4>
                 <div id="authItems" <?=$showSelects;?>>
                     <div class="col-md-5 userSelect">
                         <h5><?=\Yii::t('app', 'Доступные');?></h5>
@@ -82,14 +83,14 @@ $showSelects = (substr($model->name, 0,1) == '/') ? 'style= display:none;' : '';
                         <br><br>
                         <?= Html::a('&gt;&gt;' , false, [
                             'class' => 'btn btn-success btn-assign actionAssign',
-                            'data-rout' => \yii\helpers\Url::toRoute('/adminxx/auth-item/assign'),
+                            'data-rout' => Url::toRoute('/adminxx/auth-item/assign'),
                             'data-name' => $model->name,
                             'data-target' => 'avaliable',
                             'title' => Yii::t('app', 'Добавить')
                         ]) ?><br><br>
                         <?= Html::a('&lt;&lt;', false, [
                             'class' => 'btn btn-danger btn-assign actionRevoke',
-                            'data-rout' => \yii\helpers\Url::toRoute('/adminxx/auth-item/revoke'),
+                            'data-rout' => Url::toRoute('/adminxx/auth-item/revoke'),
                             'data-name' => $model->name,
                             'data-target' => 'assigned',
                             'title' => Yii::t('app', 'Удалить')

@@ -18,7 +18,7 @@ use yii\caching\CacheInterface;
 use yii\db\Connection;
 use yii\db\Expression;
 use yii\di\Instance;
-use app\modules\adminxx\models\User; //todo отвязаться от него
+use common\models\User; //todo отвязаться от него
 
 class DbManager extends BaseManager
 {

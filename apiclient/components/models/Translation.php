@@ -2,8 +2,8 @@
 
 namespace app\components\models;
 
-use app\components\DbMessageSource;
-use app\models\MainModel;
+use common\components\DbMessageSource;
+use common\models\MainModel;
 use Yii;
 use yii\db\Query;
 

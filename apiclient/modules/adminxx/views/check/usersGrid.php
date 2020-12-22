@@ -20,9 +20,9 @@ $timeFix = time() - $interval;
     <div class="row xContent">
         <div class="xCard">
             <?php
-            echo \app\components\widgets\xlegrid\Xlegrid::widget([
+            echo \common\widgets\xlegrid\Xlegrid::widget([
                 'dataProvider' => $dataProvider,
-                'gridTitle' => '' . \app\modules\adminxx\models\UserData::$activityIntervalArray[$interval] ,
+                'gridTitle' => '' . \common\models\UserData::$activityIntervalArray[$interval] ,
                 'additionalTitle' => 'qq',
                 'filterView' => '@app/modules/adminxx/views/check/_filterUserActivity',
                 //-------------------------------------------

@@ -23,14 +23,19 @@ class Route extends BaseObject
         */
         $routes = [];
         foreach (Yii::$app->params['aliasesForRoutesList'] as $aliaseForRoutesList) {
-            $mainHostPath = dirname(\Yii::getAlias("@$aliaseForRoutesList"));
-            $config = \yii\helpers\ArrayHelper::merge(
-                require $mainHostPath . '/common/config/main.php',
-                require $mainHostPath . "/$aliaseForRoutesList/config/main.php"
-            );
-            $aliaseApp = new Application($config);
-            $this->getRouteRecrusive($aliaseApp, $aliaseRoutes);
-            $routes = array_merge($routes, $aliaseRoutes);
+            if ($aliaseForRoutesList !== 'app') {
+                $mainHostPath = dirname(\Yii::getAlias("@$aliaseForRoutesList"));
+                $config = \yii\helpers\ArrayHelper::merge(
+                    require $mainHostPath . '/common/config/main.php',
+                    require $mainHostPath . "/$aliaseForRoutesList/config/main.php"
+                );
+                $aliaseApp = new Application($config);
+                $this->getRouteRecrusive($aliaseApp, $aliaseRoutes);
+                $routes = array_merge($routes, $aliaseRoutes);
+            } else {
+                $this->getRouteRecrusive(Yii::$app, $aliaseRoutes);
+                $routes = array_merge($routes, $aliaseRoutes);
+            }
         }
         ksort($routes);
 

@@ -1,11 +1,10 @@
 <?php
 
-namespace app\modules\adminxx\models;
+namespace apiadmin\modules\adminxx\models;
 
-use app\models\UserToken;
 use Yii;
-use app\models\MainModel;
 use common\helpers\Functions;
+use common\models\MainModel;
 
 /**
  * User - модель с правилами, геттерами, сеттерами и пр. данными
@@ -74,13 +73,10 @@ class UserM extends MainModel
     private $_userUpdater;
 
     private $_firstVisitTime;
-
     private $_lastVisitTime;
     private $_firstVisitTimeTxt;
     private $_lastVisitTimeTxt;
     private $_lastRoute;
-
-    private $_apiLoginsInfo;
 
     public static function tableName()
     {
@@ -113,6 +109,7 @@ class UserM extends MainModel
         ];
         return $ret ;
     }
+
 
     /**
      * @inheritdoc
@@ -201,6 +198,8 @@ class UserM extends MainModel
             //----  геттеры
             'created_at_str' => Yii::t('app', 'Создано'),
             'updated_at_str' => Yii::t('app', 'Изменено'),
+            'lastVisitTimeTxt' => Yii::t('app', 'Время последнего посещения'),
+            'userRoles' => Yii::t('app', 'Роли'),
 
         ];
     }
@@ -230,7 +229,7 @@ class UserM extends MainModel
      */
     public function getUserDatas()
     {
-        return $this->hasOne(UserData::class, ['user_id' => 'id']);
+        return $this->hasOne(UserData::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -238,15 +237,7 @@ class UserM extends MainModel
      */
     public function getUControl()
     {
-        return $this->hasOne(UControl::class, ['user_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserToken()
-    {
-        return $this->hasMany(UserToken::class, ['client_id' => 'id']);
+        return $this->hasOne(UControl::className(), ['user_id' => 'id']);
     }
 
 //*********************************************************************************************** ГЕТТЕРЫ-СЕТТЕРЫ
@@ -402,15 +393,33 @@ class UserM extends MainModel
             'firstVisitTimeTxt' => $this->firstVisitTimeTxt,
             'lastVisitTimeTxt' => $this->lastVisitTimeTxt,
             'lastRoute' => $this->lastRoute,
-
-            //-- user_data
-
-            //-- personal
         ];
 
 
         return $this->_userProfile;
     }
+
+    public function getUserProfileForApi()
+    {
+        $this->_userProfileForApi = [];
+
+        //---------------------
+        $this->_userProfileForApi = [
+            'id' => $this->id,
+            'status' => $this->status,
+            'username' => $this->username,
+            'last_name' => $this->last_name,
+            'first_name' => $this->first_name,
+            'middle_name' => $this->middle_name,
+            'email' => $this->email,
+            'permissions' =>  \Yii::$app->authManager->getUserRolesPermissions(),
+            'userRBACVersion' => time(),
+            'updated_at' => $this->updated_at,
+        ];
+
+        return $this->_userProfileForApi;
+    }
+
 
     /**
      * @return mixed
@@ -560,18 +569,6 @@ class UserM extends MainModel
         return $this->_lastRoute;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getApiLoginsInfo()
-    {
-        $this->_apiLoginsInfo = '';
-        foreach ($this->userToken as $userToken) {
-            $expires_in = (int) $userToken->created_at + ((int) $userToken->expires_in);
-            $this->_apiLoginsInfo .= Functions::intToDateTime($expires_in) . PHP_EOL;
-        }
-        return $this->_apiLoginsInfo;
-    }
 
 //*********************************************************************************************** CRUD
 
@@ -607,7 +604,7 @@ class UserM extends MainModel
                     if (!$create){
                         //--- сброс имевшихся, но удаленных ролей
                         foreach ($userRolesOld as $name => $role){
-                            if (!isset($userRoles[$name])){
+                            if (!in_array($name, $userRoles)){
                                 $ret = $auth->revoke($role,$this->id);
                             }
                         }

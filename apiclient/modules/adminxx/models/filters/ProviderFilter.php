@@ -4,7 +4,7 @@ namespace app\modules\adminxx\models\filters;
 use app\components\models\Provider;
 use Yii;
 use app\components\models\Translation;
-use app\widgets\xlegrid\models\GridFilter;
+use common\widgets\xlegrid\models\GridFilter;
 
 class ProviderFilter extends GridFilter
 {

@@ -2,9 +2,10 @@
 namespace app\modules\adminxx\controllers;
 
 use Yii;
-use app\components\AccessControl;
-use app\modules\adminxx\models\Assignment;
 use yii\filters\VerbFilter;
+use app\components\AccessControl;
+use app\controllers\MainController;
+use app\modules\adminxx\models\Assignment;
 
 /**
  * Class AssignmentController
@@ -27,7 +28,7 @@ class AssignmentController extends MainController
                     'actions'    => [
                         'assign', 'revoke'
                     ],
-                    'roles'      => ['adminChangeUserAssignments', 'adminUsersAdvanced' ],
+                    'roles'      => ['adminChangeUserAssignments', 'adminUsersAdvanced', ],
                 ],
             ],
         ];

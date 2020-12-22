@@ -1,7 +1,7 @@
 <?php
 
 namespace app\modules\adminxx\components\rules;
-use app\components\AccessHelper;
+use common\helpers\AccessHelper;
 use yii\rbac\Rule;
 
 class ProposalCRUDRule extends Rule

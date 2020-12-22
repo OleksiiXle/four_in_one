@@ -2,8 +2,8 @@
 
 namespace app\modules\adminxx\models\backgroundTasks;
 
-use app\commands\backgroundTasks\models\TaskWorker;
-use app\commands\backgroundTasks\models\BackgroundTask;
+use console\controllers\backgroundTasks\models\TaskWorker;
+use console\controllers\backgroundTasks\models\BackgroundTask;
 
 class UsersListUploadWorker extends TaskWorker
 {

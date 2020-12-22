@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use app\models\form\LoginWithoutApi;
 use app\modules\adminxx\models\UserM;
 use common\helpers\Functions;
 use Yii;
@@ -43,7 +44,7 @@ class SiteController extends Controller
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['login', 'signup', 'signup-confirm', 'signup-to-api' ],
+                    'actions' => ['login', 'signup', 'signup-confirm', 'signup-to-api', 'login-without-api' ],
                     'roles' => ['?'],
                 ],
                 [
@@ -307,6 +308,28 @@ app\components\clients\Facebook#1
                 throw new BadRequestHttpException('wrong mode');
         }
     }
+
+    /**
+     * Login action.
+     *
+     * @return string
+     */
+    public function actionLoginWithoutApi()
+    {
+        $this->layout = '@common/views/layouts/loginLayout.php';
+        //   $this->layout = false;
+
+        $model = new LoginWithoutApi();
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
+            return $this->goBack();
+        } else {
+            //    return $this->render('login', [
+            return $this->render('@common/views/site/login', [
+                'model' => $model,
+            ]);
+        }
+    }
+
 
     public function actionLogoutFromApi()
     {

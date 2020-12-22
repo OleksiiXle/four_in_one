@@ -41,4 +41,8 @@ return [
     'pathToBackgroundTasksLogs' => '/runtime/logs/backgroundTasks/',
     'pathToBackgroundTasksTmpFiles' => '/runtime/logs/backgroundTasks/tmp/',
     'killBackgroundTaskAfterDone' => false,
+    'aliasesForRoutesList' => [
+        'app',
+    ],
+
 ];

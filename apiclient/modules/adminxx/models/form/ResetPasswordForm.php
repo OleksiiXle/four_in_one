@@ -2,8 +2,8 @@
 
 namespace app\modules\adminxx\models\form;
 
-use app\modules\adminxx\models\User;
-use app\modules\adminxx\models\UserM;
+use common\models\User;
+use common\models\UserM;
 use yii\base\Model;
 use yii\base\InvalidParamException;
 

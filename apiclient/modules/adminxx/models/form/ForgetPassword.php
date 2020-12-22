@@ -2,7 +2,7 @@
 
 namespace app\modules\adminxx\models\form;
 
-use app\modules\adminxx\models\UserM;
+use common\models\UserM;
 use Yii;
 use yii\base\Model;
 use yii\httpclient\Client;

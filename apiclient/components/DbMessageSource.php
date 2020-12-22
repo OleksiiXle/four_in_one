@@ -8,7 +8,7 @@ use yii\caching\CacheInterface;
 use yii\db\Connection;
 use yii\di\Instance;
 use yii\i18n\MessageSource;
-use app\components\models\Translation;
+use common\components\models\Translation;
 
 /**
  * DbMessageSource extends [[MessageSource]] and represents a message source that stores translated

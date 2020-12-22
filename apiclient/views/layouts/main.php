@@ -50,7 +50,7 @@ $exitLogo = Url::toRoute('/images/log_logout_door_1563.png');
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
             Yii::$app->user->isGuest ? (
-            ['label' => 'Login', 'url' => ['/site/login']]
+            ['label' => 'Login', 'url' => ['/site/login-without-api']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout-from-api'], 'post')

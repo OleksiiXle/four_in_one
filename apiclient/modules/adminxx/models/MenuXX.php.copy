@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\adminxx\models;
+namespace apiadmin\modules\adminxx\models;
 
-use app\models\MainModel;
+use common\models\MainModel;
 use yii\helpers\Html;
 use yii\helpers\Url;
 

@@ -2,13 +2,13 @@
 
 namespace common\widgets\menuX;
 
-use common\models\MenuXX;
 use yii\widgets\InputWidget;
 
 class MenuXWidget extends InputWidget
 {
     public $showLevel=0;
     public $accessLevels = [0];
+    public $menuClass;
 
 
     public function init()
@@ -33,7 +33,7 @@ class MenuXWidget extends InputWidget
             }
         }
         MenuXAssets::register($this->getView());
-        $query = MenuXX::find()
+        $query = ($this->menuClass)::find()
             ->orderBy('parent_id, sort')
             ->where(['in', 'role', $menus])
             ->andWhere(['in', 'access_level', $this->accessLevels])
@@ -42,7 +42,7 @@ class MenuXWidget extends InputWidget
             ->asArray()
             ->all();
 
-        $html = MenuXX::getTree($tree,0, $this->showLevel);
+        $html = ($this->menuClass)::getTree($tree,0, $this->showLevel);
 
         return $this->render('menuX',
             [

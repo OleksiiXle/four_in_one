@@ -1,7 +1,7 @@
 <?php
 
 namespace app\modules\adminxx\rules;
-use app\helpers\AccessHelper;
+use common\helpers\AccessHelper;
 use yii\rbac\Rule;
 
 class StaffOrderMainItemsAvailabledRule extends Rule
