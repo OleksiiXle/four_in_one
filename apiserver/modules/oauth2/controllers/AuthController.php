@@ -2,7 +2,6 @@
 
 namespace apiserver\modules\oauth2\controllers;
 
-use common\models\UserM;
 use yii\web\Controller;
 use common\helpers\Functions;
 use apiserver\modules\oauth2\AuthorizeFilter;
@@ -48,22 +47,26 @@ class AuthController extends Controller
     public function actionIndex()
     {
         $this->layout = false;
-        Functions::logRequest();
+        Functions::log("SERVER API --- AuthController public function actionIndex()", true);
 
         $model = new LoginForm();
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
+            Functions::log("SERVER API --- пришла заполненная форма логина");
+
             if ($this->isOauthRequest) {
-                Functions::log('**** пользователь залогинился ОК');
+                Functions::log("SERVER API --- пользователь залогинился ОК");
 
                 $this->finishAuthorization();
             } else {
-                Functions::log('**** пользователь НЕ залогинился - пароль и имя не совпали');
+                Functions::log("SERVER API --- пользователь НЕ залогинился - пароль и имя не совпали");
                 return $this->goBack();
             }
 
 
             return $this->goBack();
         } else {
+            Functions::log("SERVER API --- выводим форму для логина ...");
+
             return $this->render('index', [
                 'model' => $model,
             ]);

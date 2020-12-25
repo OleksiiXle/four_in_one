@@ -60,9 +60,9 @@ abstract class BaseModel extends Model
         foreach ($this->safeAttributes() as $attribute) {
             $this->$attribute = self::getRequestValue($attribute, ArrayHelper::getValue($headers, $attribute));
         }
-        Functions::log('attributes:');
-        Functions::log(\yii\helpers\VarDumper::dumpAsString($this->getAttributes()));
-
+        Functions::log("SERVER API --- init " . static::class);
+        Functions::log("SERVER API --- attributes: ");
+        Functions::log($this->getAttributes());
     }
 
     public function addError($attribute, $error = '', $type = Exception::INVALID_REQUEST)

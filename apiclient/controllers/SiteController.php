@@ -2,7 +2,7 @@
 namespace app\controllers;
 
 use app\models\form\LoginWithoutApi;
-use app\modules\adminxx\models\UserM;
+use common\models\UserM;
 use common\helpers\Functions;
 use Yii;
 use common\components\AccessControl;
@@ -88,13 +88,24 @@ class SiteController extends Controller
 
     public function onAuthSuccess($client)
     {
-        $attributes = $client->getUserAttributes();
-        Functions::log('****************************************************');
-        Functions::log('******************************onAuthSuccess   $client:');
+        Functions::log("CLIENT --- app\controllers\\ class SiteController extends Controller", true);
+        Functions::log("CLIENT ---  public function onAuthSuccess(client)");
+        Functions::log('CLIENT --- ******************************onAuthSuccess   $client:');
         Functions::log($client);
-        Functions::log('****************************************************');
-        Functions::log('******************************onAuthSuccess   $client->getUserAttributes()');
+        Functions::log('CLIENT --- пытаемся получить   $client->getUserAttributes()');
+        $attributes = $client->getUserAttributes();
+        Functions::log('CLIENT --- $client->getUserAttributes():');
         Functions::log($attributes);
+        Yii::$app->session->setFlash('success', 'Ваша регистрация подтверждена');
+        Yii::$app->session->setFlash('success', \yii\helpers\VarDumper::dumpAsString($attributes) );
+        return $this->goHome();
+
+/*
+     'name' => 'Oleksii Xle'
+    'email' => 'lokoko.xle@ukr.net'
+    'id' => '2537274223260699'
+
+ */
         /*
          Из фейсбука прдет:
         ******************************onAuthSuccess   $client:
@@ -258,16 +269,40 @@ app\components\clients\Facebook#1
 
     public function actionLogin($mode = 'withoutSignup')
     {
+        $this->layout = '@common/views/layouts/loginLayout.php';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
      //  Functions::logRequest();
-        $this->layout = '@common/views/layouts/loginLayout.php';
+        // https://672327fb4a6e.ngrok.io
+        // https://672327fb4a6e.ngrok.io/dstest/apiclient
+        // https://672327fb4a6e.ngrok.io/dstest/apiclient/site/auth?authclient=facebook
 
         switch ($mode) {
             case 'withoutSignup':
                 $model = new LoginForm();
+                if (Yii::$app->request->isPost) {
+                    //-- login without api
+                    if ($model->load(Yii::$app->request->post()) && $model->login()){
+                        if ($model->provider != 'none') {
+                            return $this->redirect(Url::toRoute(['auth', 'authclient' => $model->provider]));
+                        } else {
+                            Yii::$app->session->setFlash('success', 'Подключения к АПИ нет');
+                            return $this->goBack();
+                        }
+                    }
+                }
+
+                $model->password = '';
+                return $this->render('login', [
+                    'model' => $model,
+                ]);
+
+
+
+
+
                 if ($model->load(Yii::$app->request->post())) {
                     if ($model->provider == 'xapi') {
                         if ($model->clientLogin()) {
@@ -279,9 +314,34 @@ app\components\clients\Facebook#1
                             ]);
                         }
                     } else {
+                        if (Yii::$app->request->isPost) {
+                            $model = new LoginWithoutApi();
+                            $_post = Yii::$app->request->post();
+                            $model->setAttributes($_post['LoginForm']);
+                            if ($model->login()) {
+                                $tmp = Url::toRoute(['auth', 'authclient' => 'facebook']);
+                                return $this->redirect(Url::toRoute(['auth', 'authclient' => 'facebook']));
+                                //return $this->goBack();
+                            } else {
+                                return $this->render('signupToApi', [
+                                    'model' => $model,
+                                ]);
+
+                            }
+                        } else {
+
+                        }
                         //-- facebok
-                        $tmp = Url::toRoute(['auth', 'authclient' => 'facebook']);
-                        return $this->redirect(Url::toRoute(['auth', 'authclient' => 'facebook']));
+                        if ($model->load(\Yii::$app->getRequest()->post()) && $model->login()) {
+                            $tmp = Url::toRoute(['auth', 'authclient' => 'facebook']);
+                            return $this->redirect(Url::toRoute(['auth', 'authclient' => 'facebook']));
+                            //return $this->goBack();
+                        } else {
+                            return $this->render('signupToApi', [
+                                'model' => $model,
+                            ]);
+
+                        }
                     }
 
                 } else {
@@ -330,25 +390,6 @@ app\components\clients\Facebook#1
         }
     }
 
-
-    public function actionLogoutFromApi()
-    {
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-        $this->layout = '@common/views/layouts/loginLayout.php';
-
-        $model = new LogoutForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->providersLogout()){
-                return $this->goHome();
-            }
-        }
-        return $this->render('logout', [
-            'model' => $model,
-        ]);
-    }
-
     public function actionSignup()
     {
         $model = new SignupForm();
@@ -380,9 +421,26 @@ app\components\clients\Facebook#1
     public function actionLogout()
     {
         Yii::$app->getUser()->logout();
-        return $this->redirect(Url::toRoute('/site/index'));
+        return $this->goHome();
     }
 
+    public function actionLogoutFromApi()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $this->layout = '@common/views/layouts/loginLayout.php';
+
+        $model = new LogoutForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->providersLogout()){
+                return $this->goHome();
+            }
+        }
+        return $this->render('logout', [
+            'model' => $model,
+        ]);
+    }
 
 
 

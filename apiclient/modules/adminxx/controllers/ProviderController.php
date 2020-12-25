@@ -65,7 +65,6 @@ class ProviderController extends MainController
     public function actionCreate()
     {
         $model = new Provider();
-        $model->scenario = Provider::SCENARIO_UPDATE;
         if (\Yii::$app->getRequest()->isPost) {
             $model->load(\Yii::$app->getRequest()->post());
             if ($model->save()) {
@@ -91,7 +90,6 @@ class ProviderController extends MainController
     public function actionUpdate($id)
     {
         $model = Provider::findOne($id);
-        $model->scenario = Provider::SCENARIO_UPDATE;
         if (\Yii::$app->getRequest()->isPost) {
             $model->load(\Yii::$app->getRequest()->post());
             if ($model->save()) {

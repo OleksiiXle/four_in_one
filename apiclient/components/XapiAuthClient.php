@@ -2,22 +2,27 @@
 
 namespace app\components;
 
-use app\components\models\Provider;
 use Yii;
-use app\models\User;
-use app\models\UserToken;
-use TheSeer\Tokenizer\Exception;
 use yii\authclient\OAuth2;
-use yii\authclient\InvalidResponseException;
 use yii\authclient\OAuthToken;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
+use app\models\User;
+use app\models\UserToken;
+use common\helpers\Functions;
+use TheSeer\Tokenizer\Exception;
 
 class XapiAuthClient extends OAuth2
 {
     public $signupUrl;
     public $errorMessage = '';
     private $_fullClientId;
+
+    /**
+     * @var array authenticated user attributes.
+     */
+    private $_userAttributes;
+
 
     /**
      * @return mixed
@@ -51,7 +56,7 @@ class XapiAuthClient extends OAuth2
         return $token;
     }
 
-    public function fetchAccessTokenXle($authCode, array $params = [], User $user=null)
+    public function fetchAccessTokenXle__($authCode, array $params = [], User $user=null)
     {
         if ($this->validateAuthState) {
             $authState = $this->getState('authState');
@@ -84,6 +89,91 @@ class XapiAuthClient extends OAuth2
         if (!$ret){
             $user->addError('username', $this->errorMessage);
         }
+        return $ret;
+/*
+        $r=1;
+        $userProfile = $this->api('/user/userinfo', 'POST', ['id' => $user->id] );
+        $tokenParams = [
+          'tokenParamKey' =>  $token->tokenParamKey,
+          'tokenSecretParamKey' =>  $token->tokenSecretParamKey,
+          'created_at' =>  $token->createTimestamp,
+          'expireDurationParamKey' =>  $token->expireDurationParamKey,
+          'access_token' =>  $token->getParam('access_token'),
+          'expires_in' =>  $token->getParam('expires_in'),
+          'token_type' =>  $token->getParam('token_type'),
+          'scope' =>  $token->getParam('scope'),
+          'refresh_token' =>  $token->getParam('refresh_token'),
+            ];
+*/
+        /*
+        $r = $this->removeState('token');
+        $token_ = $this->getState('token');
+        $this->setAccessToken($token);
+        $token_ = $this->getState('token');
+        */
+
+
+       // return $user->refreshToken($this->getStateKeyPrefix() . '_token', $tokenParams, $userProfile );
+
+    }
+
+    public function fetchAccessToken($authCode, array $params = [], User $user=null)
+    {
+        if ($user === null) {
+            $user_id = Yii::$app->user->getId();
+            $user = User::findOne($user_id);
+        }
+        Functions::log("CLIENT --- class XapiAuthClient extends OAuth2 public function fetchAccessToken(authCode, array params = [], User user=null) ");
+        if ($this->validateAuthState) {
+            $authState = $this->getState('authState');
+            Functions::log("CLIENT --- проверяем authState = $authState");
+            if (!isset($_REQUEST['state']) || empty($authState) || strcmp($_REQUEST['state'], $authState) !== 0) {
+                Functions::log("CLIENT --- authState не ОК");
+                throw new HttpException(400, 'Invalid auth state parameter.');
+            } else {
+                Functions::log("CLIENT --- authState ОК, удаляем старый из сессии");
+                $this->removeState('authState');
+            }
+        }
+
+        $defaultParams = [
+            'code' => $authCode,
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => $this->getReturnUrl(),
+        ];
+        Functions::log("CLIENT --- подготовка запроса на получение токена");
+        Functions::log("CLIENT --- параметры запроса:");
+        Functions::log(array_merge($defaultParams, $params));
+
+        $request = $this->createRequest()
+            ->setMethod('POST')
+            ->setUrl($this->tokenUrl)
+            ->setData(array_merge($defaultParams, $params));
+
+        $this->applyClientCredentialsToRequest($request);
+        Functions::log("CLIENT --- добавляем в запрос ClientCredentials");
+      //  Functions::log("CLIENT --- подготовленный запрос:");
+     //   Functions::log((string)$request);
+        Functions::log("CLIENT --- посылаем запрос ...");
+
+        $response = $this->sendRequest($request);
+        Functions::log("CLIENT --- обрабатываем ответ ...");
+        Functions::log("CLIENT --- пришло:");
+        Functions::log($response);
+
+        Functions::log("CLIENT --- пытаемся извлечь токен из того что пришло");
+        $token = $this->createToken(['params' => $response]);
+
+        Functions::log("CLIENT --- сохраняем токен в сессию");
+        $this->setAccessToken($token);
+
+        Functions::log("CLIENT --- сохраняем токен в БД");
+        $ret = $this->storeTokenToDb($token, $user);
+        if (!$ret){
+            $user->addError('username', $this->errorMessage);
+        }
+        Functions::log("CLIENT --- обработка токена закончена");
+
         return $ret;
 /*
         $r=1;
@@ -279,6 +369,59 @@ class XapiAuthClient extends OAuth2
 
     protected function initUserAttributes()
     {
-        return $this->api('userinfo', 'GET');
+        return $this->api('user/userinfo', 'GET');
     }
+
+    /**
+     * Performs request to the OAuth API returning response data.
+     * You may use [[createApiRequest()]] method instead, gaining more control over request execution.
+     * @see createApiRequest()
+     * @param string $apiSubUrl API sub URL, which will be append to [[apiBaseUrl]], or absolute API URL.
+     * @param string $method request method.
+     * @param array|string $data request data or content.
+     * @param array $headers additional request headers.
+     * @return array API response data.
+     */
+    public function api($apiSubUrl, $method = 'GET', $data = [], $headers = [])
+    {
+        Functions::log("CLIENT --- public function api(apiSubUrl, method = 'GET', data = [], headers = [])");
+        Functions::log("CLIENT --- apiSubUrl = $apiSubUrl");
+        Functions::log("CLIENT --- method = $method");
+        Functions::log("CLIENT --- data:");
+        Functions::log($data);
+
+        $request = $this->createApiRequest()
+            ->setMethod($method)
+            ->setUrl($apiSubUrl)
+            ->addHeaders($headers);
+
+        if (!empty($data)) {
+            if (is_array($data)) {
+                $request->setData($data);
+            } else {
+                $request->setContent($data);
+            }
+        }
+     //   Functions::log("CLIENT --- подготовленный запрос:");
+      //  Functions::log((string)$request);
+        Functions::log("CLIENT --- отправляем ...");
+        $response = $this->sendRequest($request);
+        Functions::log("CLIENT --- получили ответ:");
+        Functions::log($response);
+
+        return $response;
+    }
+
+    /**
+     * @return array list of user attributes
+     */
+    public function getUserAttributes()
+    {
+        if ($this->_userAttributes === null) {
+            $this->_userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
+        }
+
+        return $this->_userAttributes;
+    }
+
 }

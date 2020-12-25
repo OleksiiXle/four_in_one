@@ -30,7 +30,7 @@ class UserController extends Controller
     protected function verbs()
     {
         return [
-            'userinfo' => ['POST'],
+            'userinfo' => ['POST', 'GET'],
         ];
     }
 
@@ -42,12 +42,15 @@ class UserController extends Controller
         if ($userId = \Yii::$app->request->post('id')){
             $user = UserM::findOne($userId);
             $userProfile = $user->userProfileForApi;
-          //  \yii::trace('************************************************ $userProfileo ', "dbg");
-         //   \yii::trace(\yii\helpers\VarDumper::dumpAsString($userProfile), "dbg");
-
             return $userProfile;
+        } elseif (\Yii::$app->request->isGet) {
+            if (!\Yii::$app->user->isGuest && $user = UserM::findOne(\Yii::$app->user->getId())) {
+                $userProfile = $user->userProfileForApi;
+                return $userProfile;
+            }
+            throw new NotFoundHttpException("User not authorized");
         } else {
-            throw new NotFoundHttpException("User $userId not found");
+            throw new NotFoundHttpException("User not found");
         }
     }
 

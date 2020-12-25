@@ -162,9 +162,11 @@ class AuthAction extends Action
      */
     public function run()
     {
-        Functions::log('***************** AuthAction run');
+        Functions::log('CLIENT --- ***************** AuthAction run');
+        Functions::log("CLIENT --- app\components\\AuthAction\\public function run():");
         if (!empty($_GET[$this->clientIdGetParamName])) {
             $clientId = $_GET[$this->clientIdGetParamName];
+            Functions::log("CLIENT --- clientId = $clientId");
             /* @var $collection \yii\authclient\Collection */
             $collection = Yii::$app->get($this->clientCollection);
             if (!$collection->hasClient($clientId)) {
@@ -331,11 +333,14 @@ class AuthAction extends Action
      */
     protected function authOAuth2($client)
     {
-        Functions::log('***************** AuthAction authOAuth2');
-        Functions::log('*** $_GET:');
+        Functions::log("CLIENT --- app\components\\AuthAction\\protected function authOAuth2(client):", true);
+        Functions::log("CLIENT --- client class = " . get_class($client));
+        Functions::logRequest();
+        Functions::log('CLIENT --- *** $_GET:');
         Functions::log($_GET);
         if (isset($_GET['error'])) {
             if ($_GET['error'] == 'access_denied') {
+                Functions::log('CLIENT --- *** access_denied');
                 // user denied error
                 return $this->redirectCancel();
             } else {
@@ -347,24 +352,33 @@ class AuthAction extends Action
                 } else {
                     $errorMessage = http_build_query($_GET);
                 }
+                Functions::log('CLIENT --- *** errorMessage:');
+                Functions::log($errorMessage);
                 throw new Exception('Auth error: ' . $errorMessage);
             }
         }
 
         // Get the access_token and save them to the session.
         if (isset($_GET['code'])) {
+
             $code = $_GET['code'];
+            Functions::log("CLIENT --- !!!!!! пришел code=$code");
+            Functions::log("CLIENT --- пытаемся извлечь AccessToken... ");
             $token = $client->fetchAccessToken($code);
-            Functions::log('*** $token:');
-            Functions::log($token);
+            Functions::log("CLIENT --- вернулись в protected function authOAuth2(client)");
 
             if (!empty($token)) {
+                Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
                 return $this->authSuccess($client);
             } else {
                 return $this->redirectCancel();
             }
         } else {
+            Functions::log("CLIENT --- buildAuthUrl : ");
             $url = $client->buildAuthUrl();
+            Functions::log("CLIENT --- authUrl : $url");
+            Functions::log("CLIENT --- rediretc to authUrl...");
+            Functions::log("CLIENT --- ***********************************************************************");
             return Yii::$app->getResponse()->redirect($url);
         }
     }

@@ -2,12 +2,12 @@
 
 namespace app\models;
 
-use app\modules\adminxx\models\UserM;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use common\models\UserM;
 
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -299,6 +299,7 @@ class User extends ActiveRecord implements IdentityInterface
             throw new \Exception($token->showErrors());
         }
         //-- обновляем профиль пользователя
+        /*
         if (!empty($userProfile)){
             $userClient = UserM::findOne($this->id);
             $userClient->scenario = UserM::SCENARIO_UPDATE;
@@ -309,6 +310,7 @@ class User extends ActiveRecord implements IdentityInterface
                 }
             }
         }
+        */
         return true;
         /*
          yii\authclient\OAuthToken::__set_state(array(

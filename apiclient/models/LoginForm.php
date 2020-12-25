@@ -16,7 +16,7 @@ use yii\httpclient\Client;
  */
 class LoginForm extends Model
 {
-    const USER_NAME_PASSWORD_PATTERN       = '/^[a-zA-Z0-9_]+$/ui'; //--маска для пароля
+    const USER_NAME_PASSWORD_PATTERN       = '/^[a-zA-Z0-9_.]+$/ui'; //--маска для пароля
 
     public $username;
     public $password;
@@ -75,6 +75,35 @@ class LoginForm extends Model
     {
         return array_merge(['none' => 'Без АПИ'], Provider::getClientsList());
     }
+
+    public function login()
+    {
+        if ($this->validate()) {
+            return Yii::$app->user->login($this->user, $this->rememberMe ? 3600 * 24 * 30 : 0);
+        }
+
+        return false;
+    }
+
+    public function loginToApi($provider)
+    {
+        switch ($provider) {
+            case 'xapi':
+                break;
+            case 'facebook':
+                break;
+            default:
+                Yii::$app->session->setFlash('error', 'Неверный провайдер '. $provider);
+        }
+        return false;
+    }
+
+    private function loginToXapi()
+    {
+
+    }
+
+
 
 
     public function clientLogin()

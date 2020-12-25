@@ -32,11 +32,6 @@ class ProviderGrid extends Grid
                     'contentOptions' => ['style' => 'width: 2%;'],
                 ],
                 [
-                    'attribute' => 'class',
-                    'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
-                    'contentOptions' => ['style' => 'width: 2%; overflow: hidden'],
-                ],
-                [
                     'attribute' => 'name',
                     'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
                     'contentOptions' => ['style' => 'width: 2%; overflow: hidden'],
@@ -48,13 +43,23 @@ class ProviderGrid extends Grid
                 ],
                 [
                     'attribute' => 'client_secret',
-                    'headerOptions' => ['style' => 'width: 5%;overflow: hidden; '],
-                    'contentOptions' => ['style' => 'width: 5%; overflow: hidden'],
+                    'headerOptions' => ['style' => 'width: 7%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 7%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'class',
+                    'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 8%; overflow: hidden'],
                 ],
                 [
                     'attribute' => 'state_storage_class',
-                    'headerOptions' => ['style' => 'width: 30%;overflow: hidden; '],
-                    'contentOptions' => ['style' => 'width: 10%; overflow: hidden'],
+                    'headerOptions' => ['style' => 'width: 8%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 8%; overflow: hidden'],
+                ],
+                [
+                    'attribute' => 'auth_url',
+                    'headerOptions' => ['style' => 'width: 15%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 15%; overflow: hidden'],
                 ],
                 [
                     'headerOptions' => ['style' => 'width: 3%; '],
