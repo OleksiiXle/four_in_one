@@ -49,7 +49,7 @@ class SiteController extends Controller
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['logout', 'logout-from-api'],
+                    'actions' => ['logout', 'logout-from-api', 'after-api-login'],
                     'roles' => ['@'],
                 ],
 
@@ -82,8 +82,20 @@ class SiteController extends Controller
             'auth' => [
                 'class' => 'app\components\AuthAction',
                 'successCallback' => [$this, 'onAuthSuccess'],
+            //    'successUrl' => Url::toRoute('after-api-login'),
+           //     'redirectView' => '@app/views/site/afterApiLogin.php',
             ],
         ];
+    }
+
+    public function actionAfterApiLogin()
+    {
+        $tmp = 1;
+        $this->layout = '@app/modules/post/views/layouts/postLayout.php';
+        return $this->render('afterApiLogin', [
+          //  'provider' => $provider,
+         //   'data' => $data,
+        ]);
     }
 
     public function onAuthSuccess($client)
@@ -96,9 +108,24 @@ class SiteController extends Controller
         $attributes = $client->getUserAttributes();
         Functions::log('CLIENT --- $client->getUserAttributes():');
         Functions::log($attributes);
-        Yii::$app->session->setFlash('success', 'Ваша регистрация подтверждена');
-        Yii::$app->session->setFlash('success', \yii\helpers\VarDumper::dumpAsString($attributes) );
-        return $this->goHome();
+        $resultMessage = 'Авторизация подтверждена, сервис ' . $client->name . ' вернул Ваши данные:';
+        foreach ($attributes as $name => $value) {
+            $resultMessage .= '<br>' . $name . ' = ';
+            if (!is_array($value)) {
+                $resultMessage .= $value;
+            } else {
+                $buff = '';
+                foreach ($value as $n => $v)  {
+                    $buff .= "<br>----------->$n";
+                }
+                $resultMessage .= $buff;
+            }
+        }
+        Yii::$app->session->setFlash('success', $resultMessage);
+        return $this->redirect('after-api-login');
+     //   Yii::$app->session->setFlash('success', \yii\helpers\VarDumper::dumpAsString($attributes) );
+    //    return $this->redirect(['after-api-login', 'provider' => $client->name,
+    //        'data' => $attributes, ]);
 
 /*
      'name' => 'Oleksii Xle'
@@ -212,59 +239,6 @@ app\components\clients\Facebook#1
     'id' => '2537274223260699'
 ]
          */
-
-        /* @var $auth Auth */
-        $auth = Auth::find()->where([
-            'source' => $client->getId(),
-            'source_id' => $attributes['id'],
-        ])->one();
-
-        if (Yii::$app->user->isGuest) {
-            if ($auth) { // авторизация
-                $user = $auth->user;
-                Yii::$app->user->login($user);
-            } else { // регистрация
-                if (isset($attributes['email']) && User::find()->where(['email' => $attributes['email']])->exists()) {
-                    Yii::$app->getSession()->setFlash('error', [
-                        Yii::t('app', "Пользователь с такой электронной почтой как в {client} уже существует, но с ним не связан. Для начала войдите на сайт использую электронную почту, для того, что бы связать её.", ['client' => $client->getTitle()]),
-                    ]);
-                } else {
-                    $password = Yii::$app->security->generateRandomString(6);
-                    $user = new UserM([
-                        'username' => $attributes['login'],
-                        'email' => $attributes['email'],
-                        'password' => $password,
-                    ]);
-                    $user->generateAuthKey();
-                    $user->generatePasswordResetToken();
-                    $transaction = $user->getDb()->beginTransaction();
-                    if ($user->save()) {
-                        $auth = new Auth([
-                            'user_id' => $user->id,
-                            'source' => $client->getId(),
-                            'source_id' => (string)$attributes['id'],
-                        ]);
-                        if ($auth->save()) {
-                            $transaction->commit();
-                            Yii::$app->user->login($user);
-                        } else {
-                            print_r($auth->getErrors());
-                        }
-                    } else {
-                        print_r($user->getErrors());
-                    }
-                }
-            }
-        } else { // Пользователь уже зарегистрирован
-            if (!$auth) { // добавляем внешний сервис аутентификации
-                $auth = new Auth([
-                    'user_id' => Yii::$app->user->id,
-                    'source' => $client->getId(),
-                    'source_id' => $attributes['id'],
-                ]);
-                $auth->save();
-            }
-        }
     }
 
     public function actionLogin($mode = 'withoutSignup')
@@ -298,11 +272,7 @@ app\components\clients\Facebook#1
                 return $this->render('login', [
                     'model' => $model,
                 ]);
-
-
-
-
-
+/*
                 if ($model->load(Yii::$app->request->post())) {
                     if ($model->provider == 'xapi') {
                         if ($model->clientLogin()) {
@@ -351,6 +321,7 @@ app\components\clients\Facebook#1
                     ]);
 
                 }
+*/
                 break;
             case 'withSignup':
                 $model = new SignupForm();
@@ -442,12 +413,6 @@ app\components\clients\Facebook#1
         ]);
     }
 
-
-
-
-
-
-
     public function actionIndex()
     {
         return $this->render('index');
@@ -499,5 +464,4 @@ app\components\clients\Facebook#1
     {
         return $this->render('denyAccess');
     }
-
 }

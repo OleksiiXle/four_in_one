@@ -210,11 +210,14 @@ class AuthAction extends Action
         if (!is_callable($this->successCallback)) {
             throw new InvalidConfigException('"' . get_class($this) . '::successCallback" should be a valid callback.');
         }
+        call_user_func($this->successCallback, $client);
+        /*
         $response = call_user_func($this->successCallback, $client);
         if ($response instanceof Response) {
             return $response;
         }
         return $this->redirectSuccess();
+        */
     }
 
     /**
