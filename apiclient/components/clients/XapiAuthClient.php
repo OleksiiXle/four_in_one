@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components;
+namespace app\components\clients;
 
 use Yii;
 use yii\authclient\OAuth2;

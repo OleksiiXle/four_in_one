@@ -46,7 +46,7 @@ class AuthController extends Controller
      */
     public function actionIndex()
     {
-        $this->layout = false;
+        $this->layout = '@common/views/layouts/loginLayout.php';
         Functions::log("SERVER API --- AuthController public function actionIndex()", true);
 
         $model = new LoginForm();

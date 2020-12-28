@@ -26,16 +26,6 @@ class LoginForm extends Model
     public $errorContent = '';
 
     protected $_user = false;
-/*
-    public function behaviors()
-    {
-        return [
-            'ModelSessionStorage' => [
-                'class' => ModelSessionStorageBehavior::className(),
-            ],
-        ];
-    }
-*/
 
     /**
      * @return array the validation rules.
@@ -66,8 +56,9 @@ class LoginForm extends Model
 
     public function attributeLabels() {
         return [
-            'password' => 'Пароль',
-            'rememberMe' => 'Запомнить',
+            'username' => Yii::t('app', 'Логин'),
+            'password' => Yii::t('app', 'Пароль'),
+            'provider' => Yii::t('app', 'Апи провайдер'),
         ];
     }
 
