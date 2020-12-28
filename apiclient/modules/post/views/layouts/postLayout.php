@@ -78,23 +78,14 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => $logoI
             ?>
         </div>
         <!--************************************************************************************************************* LOGIN/LOGOUT-->
-        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center" style="padding-left: 1px">
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" align="center" style="padding-left: 1px">
             <?php
             if (!Yii::$app->user->isGuest){
                 echo Html::beginForm(['/site/logout'], 'post');
                 echo Html::submitButton(
-                    '<span> <img  src="' . $exitLogo . '" height="30px" width="30px;">' . Yii::$app->user->getIdentity()->username .  '</span>',
-                    ['class' => 'btn btn-link ']
-                );
-                echo Html::endForm();
-            }
-            ?>
-        </div>
-        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" align="center" style="padding-left: 1px">
-            <?php
-            if (!empty(Yii::$app->user->getApiLoginsInfo())){
-                echo Html::beginForm(['/site/logout-from-api'], 'post');
-                echo Html::submitButton('Logout from API<br>' . Yii::$app->user->getApiLoginsInfo(),
+                    '<span> <img  src="'
+                    . $exitLogo . '" height="30px" width="30px;">'
+                    . Yii::$app->user->getIdentity()->username . ' ' . Yii::$app->user->apiesNames . '</span>',
                     ['class' => 'btn btn-link ']
                 );
                 echo Html::endForm();

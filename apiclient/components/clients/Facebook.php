@@ -81,6 +81,8 @@ class Facebook extends OAuth2
      */
     public $clientAuthCodeUrl = 'https://graph.facebook.com/oauth/client_code';
 
+    public $errorMessage = 'Some errors';
+
 
     /**
      * {@inheritdoc}

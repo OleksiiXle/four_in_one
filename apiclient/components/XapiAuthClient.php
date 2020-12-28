@@ -16,6 +16,7 @@ class XapiAuthClient extends OAuth2
 {
     public $signupUrl;
     public $errorMessage = '';
+    public $provider_id = 'xapi';
     private $_fullClientId;
 
     /**
@@ -171,6 +172,8 @@ class XapiAuthClient extends OAuth2
         $ret = $this->storeTokenToDb($token, $user);
         if (!$ret){
             $user->addError('username', $this->errorMessage);
+            Functions::log("CLIENT --- ошибка сохранения токенва в БД");
+            Functions::log($this->errorMessage);
         }
         Functions::log("CLIENT --- обработка токена закончена");
 
@@ -269,6 +272,7 @@ class XapiAuthClient extends OAuth2
                 'token_type' =>  $token->getParam('token_type'),
                 'scope' =>  $token->getParam('scope'),
                 'refresh_token' =>  $token->getParam('refresh_token'),
+                'provider_id' =>  $this->provider_id,
             ];
             $ret = $client->refreshToken($this->getStateKeyPrefix() . '_token', $tokenParams, $userProfile );
             if (!$ret){

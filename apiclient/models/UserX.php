@@ -23,7 +23,8 @@ class UserX extends \yii\web\User
                 ->all();
             foreach ($tokens as $userToken) {
                 $expires_in = (int) $userToken['created_at'] + ((int) $userToken['expires_in']);
-                $this->_apiLoginInfo[$userToken['provider']] = [
+                $this->_apiLoginInfo[$userToken['provider_id']] = [
+                  'providerFullName' => $userToken['provider'],
                   'apiUserId' => $userToken['api_id'],
                   'accessToken' => $userToken['access_token'],
                   'expires' => Functions::intToDateTime($expires_in),

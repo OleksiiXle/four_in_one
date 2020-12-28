@@ -82,8 +82,7 @@ class SiteController extends Controller
             'auth' => [
                 'class' => 'app\components\AuthAction',
                 'successCallback' => [$this, 'onAuthSuccess'],
-            //    'successUrl' => Url::toRoute('after-api-login'),
-           //     'redirectView' => '@app/views/site/afterApiLogin.php',
+                'cancelCallback' => [$this, 'onAuthCancel'],
             ],
         ];
     }
@@ -241,6 +240,13 @@ app\components\clients\Facebook#1
          */
     }
 
+    public function onAuthCancel($client)
+    {
+        $errorMessage = "Авторизация через $client->name не удалась <br>" . $client->errorMessage;
+        Yii::$app->session->setFlash('error', $errorMessage);
+        return $this->goHome();
+   }
+
     public function actionLogin($mode = 'withoutSignup')
     {
         $this->layout = '@common/views/layouts/loginLayout.php';
@@ -391,6 +397,32 @@ app\components\clients\Facebook#1
 
     public function actionLogout()
     {
+        $succesMessage = '';
+        $errorMessage = '';
+        $apiProviders = Yii::$app->user->apiLoginInfo;
+        foreach ($apiProviders as $provider_id => $providerInfo) {
+            $clientApi = Yii::$app->authClientCollection->getClient($provider_id);
+            $userApi = UserToken::find()
+                ->select('api_id')
+                ->where(['client_id' => Yii::$app->user->getId(), 'provider_id' => $provider_id])
+                ->one();
+            if (!empty($userApi)){
+                if (!$clientApi->removeTokens($userApi->api_id)){
+                    $errorMessage = 'Токен для ' . $provider_id . ' удалить не получилось: ' . $clientApi->errorMessage;
+                } else {
+                    $succesMessage = 'Токен для ' . $provider_id . ' успешно удален ';
+                }
+            } else {
+                $errorMessage = 'Токен для ' . $provider_id . ' удалить не получилось: Не найден в базе данных';
+            }
+        }
+
+        if (!empty($errorMessage)) {
+            Yii::$app->session->setFlash('error', $errorMessage);
+        } elseif (!empty($succesMessage)) {
+            Yii::$app->session->setFlash('success', $succesMessage);
+        }
+
         Yii::$app->getUser()->logout();
         return $this->goHome();
     }

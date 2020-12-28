@@ -45,7 +45,7 @@ class UserToken extends ActiveRecord
         return [
             [['client_id', 'api_id', 'provider', 'tokenParamKey', 'tokenSecretParamKey', 'access_token', 'expires_in', 'token_type', 'refresh_token', 'created_at'], 'required'],
             [['client_id', 'api_id', 'created_at'], 'integer'],
-            [['provider'], 'string', 'max' => 50],
+            [['provider', 'provider_id'], 'string', 'max' => 50],
             [['tokenParamKey', 'tokenSecretParamKey', 'access_token',  'token_type', 'scope', 'refresh_token'], 'string', 'max' => 255],
             [['permissions'], 'string', 'max' => 10000],
             [['client_id', 'api_id', 'provider'], 'unique', 'targetAttribute' => ['client_id', 'api_id', 'provider']],
@@ -63,6 +63,7 @@ class UserToken extends ActiveRecord
             'client_id' => Yii::t('app', 'Client ID'),
             'api_id' => Yii::t('app', 'Api ID'),
             'provider' => Yii::t('app', 'Provider'),
+            'provider_id' => Yii::t('app', 'Provider'),
             'tokenParamKey' => Yii::t('app', 'Token Param Key'),
             'tokenSecretParamKey' => Yii::t('app', 'Token Secret Param Key'),
             'access_token' => Yii::t('app', 'Access Token'),

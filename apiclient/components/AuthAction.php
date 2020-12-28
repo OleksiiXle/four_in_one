@@ -83,6 +83,12 @@ class AuthAction extends Action
      *
      */
     public $successCallback;
+
+    /**
+     * @var callable PHP callback, which should be triggered in case of canceled authentication.
+     * This callback should accept [[ClientInterface]] instance as an argument.
+     */
+    public $cancelCallback;
     /**
      * @var string name or alias of the view file, which should be rendered in order to perform redirection.
      * If not set - default one will be used.
@@ -211,6 +217,21 @@ class AuthAction extends Action
             throw new InvalidConfigException('"' . get_class($this) . '::successCallback" should be a valid callback.');
         }
         call_user_func($this->successCallback, $client);
+        /*
+        $response = call_user_func($this->successCallback, $client);
+        if ($response instanceof Response) {
+            return $response;
+        }
+        return $this->redirectSuccess();
+        */
+    }
+
+    protected function authCancel($client)
+    {
+        if (!is_callable($this->cancelCallback)) {
+            throw new InvalidConfigException('"' . get_class($this) . '::cancelCallback" should be a valid callback.');
+        }
+        call_user_func($this->cancelCallback, $client);
         /*
         $response = call_user_func($this->successCallback, $client);
         if ($response instanceof Response) {
@@ -374,7 +395,7 @@ class AuthAction extends Action
                 Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
                 return $this->authSuccess($client);
             } else {
-                return $this->redirectCancel();
+                return $this->authCancel($client);
             }
         } else {
             Functions::log("CLIENT --- buildAuthUrl : ");
