@@ -92,11 +92,9 @@ class Logout extends BaseModel
             'deleted_tokens' => $ret1,
             'deleted_refresh_tokens' => $ret2,
         ];
-        Functions::log('******* LOGOUT');
+        Functions::log('SERVER API --- LOGOUT');
         Functions::log('$this->getAttributes():');
-        Functions::log(\yii\helpers\VarDumper::dumpAsString($this->getAttributes()));
-        Functions::log('$ret:');
-        Functions::log(\yii\helpers\VarDumper::dumpAsString($ret));
+        Functions::log($this->getAttributes());
 
         return $ret;
     }

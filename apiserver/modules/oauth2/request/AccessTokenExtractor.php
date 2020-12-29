@@ -34,7 +34,7 @@ class AccessTokenExtractor
      */
     public function extract()
     {
-        Functions::log('****************************** AccessTokenExtractor');
+        Functions::log('SERVER API --- AccessTokenExtractor');
         Functions::logRequest();
 
         $headerToken = null;
@@ -46,6 +46,11 @@ class AccessTokenExtractor
         }
         $postToken = $this->_request->post('access_token');
         $getToken = $this->_request->get('access_token');
+        Functions::log('SERVER API --- ищем токен везде в запросе ...');
+        Functions::log("SERVER API --- headerToken = $headerToken");
+        Functions::log("SERVER API --- postToken = $postToken");
+        Functions::log("SERVER API --- getToken = $getToken");
+
 
         // Check that exactly one method was used
         $methodsCount = isset($headerToken) + isset($postToken) + isset($getToken);

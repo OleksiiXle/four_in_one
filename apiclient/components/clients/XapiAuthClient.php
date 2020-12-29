@@ -153,9 +153,11 @@ class XapiAuthClient extends OAuth2
 
         $this->applyClientCredentialsToRequest($request);
         Functions::log("CLIENT --- добавляем в запрос ClientCredentials");
-      //  Functions::log("CLIENT --- подготовленный запрос:");
+        Functions::log("CLIENT --- данные запроса:");
+        Functions::log($request->getFullUrl());
+        Functions::log($request->getData());
      //   Functions::log((string)$request);
-        Functions::log("CLIENT --- посылаем запрос ...");
+        Functions::log("CLIENT --- посылаем запрос на получение токена...");
 
         $response = $this->sendRequest($request);
         Functions::log("CLIENT --- обрабатываем ответ ...");

@@ -82,7 +82,7 @@ class RefreshToken extends BaseModel
 
         $refreshToken->delete();
 
-        $refreshToken = \conquer\oauth2\models\RefreshToken::createRefreshToken([
+        $refreshToken = \apiserver\modules\oauth2\models\RefreshToken::createRefreshToken([
             'client_id' => $this->client_id,
             'user_id' => $refreshToken->user_id,
             'expires' => $this->refreshTokenLifetime + time(),
@@ -116,7 +116,7 @@ class RefreshToken extends BaseModel
             if (empty($this->refresh_token)) {
                 $this->errorServer(Yii::t('conquer/oauth2', 'The request is missing "refresh_token" parameter.'));
             }
-            if (!$this->_refreshToken = \conquer\oauth2\models\RefreshToken::findOne(['refresh_token' => $this->refresh_token])) {
+            if (!$this->_refreshToken = \apiserver\modules\oauth2\models\RefreshToken::findOne(['refresh_token' => $this->refresh_token])) {
                 $this->errorServer(Yii::t('conquer/oauth2', 'The Refresh Token is invalid.'));
             }
         }

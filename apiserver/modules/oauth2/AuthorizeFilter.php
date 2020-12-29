@@ -44,14 +44,14 @@ class AuthorizeFilter extends ActionFilter
      */
     public function beforeAction($action)
     {
-        Functions::log("SERVER API --- public function beforeAction(action)");
-
+        Functions::log("SERVER API --- AuthorizeFilter public function beforeAction(action)");
+        Functions::log($_GET);
         if (!$responseType = BaseModel::getRequestValue('response_type')) {
             Functions::log("SERVER API --- Invalid or missing response type.");
             throw new Exception(Yii::t('conquer/oauth2', 'Invalid or missing response type.'));
         }
 
-        Functions::log("SERVER API --- Пытаемся обработать responseType=$responseType ...");
+        Functions::log("SERVER API --- Пришло responseType=$responseType -> Создаем объект...");
         if (isset($this->responseTypes[$responseType])) {
             $this->_responseType = Yii::createObject($this->responseTypes[$responseType]);
         } else {
@@ -129,15 +129,13 @@ class AuthorizeFilter extends ActionFilter
             $responseType->errorRedirect(Yii::t('conquer/oauth2', 'The User denied access to your application.'), Exception::ACCESS_DENIED);
         }
         $parts = $responseType->getResponseData();
-        Functions::log("SERVER API --- parts = :");
-        Functions::log($parts);
 
         $redirectUri = http_build_url($responseType->redirect_uri, $parts, HTTP_URL_JOIN_QUERY | HTTP_URL_STRIP_FRAGMENT);
 
         if (isset($parts['fragment'])) {
             $redirectUri .= '#' . $parts['fragment'];
         }
-        Functions::log("SERVER API --- redirectUri = $redirectUri");
+        Functions::log("SERVER API --- формируем redirectUri = $redirectUri");
       //  Functions::log("SERVER API --- response:");
       //  Functions::log(Yii::$app->response);
 

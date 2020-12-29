@@ -360,8 +360,8 @@ class AuthAction extends Action
         Functions::log("CLIENT --- app\components\\AuthAction\\protected function authOAuth2(client):", true);
         Functions::log("CLIENT --- client class = " . get_class($client));
         Functions::logRequest();
-        Functions::log('CLIENT --- *** $_GET:');
-        Functions::log($_GET);
+      //  Functions::log('CLIENT --- *** $_GET:');
+      //  Functions::log($_GET);
         if (isset($_GET['error'])) {
             if ($_GET['error'] == 'access_denied') {
                 Functions::log('CLIENT --- *** access_denied');

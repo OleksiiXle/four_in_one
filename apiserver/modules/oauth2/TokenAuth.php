@@ -9,6 +9,7 @@ namespace apiserver\modules\oauth2;
 
 use apiserver\modules\oauth2\models\AccessToken;
 use apiserver\modules\oauth2\request\AccessTokenExtractor;
+use common\helpers\Functions;
 use Yii;
 use yii\base\Controller;
 use yii\filters\auth\AuthMethod;
@@ -66,7 +67,12 @@ class TokenAuth extends AuthMethod
      */
     public function authenticate($user, $request, $response)
     {
+        Functions::log("SERVER API --- class TokenAuth extends AuthMethod, public function authenticate(user, request, response)");
+        Functions::log("SERVER API --- Проверка токена:");
+
         $accessToken = $this->getAccessToken();
+        Functions::log("SERVER API --- токен:");
+        Functions::log($accessToken);
 
         if (!$this->checkScopes($this->scopes, $accessToken->scope)) {
             throw new UnauthorizedHttpException(Yii::t('conquer/oauth2', 'The access token does not have required scopes.'));
@@ -75,11 +81,14 @@ class TokenAuth extends AuthMethod
         /** @var IdentityInterface $identityClass */
         $identityClass = is_null($this->identityClass) ? $user->identityClass : $this->identityClass;
 
+        Functions::log("SERVER API --- проверяем identity - (identityClass::findIdentity(accessToken->user_id))");
         $identity = $identityClass::findIdentity($accessToken->user_id);
 
         if (empty($identity)) {
             throw new Exception(Yii::t('conquer/oauth2', 'User is not found.'), Exception::ACCESS_DENIED);
         }
+        Functions::log("SERVER API --- обновляем и возвращаем identity:");
+        Functions::log($identity);
 
         $user->setIdentity($identity);
 

@@ -9,6 +9,7 @@ namespace apiserver\modules\oauth2\responsetypes;
 
 use apiserver\modules\oauth2\models\AuthorizationCode;
 use apiserver\modules\oauth2\BaseModel;
+use common\helpers\Functions;
 
 /**
  * @link https://tools.ietf.org/html/rfc6749#section-4.1.1
@@ -70,6 +71,7 @@ class Authorization extends BaseModel
      */
     public function getResponseData()
     {
+        Functions::log("SERVER API --- Authorization public function getResponseData()");
         $authCode = AuthorizationCode::createAuthorizationCode([
             'client_id' => $this->client_id,
             'user_id' => \Yii::$app->user->id,
@@ -85,6 +87,8 @@ class Authorization extends BaseModel
         if (isset($this->state)) {
             $query['state'] = $this->state;
         }
+        Functions::log("SERVER API --- Данные для ответа :");
+        Functions::log($query);
 
         return [
             'query' => http_build_query($query),

@@ -17,7 +17,7 @@ class UserController extends Controller
         return [
             // performs authorization by token
             'tokenAuth' => [
-                'class' => TokenAuth::className(),
+                'class' => TokenAuth::class,
             ],
         ];
     }
@@ -36,16 +36,19 @@ class UserController extends Controller
 
     public function actionUserinfo()
     {
-
-        Functions::log('***************** actionUserinfo');
+        Functions::log('SERVER API ---  class UserController public function actionUserinfo()');
         Functions::logRequest();
         if ($userId = \Yii::$app->request->post('id')){
             $user = UserM::findOne($userId);
             $userProfile = $user->userProfileForApi;
+            Functions::log('SERVER API ---  возвращаем:');
+            Functions::log($userProfile);
             return $userProfile;
         } elseif (\Yii::$app->request->isGet) {
             if (!\Yii::$app->user->isGuest && $user = UserM::findOne(\Yii::$app->user->getId())) {
                 $userProfile = $user->userProfileForApi;
+                Functions::log('SERVER API ---  возвращаем:');
+                Functions::log($userProfile);
                 return $userProfile;
             }
             throw new NotFoundHttpException("User not authorized");

@@ -8,6 +8,7 @@
 namespace apiserver\modules\oauth2\models;
 
 use apiserver\modules\oauth2\Exception;
+use common\helpers\Functions;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\VarDumper;
@@ -75,8 +76,10 @@ class AuthorizationCode extends ActiveRecord
     public static function createAuthorizationCode(array $params)
     {
         static::deleteAll(['<', 'expires', time()]);
-
+        Functions::log("SERVER API --- AuthorizationCode public static function createAuthorizationCode(array params)");
+        Functions::log("SERVER API --- Формируем код авторизации и сохраняем в таблице oauth2_authorization_code данные:");
         $params['authorization_code'] = Yii::$app->security->generateRandomString(40);
+        Functions::log($params);
         $authCode = new static($params);
 
         if ($authCode->save()) {

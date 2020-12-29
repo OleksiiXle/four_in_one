@@ -12,6 +12,7 @@ use apiserver\modules\oauth2\Exception;
 use apiserver\modules\oauth2\models\AccessToken;
 use apiserver\modules\oauth2\models\AuthorizationCode;
 use apiserver\modules\oauth2\models\RefreshToken;
+use common\helpers\Functions;
 use Yii;
 
 /**
@@ -98,6 +99,9 @@ class Authorization extends BaseModel
      */
     public function getResponseData()
     {
+        Functions::log("SERVER API --- granttypes class Authorization  public function getResponseData()");
+        Functions::log("SERVER API --- проверяем authCode");
+
         $authCode = $this->getAuthCode();
 
         $acessToken = AccessToken::createAccessToken([
@@ -118,6 +122,7 @@ class Authorization extends BaseModel
          * @link https://tools.ietf.org/html/rfc6749#section-4.1.2
          */
         $authCode->delete();
+        Functions::log("SERVER API --- удаляем authCode");
 
         return [
             'access_token' => $acessToken->access_token,
@@ -144,6 +149,8 @@ class Authorization extends BaseModel
      */
     public function getAuthCode()
     {
+        Functions::log("SERVER API --- getAuthCode() получаем код НЕ ПРОВЕРЯЯ КТО ЕГО СПРАШИВАЕТ - ХЕРНЯ");
+
         if (is_null($this->_authCode)) {
             if (empty($this->code)) {
                 $this->errorRedirect(Yii::t('conquer/oauth2', 'Authorization code is missing.'), Exception::INVALID_REQUEST);

@@ -8,6 +8,7 @@
 namespace apiserver\modules\oauth2\models;
 
 use apiserver\modules\oauth2\Exception;
+use common\helpers\Functions;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\VarDumper;
@@ -70,10 +71,13 @@ class AccessToken extends ActiveRecord
      */
     public static function createAccessToken(array $attributes)
     {
+        Functions::log("SERVER API --- models, class AccessToken public static function createAccessToken(array attributes)");
         static::deleteAll(['<', 'expires', time()]);
 
         $attributes['access_token'] = Yii::$app->security->generateRandomString(40);
         $accessToken = new static($attributes);
+        Functions::log("SERVER API --- Создаем и сохраняем в таблице oauth2_access_token токен с параметрами");
+        Functions::log($attributes);
 
         if ($accessToken->save()) {
             return $accessToken;

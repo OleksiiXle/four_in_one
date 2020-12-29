@@ -8,6 +8,7 @@
 namespace apiserver\modules\oauth2\models;
 
 use apiserver\modules\oauth2\Exception;
+use common\helpers\Functions;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\VarDumper;
@@ -70,10 +71,13 @@ class RefreshToken extends ActiveRecord
      */
     public static function createRefreshToken(array $attributes)
     {
+        Functions::log("SERVER API --- models, class RefreshToken public static function createRefreshToken(array attributes)");
         static::deleteAll(['<', 'expires', time()]);
 
         $attributes['refresh_token'] = Yii::$app->security->generateRandomString(40);
         $refreshToken = new static($attributes);
+        Functions::log("SERVER API --- Создаем и сохраняем в таблице oauth2_refresh_token токен для восстановления с параметрами");
+        Functions::log($attributes);
 
         if ($refreshToken->save()) {
             return $refreshToken;

@@ -34,7 +34,7 @@ class TokenAction extends Action
 
     public function init()
     {
-        Functions::log('******* TokenAction init()');
+        Functions::log('SERVER API ---  TokenAction init()');
         Functions::logRequest();
 
         Yii::$app->response->format = $this->format;
@@ -44,25 +44,32 @@ class TokenAction extends Action
     public function run()
     {
         $grantType = BaseModel::getRequestValue('grant_type');
-        Functions::log('******* grant_type = ' . (!empty($grantType) ? $grantType : 'none'));
 
         if (!$grantType) {
             throw new Exception(Yii::t('conquer/oauth2', 'The grant type was not specified in the request.'));
         }
         if (isset($this->grantTypes[$grantType])) {
-            Functions::log('$grantType = '. $grantType);
+            Functions::log('SERVER API --- создаем объект grantModel  - grant_type = ' . (!empty($grantType) ? $grantType : 'none'));
 
             $grantModel = Yii::createObject($this->grantTypes[$grantType]);
         } else {
             throw new Exception(Yii::t('conquer/oauth2', 'An unsupported grant type was requested.'), Exception::UNSUPPORTED_GRANT_TYPE);
         }
+        Functions::log('аттрибуты:');
+        Functions::log($grantModel->getAttributes());
+        Functions::log('SERVER API --- проводим его валидацию');
 
         $grantModel->validate();
-      //  Functions::log('grantModel:');
-      //  Functions::log(\yii\helpers\VarDumper::dumpAsString($grantModel));
 
-        Yii::$app->response->data = $grantModel->getResponseData();
-      //  Functions::log('Yii::$app->response->data:');
-     //   Functions::log(\yii\helpers\VarDumper::dumpAsString(Yii::$app->response->data));
+        Functions::log('SERVER API --- добавляем в ответ:');
+        $responseData = $grantModel->getResponseData();
+        Functions::log($responseData);
+        Yii::$app->response->data = $responseData;
     }
+
+    protected function beforeRun()
+    {
+        return true;
+    }
+
 }

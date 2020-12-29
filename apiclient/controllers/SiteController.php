@@ -264,7 +264,9 @@ app\components\clients\Facebook#1
                 $model = new LoginForm();
                 if (Yii::$app->request->isPost) {
                     //-- login without api
+                    Functions::log('CLIENT --- Пришли данные для залогинивания на клиенте');
                     if ($model->load(Yii::$app->request->post()) && $model->login()){
+                        Functions::log('CLIENT --- Залогинились успешно, пытаемся залогинится на АПИ ' . $model->provider);
                         if ($model->provider != 'none') {
                             return $this->redirect(Url::toRoute(['auth', 'authclient' => $model->provider]));
                         } else {
@@ -275,6 +277,8 @@ app\components\clients\Facebook#1
                 }
 
                 $model->password = '';
+                Functions::log('CLIENT --- Выводим форму логина на клиенте');
+
                 return $this->render('login', [
                     'model' => $model,
                 ]);
