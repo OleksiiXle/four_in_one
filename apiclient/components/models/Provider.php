@@ -105,13 +105,16 @@ class Provider extends MainModel
 
     public static function getClientsList()
     {
+        $tmp = 1;
         $providers = static::find()
-            ->select(['client_id', 'name'])
+            ->select(['name'])
             ->asArray()
             ->all();
-        $ret = [];
+        $ret = [
+            'none' => 'Без АПИ'
+        ];
         foreach ($providers as $provider) {
-            $ret[$provider['client_id']] = $provider['name'];
+            $ret[(string)$provider['name']] = $provider['name'];
         }
         return $ret;
     }

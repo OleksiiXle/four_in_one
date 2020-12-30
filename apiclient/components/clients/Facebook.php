@@ -6,6 +6,8 @@ use Yii;
 use common\helpers\Functions;
 use yii\authclient\OAuth2;
 use yii\authclient\OAuthToken;
+use app\models\User;
+use app\models\UserToken;
 
 /**
  * Facebook allows authentication via Facebook OAuth.
@@ -83,6 +85,54 @@ class Facebook extends OAuth2
 
     public $errorMessage = 'Some errors';
 
+    public $signupUrl;
+    public $provider_id = 'facebook';
+    public $requestIsOk = false;
+    public $requestSendMessage = '';
+    public $requestSendCode = 0;
+
+    private $_fullClientId;
+
+    /**
+     * @var array authenticated user attributes.
+     */
+    private $_userAttributes;
+
+    /**
+     * Sends the given HTTP request, returning response data.
+     * @param \yii\httpclient\Request $request HTTP request to be sent.
+     * @return array response data.
+     * @throws InvalidResponseException on invalid remote response.
+     * @since 2.1
+     */
+    protected function sendRequest($request)
+    {
+        $this->errorMessage = '';
+        Functions::log("CLIENT --- ******* protected function sendRequest(request)");
+        $response = $request->send();
+        Functions::log("CLIENT --- response:");
+        Functions::log($response);
+
+        $this->requestIsOk = $response->getIsOk();
+        $this->requestSendCode = $response->getStatusCode();
+        if (!$this->requestIsOk) {
+            $responseData = $response->getData();
+            $this->requestSendMessage = 'Request failed with code:' . $this->requestSendCode . ' - ' . $responseData['name']
+                . '<br>' . str_replace(PHP_EOL, '<br>' , $responseData['message']);
+            return [];
+        }
+
+        return $response->getData();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFullClientId()
+    {
+        $this->_fullClientId = $this->getStateKeyPrefix() . '_token';
+        return $this->_fullClientId;
+    }
 
     /**
      * {@inheritdoc}
@@ -92,6 +142,91 @@ class Facebook extends OAuth2
         return $this->api('me', 'GET', [
             'fields' => implode(',', $this->attributeNames),
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchAccessToken($authCode, array $params = [], $user = null)
+    {
+        if ($user === null) {
+            $user_id = Yii::$app->user->getId();
+            $user = User::findOne($user_id);
+        }
+
+        Functions::log('CLIENT --- Получаем AccessToken');
+        Functions::log("CLIENT --- app\components\clients\\class Facebook extends OAuth2");
+        Functions::log("CLIENT --- protected function public function fetchAccessToken(authCode, array params = []):");
+        Functions::log("CLIENT --- authCode = $authCode");
+        Functions::log("CLIENT --- params :");
+        Functions::log($params);
+        if ($this->validateAuthState) {
+            Functions::log("CLIENT --- берем из сессии authState и сравниваем с пришедшим state");
+            $authState = $this->getState('authState');
+            Functions::log("CLIENT --- authState = $authState");
+            if (!isset($_REQUEST['state']) || empty($authState) || strcmp($_REQUEST['state'], $authState) !== 0) {
+                Functions::log("CLIENT --- authState не ОК");
+                $this->errorMessage = 'Invalid auth state parameter.';
+                return false;
+                //throw new HttpException(400, 'Invalid auth state parameter.');
+            } else {
+                $this->removeState('authState');
+            }
+            Functions::log("CLIENT --- пришло = " . $_REQUEST['state']);
+        }
+        Functions::log("CLIENT --- если authCode совпал - готовим запрос на получение токена:");
+        $defaultParams = [
+            'code' => $authCode,
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => $this->getReturnUrlForToken(),
+            //  'redirect_uri' => $this->getReturnUrl(),
+            //    'redirect_uri' => 'https://8a657ac5cc1f.ngrok.io/dstest/apiclient/site/auth?authclient=facebook',
+        ];
+        Functions::log("CLIENT --- подготовка запроса на получение токена");
+        Functions::log("CLIENT --- параметры запроса:");
+        Functions::log(array_merge($defaultParams, $params));
+
+        Functions::log("CLIENT --- формируем запрос:");
+        $request = $this->createRequest()
+            ->setMethod('POST')
+            ->setUrl($this->tokenUrl)
+            ->setData(array_merge($defaultParams, $params));
+        Functions::log((string)$request);
+
+        Functions::log("CLIENT --- добавляем в запрос свои clientId и clientSecret");
+
+        $this->applyClientCredentialsToRequest($request);
+        Functions::log("CLIENT --- добавляем в запрос ClientCredentials");
+        Functions::log("CLIENT --- данные запроса:");
+        Functions::log($request->getFullUrl());
+        Functions::log($request->getData());
+        //   Functions::log((string)$request);
+        Functions::log("CLIENT --- посылаем запрос на получение токена...");
+        $response = $this->sendRequest($request);
+
+        Functions::log("CLIENT --- Пришло:", true);
+        Functions::logRequest();
+
+        if (!$this->requestIsOk) {
+            if ($this->validateAuthState) {
+                $this->removeState('authState');
+            }
+            $this->errorMessage = $this->requestSendMessage;
+            return false;
+        }
+
+        $token = $this->createToken(['params' => $response]);
+        Functions::log("CLIENT --- получился токен - объект класса " . get_class($token) . " :");
+        Functions::log($token);
+
+        $this->setAccessToken($token);
+        Functions::log("CLIENT --- записываем его в сессию setState('token', token);");
+        //-----------
+        // $token = parent::fetchAccessToken($authCode, $params);
+        if ($this->autoExchangeAccessToken) {
+            $token = $this->exchangeAccessToken($token);
+        }
+        return true;
     }
 
     /**
@@ -137,99 +272,6 @@ class Facebook extends OAuth2
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function fetchAccessToken($authCode, array $params = [], $user = null)
-    {
-        Functions::log('CLIENT --- Получаем AccessToken');
-        Functions::log("CLIENT --- app\components\clients\\class Facebook extends OAuth2");
-        Functions::log("CLIENT --- protected function public function fetchAccessToken(authCode, array params = []):");
-        Functions::log("CLIENT --- authCode = $authCode");
-        Functions::log("CLIENT --- params :");
-        Functions::log($params);
-        if ($this->validateAuthState) {
-            Functions::log("CLIENT --- берем из сессии authState и сравниваем с пришедшим state");
-            $authState = $this->getState('authState');
-            Functions::log("CLIENT --- authState = $authState");
-            if (!isset($_REQUEST['state']) || empty($authState) || strcmp($_REQUEST['state'], $authState) !== 0) {
-                throw new HttpException(400, 'Invalid auth state parameter.');
-            } else {
-                $this->removeState('authState');
-            }
-            Functions::log("CLIENT --- пришло = " . $_REQUEST['state']);
-        }
-        Functions::log("CLIENT --- если authCode совпал - готовим запрос на получение токена:");
-        $defaultParams = [
-            'code' => $authCode,
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->getReturnUrlForToken(),
-          //  'redirect_uri' => $this->getReturnUrl(),
-        //    'redirect_uri' => 'https://8a657ac5cc1f.ngrok.io/dstest/apiclient/site/auth?authclient=facebook',
-        ];
-        Functions::log('CLIENT --- параметры запроса:');
-        Functions::log(array_merge($defaultParams, $params));
-
-        Functions::log("CLIENT --- формируем запрос:");
-        $request = $this->createRequest()
-            ->setMethod('POST')
-            ->setUrl($this->tokenUrl)
-            ->setData(array_merge($defaultParams, $params));
-        Functions::log((string)$request);
-
-        Functions::log("CLIENT --- добавляем в запрос свои clientId и clientSecret");
-
-        $this->applyClientCredentialsToRequest($request);
-        Functions::log("CLIENT --- получилось:");
-        Functions::log((string)$request);
-
-        Functions::log("CLIENT --- Отправляем запрос ...");
-        $response = $this->sendRequest($request);
-        Functions::log("CLIENT --- Пришло:", true);
-        Functions::logRequest();
-
-
-        $token = $this->createToken(['params' => $response]);
-        Functions::log("CLIENT --- получился токен - объект класса " . get_class($token) . " :");
-        Functions::log($token);
-
-        $this->setAccessToken($token);
-        Functions::log("CLIENT --- записываем его в сессию setState('token', token);");
-        //-----------
-       // $token = parent::fetchAccessToken($authCode, $params);
-        if ($this->autoExchangeAccessToken) {
-            $token = $this->exchangeAccessToken($token);
-        }
-        return $token;
-    }
-
-    /**
-     * Sends the given HTTP request, returning response data.
-     * @param \yii\httpclient\Request $request HTTP request to be sent.
-     * @return array response data.
-     * @throws InvalidResponseException on invalid remote response.
-     * @since 2.1
-     */
-    protected function sendRequest($request)
-    {
-        Functions::log("CLIENT --- ******* protected function sendRequest(request)");
-
-        $response = $request->send();
-        Functions::log("CLIENT --- response:");
-        Functions::log($response);
-
-
-        if (!$response->getIsOk()) {
-            Functions::log("CLIENT --- errors getStatusCode=" . $response->getStatusCode());
-            Functions::log(json_decode($response->getContent(), true));
-
-            throw new InvalidResponseException($response, 'Request failed with code: ' . $response->getStatusCode() . ', message: ' . $response->getContent());
-        }
-
-        return $response->getData();
-    }
-
-
-    /**
      * Creates token from its configuration.
      * @param array $tokenConfig token configuration.
      * @return OAuthToken token instance.
@@ -251,7 +293,6 @@ class Facebook extends OAuth2
 
         return Yii::createObject($tokenConfig);
     }
-
 
     /**
      * Exchanges short-live (2 hours) access token to long-live (60 days) one.
@@ -403,4 +444,15 @@ class Facebook extends OAuth2
         return $returnUrl;
     }
 
+    /**
+     * @return array list of user attributes
+     */
+    public function getUserAttributes()
+    {
+        if ($this->_userAttributes === null) {
+            $this->_userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
+        }
+
+        return $this->_userAttributes;
+    }
 }

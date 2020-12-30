@@ -4,6 +4,7 @@ namespace app\components;
 use Yii;
 use yii\base\Component;
 use yii\di\Instance;
+use yii\helpers\Url;
 use yii\httpclient\Client;
 use yii\httpclient\Request;
 use yii\helpers\VarDumper;
@@ -172,9 +173,11 @@ class XapiV1Client extends Component {
             $XapiAuthClient = $authCollection->getClient('xapi');
             $token = $XapiAuthClient->getAccessToken();
             if ($token) {
+                \yii::$app->getResponse()->redirect(Url::toRoute($this->authRedirect))->send();
+                \yii::$app->end();
                 $this->request->setHeaders(['Authorization' => 'Bearer ' . $token->params['access_token']]);
             } else {
-                \yii::$app->getResponse()->redirect($this->authRedirect)->send();
+                \yii::$app->getResponse()->redirect(Url::toRoute($this->authRedirect))->send();
                 \yii::$app->end();
            }
         }

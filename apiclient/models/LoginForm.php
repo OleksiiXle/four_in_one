@@ -37,7 +37,7 @@ class LoginForm extends Model
             [['username', 'password'], 'required'],
             ['username',  'string', 'min' => 3, 'max' => 50],
             ['password',  'string', 'min' => 3, 'max' => 50],
-            ['provider',  'string', 'min' => 3, 'max' => 50],
+            ['provider',  'string',  'max' => 50],
             [['username', 'password'], 'match', 'pattern' => self::USER_NAME_PASSWORD_PATTERN],
 
          //   ['password', 'match', 'pattern' =>  User::USER_PASSWORD_PATTERN, 'message' => User::USER_PASSWORD_ERROR_MESSAGE],
@@ -64,7 +64,7 @@ class LoginForm extends Model
 
     public static function providers()
     {
-        return array_merge(['none' => 'Без АПИ'], Provider::getClientsList());
+        return Provider::getClientsList();
     }
 
     public function login()

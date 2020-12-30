@@ -255,9 +255,9 @@ app\components\clients\Facebook#1
         }
 
      //  Functions::logRequest();
-        // https://672327fb4a6e.ngrok.io
-        // https://672327fb4a6e.ngrok.io/dstest/apiclient
-        // https://672327fb4a6e.ngrok.io/dstest/apiclient/site/auth?authclient=facebook
+        //  https://74b8ca35d403.ngrok.io
+        //  https://74b8ca35d403.ngrok.io/dstest/apiclient
+        //  https://74b8ca35d403.ngrok.io/dstest/apiclient/site/auth?authclient=facebook
 
         switch ($mode) {
             case 'withoutSignup':

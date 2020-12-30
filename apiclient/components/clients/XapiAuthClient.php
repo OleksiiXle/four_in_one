@@ -23,10 +23,11 @@ class XapiAuthClient extends OAuth2
     public $signupUrl;
     public $errorMessage = '';
     public $provider_id = 'xapi';
-    private $_fullClientId;
     public $requestIsOk = false;
     public $requestSendMessage = '';
     public $requestSendCode = 0;
+
+    private $_fullClientId;
 
     /**
      * @var array authenticated user attributes.
@@ -66,29 +67,6 @@ class XapiAuthClient extends OAuth2
         return $this->_fullClientId;
     }
 
-    /**
-     * Restores access token.
-     * @return OAuthToken auth token.
-     */
-    protected function restoreAccessToken()
-    {
-        $token = $this->getState('token');
-        if (!is_object($token)){
-            $token = $this->RestoreTokenFromDb();
-        }
-        if (is_object($token)) {
-            /* @var $token OAuthToken */
-            if ($token->getIsExpired() && $this->autoRefreshAccessToken) {
-                $token = $this->refreshAccessToken($token);
-            }
-        } else {
-            $token = $this->refreshAccessToken($token);
-           // return false;
-          //  throw new \Exception($this->errorMessage);
-        }
-        return $token;
-    }
-
     public function fetchAccessToken($authCode, array $params = [], User $user=null)
     {
         if ($user === null) {
@@ -103,7 +81,7 @@ class XapiAuthClient extends OAuth2
                 Functions::log("CLIENT --- authState не ОК");
                 $this->errorMessage = 'Invalid auth state parameter.';
                 return false;
-               // throw new HttpException(400, 'Invalid auth state parameter.');
+                // throw new HttpException(400, 'Invalid auth state parameter.');
             } else {
                 Functions::log("CLIENT --- authState ОК, удаляем старый из сессии");
                 $this->removeState('authState');
@@ -129,10 +107,14 @@ class XapiAuthClient extends OAuth2
         Functions::log("CLIENT --- данные запроса:");
         Functions::log($request->getFullUrl());
         Functions::log($request->getData());
-     //   Functions::log((string)$request);
+        //   Functions::log((string)$request);
         Functions::log("CLIENT --- посылаем запрос на получение токена...");
 
         $response = $this->sendRequest($request);
+        Functions::log("CLIENT --- обрабатываем ответ ...");
+        Functions::log("CLIENT --- пришло:");
+        Functions::log($response);
+
         if (!$this->requestIsOk) {
             if ($this->validateAuthState) {
                 $this->removeState('authState');
@@ -140,10 +122,6 @@ class XapiAuthClient extends OAuth2
             $this->errorMessage = $this->requestSendMessage;
             return false;
         }
-        Functions::log("CLIENT --- обрабатываем ответ ...");
-        Functions::log("CLIENT --- пришло:");
-        Functions::log($response);
-
         Functions::log("CLIENT --- пытаемся извлечь токен из того что пришло");
         $token = $this->createToken(['params' => $response]);
 
@@ -161,27 +139,49 @@ class XapiAuthClient extends OAuth2
         Functions::log("CLIENT --- обработка токена закончена");
 
         return true;
-/*
-        $r=1;
-        $userProfile = $this->api('/user/userinfo', 'POST', ['id' => $user->id] );
-        $tokenParams = [
-          'tokenParamKey' =>  $token->tokenParamKey,
-          'tokenSecretParamKey' =>  $token->tokenSecretParamKey,
-          'created_at' =>  $token->createTimestamp,
-          'expireDurationParamKey' =>  $token->expireDurationParamKey,
-          'access_token' =>  $token->getParam('access_token'),
-          'expires_in' =>  $token->getParam('expires_in'),
-          'token_type' =>  $token->getParam('token_type'),
-          'scope' =>  $token->getParam('scope'),
-          'refresh_token' =>  $token->getParam('refresh_token'),
-            ];
-*/
+        /*
+                $r=1;
+                $userProfile = $this->api('/user/userinfo', 'POST', ['id' => $user->id] );
+                $tokenParams = [
+                  'tokenParamKey' =>  $token->tokenParamKey,
+                  'tokenSecretParamKey' =>  $token->tokenSecretParamKey,
+                  'created_at' =>  $token->createTimestamp,
+                  'expireDurationParamKey' =>  $token->expireDurationParamKey,
+                  'access_token' =>  $token->getParam('access_token'),
+                  'expires_in' =>  $token->getParam('expires_in'),
+                  'token_type' =>  $token->getParam('token_type'),
+                  'scope' =>  $token->getParam('scope'),
+                  'refresh_token' =>  $token->getParam('refresh_token'),
+                    ];
+        */
         /*
         $r = $this->removeState('token');
         $token_ = $this->getState('token');
         $this->setAccessToken($token);
         $token_ = $this->getState('token');
         */
+    }
+    /**
+     * Restores access token.
+     * @return OAuthToken auth token.
+     */
+    protected function restoreAccessToken()
+    {
+        $token = $this->getState('token');
+        if (!is_object($token)){
+            $token = $this->RestoreTokenFromDb();
+        }
+        if (is_object($token)) {
+            /* @var $token OAuthToken */
+            if ($token->getIsExpired() && $this->autoRefreshAccessToken) {
+                $token = $this->refreshAccessToken($token);
+            }
+        } else {
+            return false;
+          //  $token = $this->refreshAccessToken($token);
+          //  throw new \Exception($this->errorMessage);
+        }
+        return $token;
     }
 
     /**
@@ -209,7 +209,7 @@ class XapiAuthClient extends OAuth2
         $token = $this->createToken(['params' => $response]);
         $this->setAccessToken($token);
 
-        if (!$this->storeTokenToDb($token, false, false)){
+        if (!$this->storeTokenToDb($token, false, true)){
             return false;
             throw new \Exception($this->errorMessage);
         }
@@ -414,5 +414,6 @@ class XapiAuthClient extends OAuth2
 
         return $this->_userAttributes;
     }
+
 
 }
