@@ -294,7 +294,9 @@ class User extends ActiveRecord implements IdentityInterface
         }
      //   $data = $token->getAttributes();
         if (!$token->save()){
-            throw new \Exception($token->showErrors());
+            $this->addError('id', $token->showErrors());
+            return false;
+          //  throw new \Exception($token->showErrors());
         }
         //-- обновляем профиль пользователя
         /*

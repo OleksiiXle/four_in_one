@@ -67,7 +67,7 @@ class XapiV1Client extends Component {
     public $authMessage;
     public $authMessageType   = "error";
     public $authCallback;
-    public $authRedirect      = '/site/login';
+    public $authRedirect      = 'apiclient/site/login';
     public $useDefAuthMessage = true;
 
     /** Permission error */
@@ -173,7 +173,10 @@ class XapiV1Client extends Component {
             $token = $XapiAuthClient->getAccessToken();
             if ($token) {
                 $this->request->setHeaders(['Authorization' => 'Bearer ' . $token->params['access_token']]);
-            }
+            } else {
+                \yii::$app->getResponse()->redirect($this->authRedirect)->send();
+                \yii::$app->end();
+           }
         }
         $this->response = $this->request->send();
 

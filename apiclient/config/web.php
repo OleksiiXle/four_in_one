@@ -11,6 +11,7 @@ $config = [
     'bootstrap' => ['log'],
  //   'defaultRoute' => 'adminxx',
     'language' => 'ru-RU',
+    'timeZone' => 'Europe/Kiev',
     'defaultRoute' => 'post',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',

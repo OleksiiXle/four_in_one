@@ -388,10 +388,9 @@ class AuthAction extends Action
             $code = $_GET['code'];
             Functions::log("CLIENT --- !!!!!! пришел code=$code");
             Functions::log("CLIENT --- пытаемся извлечь AccessToken... ");
-            $token = $client->fetchAccessToken($code);
             Functions::log("CLIENT --- вернулись в protected function authOAuth2(client)");
 
-            if (!empty($token)) {
+            if ($client->fetchAccessToken($code)) {
                 Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
                 return $this->authSuccess($client);
             } else {

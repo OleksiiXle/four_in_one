@@ -9,6 +9,7 @@ namespace apiserver\modules\oauth2\granttypes;
 
 use apiserver\modules\oauth2\BaseModel;
 use apiserver\modules\oauth2\models\AccessToken;
+use common\helpers\Functions;
 use Yii;
 
 /**
@@ -71,6 +72,9 @@ class RefreshToken extends BaseModel
      */
     public function getResponseData()
     {
+        Functions::log("SERVER API --- granttypes class RefreshToken  public function getResponseData()");
+        Functions::log("SERVER API --- обновление токена на основе refreshToken");
+
         $refreshToken = $this->getRefreshToken();
 
         $acessToken = AccessToken::createAccessToken([
@@ -89,13 +93,16 @@ class RefreshToken extends BaseModel
             'scope' => $refreshToken->scope,
         ]);
 
-        return [
+        $ret = [
             'access_token' => $acessToken->access_token,
             'expires_in' => $this->accessTokenLifetime,
             'token_type' => $this->tokenType,
             'scope' => $refreshToken->scope,
             'refresh_token' => $refreshToken->refresh_token,
         ];
+        Functions::log("SERVER API --- обновление токена на основе refreshToken, данные на отправку:");
+        Functions::log($ret);
+        return $ret;
     }
 
     /**

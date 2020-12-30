@@ -1,0 +1,726 @@
+CLIENT --- Выводим форму логина на клиенте
+CLIENT --- Пришли данные для залогинивания на клиенте
+CLIENT --- Залогинились успешно, пытаемся залогинится на АПИ xapi
+CLIENT --- *****************
+
+CLIENT --- Формируем buildAuthUrl :
+CLIENT --- authUrl : http://192.168.33.11/dstest/apiserver/oauth2/auth/index?
+       client_id=xapi&
+       response_type=code&
+       redirect_uri=http%3A%2F%2F192.168.33.11%2Fdstest%2Fapiclient%2Fsite%2Fauth%3Fauthclient%3Dxapi&
+       xoauth_displayname=My%20Application&
+       state=13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1
+CLIENT --- state запоминаем в сессию
+CLIENT --- rediretc to authUrl...
+CLIENT --- ***********************************************************************
+
+SERVER API --- REQUEST
+Array
+(
+    [METHOD] => GET
+    [QUERY_PARAMS] => Array
+        (
+            [client_id] => xapi
+            [response_type] => code
+            [redirect_uri] => http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi
+            [xoauth_displayname] => My Application
+            [state] => 13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1
+        )
+
+)
+
+SERVER API --- выводим форму для логина ...
+
+SERVER API --- пришло
+Array
+(
+    [METHOD] => POST
+    [QUERY_PARAMS] => Array
+        (
+            [client_id] => xapi
+            [response_type] => code
+            [redirect_uri] => http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi
+            [xoauth_displayname] => My Application
+            [state] => 13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1
+        )
+
+    [POST_DATA] => Array
+        (
+            [_csrf] => rzVLPlCzotdfffGd27MJmoa2fg8CJ69EAF3ZUAY9WDHhZ3pxIseakw41wuqdh2uiwvk_emNxlyZBN7gaPlJgBQ==
+            [LoginForm] => Array
+                (
+                    [username] => adminSuper
+                    [password] => 1234567890
+                )
+
+            [login-button] => 
+        )
+
+)
+
+
+SERVER API --- Пришло responseType=code -> Создаем объект...
+SERVER API --- attributes:
+[
+    'response_type' => 'code'
+    'client_id' => 'xapi'
+    'redirect_uri' => 'http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi'
+    'scope' => null
+    'state' => '13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1'
+    'tokenType' => 'bearer'
+    'authCodeLifetime' => 30
+    'accessTokenLifetime' => 3600
+    'refreshTokenLifetime' => 1209600
+]
+SERVER API --- Создали объект code
+SERVER API --- валидация code
+SERVER API --- прошла
+SERVER API --- записываем сериализованый responseType в сессию     (зачем хз?)
+
+******* 29.12.2020 08:46
+SERVER API --- AuthController public function actionIndex()
+SERVER API --- пришла заполненная форма логина
+SERVER API --- пользователь залогинился ОК
+
+
+SERVER API --- Формируем код авторизации и сохраняем в таблице oauth2_authorization_code данные:
+[
+    'client_id' => 'xapi'
+    'user_id' => 1
+    'expires' => 1609231612
+    'scope' => null
+    'redirect_uri' => 'http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi'
+    'authorization_code' => 'uKfKq3aqFf2GEVGpxwQI1yXWmED1sE6fNXb00Lu4'
+]
+SERVER API --- Данные для ответа :
+[
+    'code' => 'uKfKq3aqFf2GEVGpxwQI1yXWmED1sE6fNXb00Lu4'
+    'state' => '13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1'
+]
+
+SERVER API --- формируем redirectUri = http://192.168.33.11/dstest/apiclient/site/auth?
+       authclient=xapi&
+       code=uKfKq3aqFf2GEVGpxwQI1yXWmED1sE6fNXb00Lu4&
+       state=13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1
+SERVER API --- редиректимся на redirectUri ...
+
+
+CLIENT --- *****************
+
+CLIENT ---  REQUEST
+Array
+(
+    [METHOD] => GET
+    [QUERY_PARAMS] => Array
+        (
+            [authclient] => xapi
+            [code] => oaJFaCBDuRE4xSZYAIozaWdfVI8SyTqyoPLM_0kh
+            [state] => 13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1
+        )
+
+)
+
+CLIENT --- !!!!!! пришел code=oaJFaCBDuRE4xSZYAIozaWdfVI8SyTqyoPLM_0kh
+CLIENT --- пытаемся извлечь AccessToken... 
+CLIENT --- проверяем authState = 13d5c7c1f46f2acf8042e0296d0cb03001c7edc8721b66addd06dd1a654da9d1
+CLIENT --- authState ОК, удаляем старый из сессии
+
+CLIENT --- подготовка запроса на получение токена
+CLIENT --- параметры запроса:
+[
+    'code' => 'oaJFaCBDuRE4xSZYAIozaWdfVI8SyTqyoPLM_0kh'
+    'grant_type' => 'authorization_code'
+    'redirect_uri' => 'http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi'
+]
+CLIENT --- добавляем в запрос ClientCredentials
+CLIENT --- данные запроса:
+http://192.168.33.11/dstest/apiserver/oauth2/auth/token
+[
+    'code' => 'oaJFaCBDuRE4xSZYAIozaWdfVI8SyTqyoPLM_0kh'
+    'grant_type' => 'authorization_code'
+    'redirect_uri' => 'http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi'
+    'client_id' => 'xapi'
+    'client_secret' => '123'
+]
+CLIENT --- посылаем запрос на получение токена...
+
+
+SERVER API ---  REQUEST
+Array
+(
+    [METHOD] => POST
+    [QUERY_PARAMS] => Array
+        (
+        )
+
+    [POST_DATA] => Array
+        (
+            [code] => oaJFaCBDuRE4xSZYAIozaWdfVI8SyTqyoPLM_0kh
+            [grant_type] => authorization_code
+            [redirect_uri] => http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi
+            [client_id] => xapi
+            [client_secret] => 123
+        )
+
+)
+
+
+SERVER API --- создаем объект grantModel  - grant_type = authorization_code
+
+аттрибуты:
+[
+    'grant_type' => 'authorization_code'
+    'code' => 'oaJFaCBDuRE4xSZYAIozaWdfVI8SyTqyoPLM_0kh'
+    'redirect_uri' => 'http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi'
+    'client_id' => 'xapi'
+    'scope' => null
+    'tokenType' => 'bearer'
+    'authCodeLifetime' => 30
+    'accessTokenLifetime' => 3600
+    'refreshTokenLifetime' => 1209600
+]
+SERVER API --- проводим его валидацию
+SERVER API --- getAuthCode() получаем код НЕ ПРОВЕРЯЯ КТО ЕГО СПРАШИВАЕТ - ХЕРНЯ
+
+SERVER API --- Создаем и сохраняем в таблице oauth2_access_token токен с параметрами
+[
+    'client_id' => 'xapi'
+    'user_id' => 1
+    'expires' => 1609235183
+    'scope' => null
+    'access_token' => 'BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R'
+]
+
+SERVER API --- Создаем и сохраняем в таблице oauth2_refresh_token токен для восстановления с параметрами
+[
+    'client_id' => 'xapi'
+    'user_id' => 1
+    'expires' => 1610441183
+    'scope' => null
+    'refresh_token' => 'MjXwcnXO-Rurh9wqsF2fR6zqZXmBVyA520OFvFOp'
+]
+
+SERVER API --- удаляем authCode
+[
+    'access_token' => 'BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R'
+    'expires_in' => 3600
+    'token_type' => 'bearer'
+    'scope' => null
+    'refresh_token' => 'MjXwcnXO-Rurh9wqsF2fR6zqZXmBVyA520OFvFOp'
+]
+
+CLIENT --- обрабатываем ответ ...
+CLIENT --- пришло:
+[
+    'access_token' => 'BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R'
+    'expires_in' => 3600
+    'token_type' => 'bearer'
+    'scope' => null
+    'refresh_token' => 'MjXwcnXO-Rurh9wqsF2fR6zqZXmBVyA520OFvFOp'
+]
+CLIENT --- пытаемся извлечь токен из того что пришло
+CLIENT --- сохраняем токен в сессию
+CLIENT --- сохраняем токен в БД
+CLIENT --- запрашиваем у сервера профиль юсера
+CLIENT --- apiSubUrl = /user/userinfo
+CLIENT --- method = POST
+CLIENT --- data:
+[
+    'id' => 1
+]
+CLIENT --- отправляем ...
+
+
+SERVER API --- Проверка токена:
+Array
+(
+    [METHOD] => POST
+    [POST_DATA] => Array
+        (
+            [id] => 1
+            [access_token] => BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R
+        )
+
+)
+
+SERVER API --- ищем токен везде в запросе ...
+SERVER API --- headerToken = 
+SERVER API --- postToken = BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R
+SERVER API --- getToken = 
+
+SERVER API --- проверяем identity - (identityClass::findIdentity(accessToken->user_id))
+SERVER API --- обновляем и возвращаем identity:
+common\models\User#1
+(
+    [common\models\User:_user] => false
+    [yii\db\BaseActiveRecord:_attributes] => [
+        'id' => 1
+        'username' => 'adminSuper'
+        'auth_key' => 'Rdm546AIfiSzw9Ovr2kB8HbSWiwVOyz7'
+        'password_hash' => '$2y$13$1SO2.sR2MQ8yUyiiIEDo0.Z.0HOsaljzDo.ePIFK78UElVlRnQMZy'
+        'password_reset_token' => null
+        'email' => 'adminSuper@email.com'
+        'status' => 10
+        'refresh_permissions' => 0
+        'created_at' => 1607057027
+        'updated_at' => 1608540543
+        'created_by' => 0
+        'updated_by' => 1
+        'email_confirm_token' => null
+        'verification_token' => null
+
+
+SERVER API ---  возвращаем:
+[
+    'id' => 1
+    'status' => 10
+    'username' => 'adminSuper'
+    'last_name' => 'Все'
+    'first_name' => 'Демиург'
+    'middle_name' => 'Может'
+    'email' => 'adminSuper@email.com'
+    'permissions' => [
+        'adminSuper' => ''
+        'adminSystem' => ''
+        'user' => ''
+        'adminUsers' => ''
+        'adminUsersAdvanced' => ''
+        'adminAuthItemCRUD' => ''
+        'adminAuthItemList' => ''
+        'adminConfigUpdate' => ''
+        'adminGuestControl' => ''
+        'adminGuestControlDelete' => ''
+        'adminMenuEdit' => ''
+        'adminUsersView' => ''
+        'adminUserView' => ''
+        'menuAdminAuthItemList' => ''
+        'menuAdminConfigUpdate' => ''
+        'menuAdminGuestControl' => ''
+        'menuAdminMenuEdit' => ''
+        'menuAdminTranslateUpdate' => ''
+        'menuAdminUsersView' => ''
+        'menuAdminxMain' => ''
+        'adminChangeUserActivity' => ''
+        'adminChangeUserAssignments' => ''
+        'adminTranslateUpdate' => ''
+        'adminUserCreate' => ''
+        'adminUserUpdate' => ''
+        'menuAll' => ''
+        'postCRUD' => ''
+    ]
+    'userRBACVersion' => 1609231583
+    'updated_at' => 1608540543
+]
+CLIENT --- получили ответ:
+[
+    'id' => 1
+    'status' => 10
+    'username' => 'adminSuper'
+    'last_name' => 'Все'
+    'first_name' => 'Демиург'
+    'middle_name' => 'Может'
+    'email' => 'adminSuper@email.com'
+    'permissions' => [
+        'adminSuper' => ''
+        'adminSystem' => ''
+        'user' => ''
+        'adminUsers' => ''
+        'adminUsersAdvanced' => ''
+        'adminAuthItemCRUD' => ''
+        'adminAuthItemList' => ''
+        'adminConfigUpdate' => ''
+        'adminGuestControl' => ''
+        'adminGuestControlDelete' => ''
+        'adminMenuEdit' => ''
+        'adminUsersView' => ''
+        'adminUserView' => ''
+        'menuAdminAuthItemList' => ''
+        'menuAdminConfigUpdate' => ''
+        'menuAdminGuestControl' => ''
+        'menuAdminMenuEdit' => ''
+        'menuAdminTranslateUpdate' => ''
+        'menuAdminUsersView' => ''
+        'menuAdminxMain' => ''
+        'adminChangeUserActivity' => ''
+        'adminChangeUserAssignments' => ''
+        'adminTranslateUpdate' => ''
+        'adminUserCreate' => ''
+        'adminUserUpdate' => ''
+        'menuAll' => ''
+        'postCRUD' => ''
+    ]
+    'userRBACVersion' => 1609231583
+    'updated_at' => 1608540543
+]
+CLIENT --- обработка токена закончена
+
+CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...
+
+******* 29.12.2020 08:46
+CLIENT --- app\controllers\ class SiteController extends Controller
+CLIENT ---  public function onAuthSuccess(client)
+CLIENT --- ******************************onAuthSuccess   $client:
+app\components\clients\XapiAuthClient#1
+(
+    [signupUrl] => 'http://192.168.33.11/dstest/apiserver/oauth2/auth/signup'
+    [errorMessage] => ''
+    [provider_id] => 'xapi'
+    [app\components\clients\XapiAuthClient:_fullClientId] => null
+    [app\components\clients\XapiAuthClient:_userAttributes] => null
+    [version] => '2.0'
+    [clientId] => 'xapi'
+    [clientSecret] => '123'
+    [tokenUrl] => 'http://192.168.33.11/dstest/apiserver/oauth2/auth/token'
+    [validateAuthState] => true
+    [apiBaseUrl] => 'http://192.168.33.11/dstest/apiserver/v1'
+    [authUrl] => 'http://192.168.33.11/dstest/apiserver/oauth2/auth/index'
+    [scope] => null
+    [autoRefreshAccessToken] => true
+    [yii\authclient\BaseOAuth:_returnUrl] => 'http://192.168.33.11/dstest/apiclient/site/auth?authclient=xapi'
+    [yii\authclient\BaseOAuth:_accessToken] => yii\authclient\OAuthToken#2
+    (
+        [tokenParamKey] => 'access_token'
+        [tokenSecretParamKey] => 'oauth_token_secret'
+        [createTimestamp] => 1609231583
+        [yii\authclient\OAuthToken:_expireDurationParamKey] => 'expires_in'
+        [yii\authclient\OAuthToken:_params] => [
+            'access_token' => 'BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R'
+            'expires_in' => 3600
+            'token_type' => 'bearer'
+            'scope' => null
+            'refresh_token' => 'MjXwcnXO-Rurh9wqsF2fR6zqZXmBVyA520OFvFOp'
+        ]
+    )
+    [yii\authclient\BaseOAuth:_signatureMethod] => []
+    [yii\authclient\BaseClient:_id] => 'xapi'
+    [yii\authclient\BaseClient:_name] => null
+    [yii\authclient\BaseClient:_title] => null
+    [yii\authclient\BaseClient:_normalizeUserAttributeMap] => null
+    [yii\authclient\BaseClient:_viewOptions] => null
+    [yii\authclient\BaseClient:_httpClient] => yii\httpclient\Client#3
+    (
+        [baseUrl] => 'http://192.168.33.11/dstest/apiserver/v1'
+        [formatters] => [
+            'urlencoded' => yii\httpclient\UrlEncodedFormatter#4
+            (
+                [encodingType] => 1
+                [charset] => null
+            )
+        ]
+        [parsers] => [
+            'json' => yii\httpclient\JsonParser#5
+            (
+                [asArray] => true
+            )
+        ]
+        [requestConfig] => []
+        [responseConfig] => []
+        [contentLoggingMaxSize] => 2000
+        [yii\httpclient\Client:_transport] => yii\httpclient\StreamTransport#6
+        (
+            [yii\base\Component:_events] => []
+            [yii\base\Component:_eventWildcards] => []
+            [yii\base\Component:_behaviors] => null
+        )
+        [yii\base\Component:_events] => []
+        [yii\base\Component:_eventWildcards] => []
+        [yii\base\Component:_behaviors] => []
+    )
+    [yii\authclient\BaseClient:_requestOptions] => []
+    [yii\authclient\BaseClient:_stateStorage] => app\components\XapiStateStorage#7
+    (
+        [session] => yii\web\Session#8
+        (
+            [flashParam] => '__flash'
+            [handler] => null
+            [*:_forceRegenerateId] => null
+            [yii\web\Session:_cookieParams] => [
+                'httponly' => true
+            ]
+            [yii\web\Session:frozenSessionData] => null
+            [yii\web\Session:_hasSessionId] => true
+            [yii\base\Component:_events] => []
+            [yii\base\Component:_eventWildcards] => []
+            [yii\base\Component:_behaviors] => null
+        )
+        [yii\base\Component:_events] => []
+        [yii\base\Component:_eventWildcards] => []
+        [yii\base\Component:_behaviors] => null
+    )
+    [yii\base\Component:_events] => []
+    [yii\base\Component:_eventWildcards] => []
+    [yii\base\Component:_behaviors] => null
+    [yii\authclient\BaseClient:_userAttributes] => null
+)
+CLIENT --- пытаемся получить   $client->getUserAttributes()
+CLIENT --- public function api(apiSubUrl, method = 'GET', data = [], headers = [])
+CLIENT --- apiSubUrl = user/userinfo
+CLIENT --- method = GET
+CLIENT --- data:
+[]
+CLIENT --- отправляем ...
+SERVER API --- class TokenAuth extends AuthMethod, public function authenticate(user, request, response)
+SERVER API --- Проверка токена:
+SERVER API --- AccessTokenExtractor
+*** REQUEST *** 29.12.2020 08:46
+Array
+(
+    [METHOD] => GET
+    [QUERY_PARAMS] => Array
+        (
+            [access_token] => BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R
+        )
+
+)
+
+SERVER API --- ищем токен везде в запросе ...
+SERVER API --- headerToken = 
+SERVER API --- postToken = 
+SERVER API --- getToken = BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R
+SERVER API --- токен:
+apiserver\modules\oauth2\models\AccessToken#1
+(
+    [yii\db\BaseActiveRecord:_attributes] => [
+        'access_token' => 'BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R'
+        'client_id' => 'xapi'
+        'user_id' => 1
+        'expires' => 1609235183
+        'scope' => null
+    ]
+    [yii\db\BaseActiveRecord:_oldAttributes] => [
+        'access_token' => 'BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R'
+        'client_id' => 'xapi'
+        'user_id' => 1
+        'expires' => 1609235183
+        'scope' => null
+    ]
+    [yii\db\BaseActiveRecord:_related] => []
+    [yii\db\BaseActiveRecord:_relationsDependencies] => []
+    [yii\base\Model:_errors] => null
+    [yii\base\Model:_validators] => null
+    [yii\base\Model:_scenario] => 'default'
+    [yii\base\Component:_events] => []
+    [yii\base\Component:_eventWildcards] => []
+    [yii\base\Component:_behaviors] => []
+)
+SERVER API --- проверяем identity - (identityClass::findIdentity(accessToken->user_id))
+SERVER API --- обновляем и возвращаем identity:
+common\models\User#1
+(
+    [common\models\User:_user] => false
+    [yii\db\BaseActiveRecord:_attributes] => [
+        'id' => 1
+        'username' => 'adminSuper'
+        'auth_key' => 'Rdm546AIfiSzw9Ovr2kB8HbSWiwVOyz7'
+        'password_hash' => '$2y$13$1SO2.sR2MQ8yUyiiIEDo0.Z.0HOsaljzDo.ePIFK78UElVlRnQMZy'
+        'password_reset_token' => null
+        'email' => 'adminSuper@email.com'
+        'status' => 10
+        'refresh_permissions' => 0
+        'created_at' => 1607057027
+        'updated_at' => 1608540543
+        'created_by' => 0
+        'updated_by' => 1
+        'email_confirm_token' => null
+        'verification_token' => null
+    ]
+    [yii\db\BaseActiveRecord:_oldAttributes] => [
+        'id' => 1
+        'username' => 'adminSuper'
+        'auth_key' => 'Rdm546AIfiSzw9Ovr2kB8HbSWiwVOyz7'
+        'password_hash' => '$2y$13$1SO2.sR2MQ8yUyiiIEDo0.Z.0HOsaljzDo.ePIFK78UElVlRnQMZy'
+        'password_reset_token' => null
+        'email' => 'adminSuper@email.com'
+        'status' => 10
+        'refresh_permissions' => 0
+        'created_at' => 1607057027
+        'updated_at' => 1608540543
+        'created_by' => 0
+        'updated_by' => 1
+        'email_confirm_token' => null
+        'verification_token' => null
+    ]
+    [yii\db\BaseActiveRecord:_related] => []
+    [yii\db\BaseActiveRecord:_relationsDependencies] => []
+    [yii\base\Model:_errors] => null
+    [yii\base\Model:_validators] => null
+    [yii\base\Model:_scenario] => 'default'
+    [yii\base\Component:_events] => [
+        'beforeInsert' => [
+            0 => [
+                0 => [
+                    0 => yii\behaviors\TimestampBehavior#2
+                    (
+                        [createdAtAttribute] => 'created_at'
+                        [updatedAtAttribute] => 'updated_at'
+                        [value] => null
+                        [attributes] => [
+                            'beforeInsert' => [
+                                0 => 'created_at'
+                                1 => 'updated_at'
+                            ]
+                            'beforeUpdate' => 'updated_at'
+                        ]
+                        [skipUpdateOnClean] => true
+                        [preserveNonEmptyValues] => false
+                        [owner] => common\models\User#1(...)
+                        [yii\base\Behavior:_attachedEvents] => [
+                            'beforeInsert' => 'evaluateAttributes'
+                            'beforeUpdate' => 'evaluateAttributes'
+                        ]
+                    )
+                    1 => 'evaluateAttributes'
+                ]
+                1 => null
+            ]
+        ]
+        'beforeUpdate' => [
+            0 => [
+                0 => [
+                    0 => yii\behaviors\TimestampBehavior#2(...)
+                    1 => 'evaluateAttributes'
+                ]
+                1 => null
+            ]
+        ]
+    ]
+    [yii\base\Component:_eventWildcards] => []
+    [yii\base\Component:_behaviors] => [
+        0 => yii\behaviors\TimestampBehavior#2(...)
+    ]
+)
+SERVER API ---  class UserController public function actionUserinfo()
+*** REQUEST *** 29.12.2020 08:46
+Array
+(
+    [METHOD] => GET
+    [QUERY_PARAMS] => Array
+        (
+            [access_token] => BmzA0wV0c60dlNXz0_9CoXn15XnKqLPeVZY70a0R
+        )
+
+)
+
+SERVER API ---  возвращаем:
+[
+    'id' => 1
+    'status' => 10
+    'username' => 'adminSuper'
+    'last_name' => 'Все'
+    'first_name' => 'Демиург'
+    'middle_name' => 'Может'
+    'email' => 'adminSuper@email.com'
+    'permissions' => [
+        'adminSuper' => ''
+        'adminSystem' => ''
+        'user' => ''
+        'adminUsers' => ''
+        'adminUsersAdvanced' => ''
+        'adminAuthItemCRUD' => ''
+        'adminAuthItemList' => ''
+        'adminConfigUpdate' => ''
+        'adminGuestControl' => ''
+        'adminGuestControlDelete' => ''
+        'adminMenuEdit' => ''
+        'adminUsersView' => ''
+        'adminUserView' => ''
+        'menuAdminAuthItemList' => ''
+        'menuAdminConfigUpdate' => ''
+        'menuAdminGuestControl' => ''
+        'menuAdminMenuEdit' => ''
+        'menuAdminTranslateUpdate' => ''
+        'menuAdminUsersView' => ''
+        'menuAdminxMain' => ''
+        'adminChangeUserActivity' => ''
+        'adminChangeUserAssignments' => ''
+        'adminTranslateUpdate' => ''
+        'adminUserCreate' => ''
+        'adminUserUpdate' => ''
+        'menuAll' => ''
+        'postCRUD' => ''
+    ]
+    'userRBACVersion' => 1609231583
+    'updated_at' => 1608540543
+]
+CLIENT --- получили ответ:
+[
+    'id' => 1
+    'status' => 10
+    'username' => 'adminSuper'
+    'last_name' => 'Все'
+    'first_name' => 'Демиург'
+    'middle_name' => 'Может'
+    'email' => 'adminSuper@email.com'
+    'permissions' => [
+        'adminSuper' => ''
+        'adminSystem' => ''
+        'user' => ''
+        'adminUsers' => ''
+        'adminUsersAdvanced' => ''
+        'adminAuthItemCRUD' => ''
+        'adminAuthItemList' => ''
+        'adminConfigUpdate' => ''
+        'adminGuestControl' => ''
+        'adminGuestControlDelete' => ''
+        'adminMenuEdit' => ''
+        'adminUsersView' => ''
+        'adminUserView' => ''
+        'menuAdminAuthItemList' => ''
+        'menuAdminConfigUpdate' => ''
+        'menuAdminGuestControl' => ''
+        'menuAdminMenuEdit' => ''
+        'menuAdminTranslateUpdate' => ''
+        'menuAdminUsersView' => ''
+        'menuAdminxMain' => ''
+        'adminChangeUserActivity' => ''
+        'adminChangeUserAssignments' => ''
+        'adminTranslateUpdate' => ''
+        'adminUserCreate' => ''
+        'adminUserUpdate' => ''
+        'menuAll' => ''
+        'postCRUD' => ''
+    ]
+    'userRBACVersion' => 1609231583
+    'updated_at' => 1608540543
+]
+CLIENT --- $client->getUserAttributes():
+[
+    'id' => 1
+    'status' => 10
+    'username' => 'adminSuper'
+    'last_name' => 'Все'
+    'first_name' => 'Демиург'
+    'middle_name' => 'Может'
+    'email' => 'adminSuper@email.com'
+    'permissions' => [
+        'adminSuper' => ''
+        'adminSystem' => ''
+        'user' => ''
+        'adminUsers' => ''
+        'adminUsersAdvanced' => ''
+        'adminAuthItemCRUD' => ''
+        'adminAuthItemList' => ''
+        'adminConfigUpdate' => ''
+        'adminGuestControl' => ''
+        'adminGuestControlDelete' => ''
+        'adminMenuEdit' => ''
+        'adminUsersView' => ''
+        'adminUserView' => ''
+        'menuAdminAuthItemList' => ''
+        'menuAdminConfigUpdate' => ''
+        'menuAdminGuestControl' => ''
+        'menuAdminMenuEdit' => ''
+        'menuAdminTranslateUpdate' => ''
+        'menuAdminUsersView' => ''
+        'menuAdminxMain' => ''
+        'adminChangeUserActivity' => ''
+        'adminChangeUserAssignments' => ''
+        'adminTranslateUpdate' => ''
+        'adminUserCreate' => ''
+        'adminUserUpdate' => ''
+        'menuAll' => ''
+        'postCRUD' => ''
+    ]
+    'userRBACVersion' => 1609231583
+    'updated_at' => 1608540543
+]

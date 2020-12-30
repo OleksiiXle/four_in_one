@@ -1,14 +1,15 @@
 <?php
 namespace apiserver\modules\oauth2\models;
 
+use common\models\MainModel;
 use common\models\User;
 use Yii;
-use yii\base\Model;
+use yii\web\BadRequestHttpException;
 
 /**
  * Login form
  */
-class LoginForm extends Model
+class LoginForm extends MainModel
 {
     public $username;
     public $password;
@@ -57,17 +58,8 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-          //  \yii::trace('************************************************ login validate OK', "dbg");
-           // return false;
-
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
-        } else {
-          //  \yii::trace('************************************************ login validate NONE', "dbg");
-          //  \yii::trace(\yii\helpers\VarDumper::dumpAsString($this->getErrors()), "dbg");
-
-
         }
-        
         return false;
     }
 
