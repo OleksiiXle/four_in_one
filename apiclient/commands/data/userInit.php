@@ -3,54 +3,15 @@ return [
     [
         'username' => 'adminSuper',
         'email' => 'adminSuper@email.com',
-        'password' => '1234567890',
-        'retypePassword' => '1234567890',
+        'password' => 'jopapolnaya',
+        'retypePassword' => 'jopapolnaya',
         'first_name' => 'Демиург',
-        'middle_name' => 'Демиург',
-        'last_name' => 'Демиург',
+        'middle_name' => 'Может',
+        'last_name' => 'Все',
         'userRoles' => [
             'adminSuper'
         ],
     ],
-    [
-        'username' => 'adminSystem',
-        'email' => 'adminSystem@email.com',
-        'password' => '1234567890',
-        'retypePassword' => '1234567890',
-        'first_name' => 'Администратор',
-        'middle_name' => 'Технический',
-        'last_name' => 'Системный',
-        'userRoles' => [
-            'adminSystem'
-        ],
-    ],
-    [
-        'username' => 'adminUsers',
-        'email' => 'adminUsers@email.com',
-        'password' => '1234567890',
-        'retypePassword' => '1234567890',
-        'first_name' => 'Администратор',
-        'middle_name' => 'Системный',
-        'last_name' => 'Поперсоналу',
-        'userRoles' => [
-            'adminUsers'
-        ],
-    ],
-    [
-        'username' => 'adminUsersAdvanced',
-        'email' => 'adminUsersAdvanced@email.com',
-        'password' => '1234567890',
-        'retypePassword' => '1234567890',
-        'first_name' => 'Администратор',
-        'middle_name' => 'Расширенный',
-        'last_name' => 'Поперсоналу',
-        'userRoles' => [
-            'adminUsersAdvanced'
-        ],
-    ],
-
-
-
     [
         'username' => 'user1',
         'email' => 'user1@email.com',

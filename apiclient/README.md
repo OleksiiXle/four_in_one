@@ -2,31 +2,30 @@
 
 composer update
 
-mysql -u root -p
+1. mysql -u root -p
 CREATE DATABASE xle_client;
 EXIT;
 
-php yii migrate
+добавить имена баз данных и пароли в config
 
-1. Добавить недостающие разрешения и роли (из консоли)
+2. php yii migrate
+
+3. Наполнение баз данных тестовыми данными
+   php yii init/add-data
+   (если надо очистить предварительно таблицы - php yii init/remove-data)
+
+По отдельности (при необходимости):
    php yii adminxx/common-roles-init
-
-2. Инициализировать новое меню (из консоли), старое - останется.
    php yii adminxx/menu-init
-   
-3. Инициализировать дефолтных пользователей.
    php yii adminxx/users-init
+   php yii translate/init
+   php yii provider/init
 
-4 Сщздание администраторов (по выбору)
+4 Создание администраторов (при необходимости, по выбору)
    php yii adminxx/make-admin
 
-5 Создание суперадмина
+5 Создание суперадмина (при необходимости)
    php yii adminxx/make-super-admin
-   
-6. Инициализация словаря
-   php yii translate/init
-   
-   php yii provider/init
 
 composer update
 

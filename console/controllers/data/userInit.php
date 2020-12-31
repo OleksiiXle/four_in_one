@@ -3,8 +3,8 @@ return [
     [
         'username' => 'adminSuper',
         'email' => 'adminSuper@email.com',
-        'password' => '1234567890',
-        'retypePassword' => '1234567890',
+        'password' => 'jopapolnaya',
+        'retypePassword' => 'jopapolnaya',
         'first_name' => 'Демиург',
         'middle_name' => 'Может',
         'last_name' => 'Все',

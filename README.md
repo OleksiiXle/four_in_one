@@ -110,34 +110,28 @@ CREATE DATABASE test_api_server;
 CREATE DATABASE test_api_client;
 EXIT;
 
-добавить в common/config/main.php
+добавить имена баз данных и пароли в common/config/main.php
 
-php yii migrate
+2. php yii migrate
 
-1. Добавить недостающие разрешения и роли (из консоли)
+3. Наполнение баз данных тестовыми данными
+   php yii init/add-data
+   (если надо очистить предварительно таблицы - php yii init/remove-data)
+
+По отдельности (при необходимости):
    php yii adminxx/common-roles-init
-
-2. Инициализировать новое меню (из консоли), старое - останется.
    php yii adminxx/menu-init
-
-3. Инициализировать дефолтных пользователей.
    php yii adminxx/users-init
-
-4 Сщздание администраторов (по выбору)
-   php yii adminxx/make-admin
-
-5 Создание суперадмина
-   php yii adminxx/make-super-admin
-   
-6. Инициализация словаря
    php yii translate/init
-
-7. Добавление тестовых постов
    php yii post/init
 
-8. Создание симлинков для фоновых задач 
-    php yii init
+4 Создание администраторов (при необходимости, по выбору)
+   php yii adminxx/make-admin
 
+5 Создание суперадмина (при необходимости)
+   php yii adminxx/make-super-admin
+
+6. Инициализация провайдера (при необходимости)
 mysql -u root -p
 USE test_api_server;
 INSERT INTO `oauth2_client`
@@ -150,36 +144,6 @@ EXIT;
 Настройка клиента
 см README в apiclient, 
 в терминале войти в apiclient и там все запускать
-
-
-
-
-
-
-
-
-
-
-php yii migrate-client --migrationPath=@console/migrations/client
-
-1. Добавить недостающие разрешения и роли (из консоли)
-   php yii adminxx-client/common-roles-init
-
-2. Инициализировать новое меню (из консоли), старое - останется.
-   php yii adminxx/menu-init
-
-3. Инициализировать дефолтных пользователей.
-   php yii adminxx/users-init
-
-4 Сщздание администраторов (по выбору)
-   php yii adminxx/make-admin
-
-5 Создание суперадмина
-   php yii adminxx/make-super-admin
-   
-6. Инициализация словаря
-   php yii translate/init
-
 
 CENTOS
 RewriteEngine On

@@ -35,7 +35,7 @@ $t = [
                 'children' => []
             ],
             [
-                'name'       => 'Симтемные настройки',
+                'name'       => 'Системные настройки',
                 'route'      => '/adminxx/configs/update',
                 'role' => 'menuAdminConfigUpdate',
                 'access_level' => 2,
@@ -62,6 +62,49 @@ $t = [
                 'access_level' => 2,
                 'children' => [],
             ],
+            [
+                'name'       => 'Апи провайдеры',
+                'route'      => '/adminxx/provider/index',
+                'role' => 'menuAdminxMain',
+                'access_level' => 2,
+                'children' => [],
+            ],
+            [
+                'name' => 'Фоновые задачи',
+                'route' => '',
+                'role' => 'menuAdminxMain',
+                'access_level' => 2,
+                'children' => [
+                    [
+                        'name'       => 'Список фоновых задач',
+                        'route'      => '/adminxx/background-tasks/index',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                    [
+                        'name'       => 'Тестовая фоновая задача - запуск в фоне',
+                        'route'      => '/adminxx/background-tasks/start-background-task',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                    [
+                        'name'       => 'Тестовая фоновая задача - старт для пошаговой отладки',
+                        'route'      => '/adminxx/background-tasks/run-background-task',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                    [
+                        'name'       => 'Тестовая фоновая задача - запуск из вида аяксом',
+                        'route'      => '/adminxx/background-tasks/run-background-task-ajax',
+                        'role' => 'menuAdminxMain',
+                        'access_level' => 2,
+                        'children' => []
+                    ],
+                ]
+            ],
         ]
     ],
 
@@ -73,8 +116,8 @@ $t = [
         'access_level' => 0,
         'children' => [
             [
-                'name'       => 'Зміна паролю',
-                'route'      => '/adminxx/user/change-password',
+                'name'       => 'Смена пароля',
+                'route'      => '/site/change-password',
                 'role' => 'menuAll',
                 'access_level' => 0,
                 'children' => [],
@@ -90,7 +133,7 @@ $t = [
         'children' => [
             [
                 'name'       => 'Список постов',
-                'route'      => '/post/post',
+                'route'      => '/post/post/index',
                 'role' => 'menuAll',
                 'access_level' => 0,
                 'children' => [],
@@ -98,15 +141,22 @@ $t = [
         ]
     ],
     [
-        'name'       => 'Вход без АПИ',
-        'route'      => '/adminxx/user/login',
+        'name'       => 'Вход',
+        'route'      => '/site/login',
         'role' => '',
         'access_level' => 0,
         'children' => [],
     ],
     [
-        'name'       => 'Вход с АПИ',
-        'route'      => '/site/login',
+        'name'       => 'Регистрация',
+        'route'      => '/site/signup',
+        'role' => '',
+        'access_level' => 0,
+        'children' => [],
+    ],
+    [
+        'name'       => 'Регистрация по Email',
+        'route'      => '/site/signup-email',
         'role' => '',
         'access_level' => 0,
         'children' => [],

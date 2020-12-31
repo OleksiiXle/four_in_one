@@ -1,12 +1,11 @@
 <?php
-namespace console\controllers;
+namespace app\commands;
 
-use apiadmin\modules\adminxx\models\oauth\OauthAuthorizationCode;
-use apiadmin\modules\adminxx\models\oauth\OauthAccessToken;
-use apiadmin\modules\adminxx\models\oauth\OauthCient;
-use apiadmin\modules\adminxx\models\oauth\OauthRefreshToken;
-use common\components\conservation\models\Conservation;
-use console\controllers\backgroundTasks\models\BackgroundTask;
+use app\commands\backgroundTasks\models\BackgroundTask;
+use app\components\conservation\models\Conservation;
+use app\components\models\Provider;
+use app\models\UserApi;
+use app\models\UserToken;
 use Yii;
 use common\models\MenuXX;
 use common\models\UserData;
@@ -38,8 +37,6 @@ class InitController extends \yii\console\Controller
         $a = \Yii::$app->db->createCommand('ALTER TABLE user AUTO_INCREMENT=1')->execute();
         $a = \Yii::$app->db->createCommand('ALTER TABLE user_data AUTO_INCREMENT=1')->execute();
         $a = \Yii::$app->db->createCommand('ALTER TABLE u_control AUTO_INCREMENT=1')->execute();
-        $a = \Yii::$app->db->createCommand('ALTER TABLE post AUTO_INCREMENT=1')->execute();
-        $a = \Yii::$app->db->createCommand('ALTER TABLE post_media AUTO_INCREMENT=1')->execute();
         echo 'Удалено пользователей ' . $delCnt . PHP_EOL;
 
         echo 'Удаление переводов из словаря' .PHP_EOL;
@@ -57,17 +54,20 @@ class InitController extends \yii\console\Controller
         $a = \Yii::$app->db->createCommand('ALTER TABLE conservation AUTO_INCREMENT=1')->execute();
         echo 'Удалено conservation ' . $delCnt . PHP_EOL;
 
-        echo 'Удаление oauth2_access_token' .PHP_EOL;
-        $delCnt = OauthAccessToken::deleteAll();
-        echo 'Удалено oauth2_access_token ' . $delCnt . PHP_EOL;
+        echo 'Удаление user_token' .PHP_EOL;
+        $delCnt = UserToken::deleteAll();
+        $a = \Yii::$app->db->createCommand('ALTER TABLE user_token AUTO_INCREMENT=1')->execute();
+        echo 'Удалено user_token ' . $delCnt . PHP_EOL;
 
-        echo 'Удаление oauth2_authorization_code' .PHP_EOL;
-        $delCnt = OauthAuthorizationCode::deleteAll();
-        echo 'Удалено oauth2_authorization_code ' . $delCnt . PHP_EOL;
+        echo 'Удаление user_api' .PHP_EOL;
+        $delCnt = UserApi::deleteAll();
+        $a = \Yii::$app->db->createCommand('ALTER TABLE user_api AUTO_INCREMENT=1')->execute();
+        echo 'Удалено user_api ' . $delCnt . PHP_EOL;
 
-        echo 'Удаление oauth2_refresh_token' .PHP_EOL;
-        $delCnt = OauthRefreshToken::deleteAll();
-        echo 'Удалено oauth2_refresh_token ' . $delCnt . PHP_EOL;
+        echo 'Удаление provider' .PHP_EOL;
+        $delCnt = Provider::deleteAll();
+        $a = \Yii::$app->db->createCommand('ALTER TABLE provider AUTO_INCREMENT=1')->execute();
+        echo 'Удалено provider ' . $delCnt . PHP_EOL;
 
      //   echo 'Удаление oauth2_client' .PHP_EOL;
      //   $delCnt = OauthCient::deleteAll();
@@ -81,8 +81,7 @@ class InitController extends \yii\console\Controller
         $this->permissionsInit();
         $this->menuInit();
         $this->usersInit();
-        $this->linksInit();
-        $this->postsInit();
+        $this->providersInit();
     }
 
     private function permissionsInit()
@@ -270,129 +269,33 @@ class InitController extends \yii\console\Controller
         return true;
     }
 
-    private function linksInit()
+    public function providersInit()
     {
-        echo '***********************************************************************' . PHP_EOL;
-        echo 'Создание структуры логов в console' . PHP_EOL;
-        $basePath = Yii::$app->basePath;
-        $basePathClean = str_replace('console', '', Yii::$app->basePath);
-        $params = Yii::$app->params;
-        //-- создание структуры логов в console
-        $dirName = $basePath . DIRECTORY_SEPARATOR . 'runtime/logs';
-        echo $dirName;
-        if (!is_dir($dirName)) {
-            mkdir($dirName, 0777, true);
-            echo  ' created' . PHP_EOL;
-        } else {
-            echo  ' exists' . PHP_EOL;
-        }
+        echo 'Провайдеры АПИ ...' .PHP_EOL;
 
-        $dirName = $basePath . DIRECTORY_SEPARATOR . 'runtime/logs' . self::PATH_TO_BACKGROUND_TASKS_LOGS;
-        echo $dirName;
-        if (!is_dir($dirName)) {
-            mkdir($dirName, 0777, true);
-            echo  ' created' . PHP_EOL;
-        } else {
-            echo  ' exists' . PHP_EOL;
-        }
-
-        $dirName .= DIRECTORY_SEPARATOR . 'tmp';
-        echo $dirName;
-        if (!is_dir($dirName)) {
-            mkdir($dirName, 0777, true);
-            echo  ' created' . PHP_EOL;
-        } else {
-            echo  ' exists' . PHP_EOL;
-        }
-
-        echo '***********************************************************************' . PHP_EOL;
-        echo 'Создание симлинков для работы с BackgroundTasks' . PHP_EOL;
-
-        //-- симлинки
-        $baseLogPath = 'runtime/logs' . $params['pathToBackgroundTasksLogs'];
-        $pathToLogs = $basePath . DIRECTORY_SEPARATOR .  $baseLogPath;
-
-        foreach ($params['appAliases'] as $appAlias) {
-            $dirName = $basePathClean . $appAlias .  '/runtime/logs';
-            echo $dirName;
-            if (!is_dir($dirName)) {
-                mkdir($dirName, 0777, true);
-                echo  ' created' . PHP_EOL;
-            } else {
-                echo  ' exists' . PHP_EOL;
+        $providers = require(__DIR__ . '/../config/providers.php');
+        //  echo var_dump($providers) . PHP_EOL;
+        foreach ($providers as $name => $properties) {
+            $provider = new Provider();
+            //  $provider->setAttributes($properties);
+            $provider->name = $name;
+            $provider->class = (!empty($properties['class'])) ? $properties['class'] : null;
+            $provider->client_id = (!empty($properties['client_id'])) ? $properties['client_id'] : null;
+            $provider->client_secret = (!empty($properties['client_secret'])) ? $properties['client_secret'] : null;
+            $provider->token_url = (!empty($properties['token_url'])) ? $properties['token_url'] : null;
+            $provider->auth_url = (!empty($properties['auth_url'])) ? $properties['auth_url'] : null;
+            $provider->signup_url = (!empty($properties['signup_url'])) ? $properties['signup_url'] : null;
+            $provider->api_base_url = (!empty($properties['api_base_url'])) ? $properties['api_base_url'] : null;
+            $provider->scope = (!empty($properties['scope'])) ? $properties['scope'] : null;
+            $provider->state_storage_class = (!empty($properties['state_storage_class'])) ? $properties['state_storage_class'] : null;
+            //     echo var_dump($properties) . PHP_EOL;
+            //    echo $name . PHP_EOL;
+            echo var_dump($provider->getAttributes()) . PHP_EOL;
+            if (!$provider->save()) {
+                echo var_dump($provider->getErrors()) . PHP_EOL;
+                exit();
             }
-
-            $pathFromFolderLinkToLogs = $basePathClean
-                . $appAlias . DIRECTORY_SEPARATOR . $baseLogPath;
-            //   echo $pathToLogs . PHP_EOL;
-            //   echo $pathFromFolderLinkToLogs . PHP_EOL;
-            exec("ln -s $pathToLogs $pathFromFolderLinkToLogs", $output,$exitCode);
         }
-    }
-
-    public function actionLinks()
-    {
-        $basePath = Yii::$app->basePath;
-        $basePathClean = str_replace('console', '', Yii::$app->basePath);
-        $params = Yii::$app->params;
-        //-- создание структуры логов в console
-        $dirName = $basePath . DIRECTORY_SEPARATOR . 'runtime/logs';
-        echo $dirName;
-        if (!is_dir($dirName)) {
-            mkdir($dirName, 0777, true);
-            echo  ' created' . PHP_EOL;
-        } else {
-            echo  ' exists' . PHP_EOL;
-        }
-
-        $dirName = $basePath . DIRECTORY_SEPARATOR . 'runtime/logs' . self::PATH_TO_BACKGROUND_TASKS_LOGS;
-        echo $dirName;
-        if (!is_dir($dirName)) {
-            mkdir($dirName, 0777, true);
-            echo  ' created' . PHP_EOL;
-        } else {
-            echo  ' exists' . PHP_EOL;
-        }
-
-        $dirName .= DIRECTORY_SEPARATOR . 'tmp';
-        echo $dirName;
-        if (!is_dir($dirName)) {
-            mkdir($dirName, 0777, true);
-            echo  ' created' . PHP_EOL;
-        } else {
-            echo  ' exists' . PHP_EOL;
-        }
-
-        //-- симлинки
-        $baseLogPath = 'runtime/logs' . $params['pathToBackgroundTasksLogs'];
-        $pathToLogs = $basePath . DIRECTORY_SEPARATOR .  $baseLogPath;
-
-        foreach ($params['appAliases'] as $appAlias) {
-            $dirName = $basePathClean . $appAlias .  '/runtime/logs';
-            echo $dirName;
-            if (!is_dir($dirName)) {
-                mkdir($dirName, 0777, true);
-                echo  ' created' . PHP_EOL;
-            } else {
-                echo  ' exists' . PHP_EOL;
-            }
-
-            $pathFromFolderLinkToLogs = $basePathClean
-                . $appAlias . DIRECTORY_SEPARATOR . $baseLogPath;
-            //   echo $pathToLogs . PHP_EOL;
-            //   echo $pathFromFolderLinkToLogs . PHP_EOL;
-            exec("ln -s $pathToLogs $pathFromFolderLinkToLogs", $output,$exitCode);
-        }
-    }
-
-    public function postsInit(){
-        echo 'Тестовые посты ...' .PHP_EOL;
-
-        $strSql = file_get_contents(__DIR__ . '/data/post.sql');
-        $a = \Yii::$app->db->createCommand($strSql)->execute();
-        $strSql = file_get_contents(__DIR__ . '/data/post_media.sql');
-        $a = \Yii::$app->db->createCommand($strSql)->execute();
-        echo 'ОК' .PHP_EOL;
 
     }
 

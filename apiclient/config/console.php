@@ -13,7 +13,9 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
+        '@common'   => dirname(dirname(__DIR__)) . '/common',
     ],
+
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',

@@ -18,7 +18,7 @@ class AdminxxController extends Controller
         $rolesPermissions = $params['rolesPermissions'];
         $rolesChildren    = $params['rolesChildren'];
         $auth = \Yii::$app->authManager;
-        $rolesOld = $auth->getRoles();
+      //  $auth->removeAll(); //todo CLEAR ALL
         //-- добавляем роли, которых не было
         foreach ($roles as $roleName => $roleNote) {
             echo '* роль * ' . $roleName ;

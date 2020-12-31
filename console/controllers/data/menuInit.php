@@ -117,7 +117,7 @@ $t = [
         'children' => [
             [
                 'name'       => 'Смена пароля',
-                'route'      => '/adminxx/user/change-password',
+                'route'      => '/site/change-password',
                 'role' => 'menuAll',
                 'access_level' => 0,
                 'children' => [],
@@ -133,7 +133,7 @@ $t = [
         'children' => [
             [
                 'name'       => 'Список постов',
-                'route'      => '/post/post',
+                'route'      => '/post/post/index',
                 'role' => 'menuAll',
                 'access_level' => 0,
                 'children' => [],
@@ -142,7 +142,21 @@ $t = [
     ],
     [
         'name'       => 'Вход',
-        'route'      => '/adminxx/user/login',
+        'route'      => '/site/login',
+        'role' => '',
+        'access_level' => 0,
+        'children' => [],
+    ],
+    [
+        'name'       => 'Регистрация',
+        'route'      => '/site/signup',
+        'role' => '',
+        'access_level' => 0,
+        'children' => [],
+    ],
+    [
+        'name'       => 'Регистрация по Email',
+        'route'      => '/site/signup-email',
         'role' => '',
         'access_level' => 0,
         'children' => [],
