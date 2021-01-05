@@ -161,6 +161,7 @@ class XapiAuthClient extends OAuth2
         $token_ = $this->getState('token');
         */
     }
+
     /**
      * Restores access token.
      * @return OAuthToken auth token.

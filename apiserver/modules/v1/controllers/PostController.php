@@ -3,9 +3,11 @@
 namespace apiserver\modules\v1\controllers;
 
 use apiserver\modules\v1\models\Post;
+use app\modules\v1\models\filters\PostFilter;
 use common\helpers\Functions;
 use yii\rest\Controller;
 use yii\web\Response;
+use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use common\components\AccessControl;
@@ -31,7 +33,7 @@ class PostController extends Controller
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'view',
+                        'index', 'view', 'grid'
                     ],
                     'roles'      => ['@', '?' ],
                 ],
@@ -69,6 +71,21 @@ class PostController extends Controller
     {
         $ret = Post::find()->all();
         return $ret;
+    }
+
+    public function actionGrid()
+    {
+        Functions::log('actionGrid');
+        Functions::logRequest();
+        $filter = new PostFilter();
+        $data = $filter->runClientProviderQuery();
+        Functions::log('$data:');
+        Functions::log($data);
+        if (isset($data)){
+            return $data;
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
 
     public function actionView($id)

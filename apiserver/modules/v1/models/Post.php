@@ -6,5 +6,4 @@ use apiuser\modules\post\models\Post as FrontendPost;
 
 class Post extends FrontendPost
 {
-
 }

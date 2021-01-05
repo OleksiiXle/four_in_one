@@ -2,6 +2,7 @@
 
 namespace app\modules\post\controllers;
 
+use app\modules\post\grids\PostGrid;
 use app\modules\post\models\Post;
 use Yii;
 use common\components\AccessControl;
@@ -33,7 +34,7 @@ class PostController extends MainController
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'create', 'view', 'delete',
+                        'index', 'create', 'view', 'delete', 'grid'
                     ],
                     'roles'      => ['@', '?', ],
                 ],
@@ -110,6 +111,15 @@ class PostController extends MainController
             return $this->goBack();
 
         }
+    }
+
+    public function actionGrid()
+    {
+        $postProvider = new PostGrid();
+        return $this->render('grid', [
+            'postProvider' => $postProvider,
+        ]);
+
     }
 
     public function actionCreate()

@@ -2,6 +2,7 @@
 
 namespace app\modules\post\models;
 
+use common\models\MainModel;
 use Yii;
 use app\models\MainApiModel;
 
@@ -19,7 +20,8 @@ use app\models\MainApiModel;
  *
  * @property PostMedia[] $postMedia
  */
-class Post extends MainApiModel
+//class Post extends MainApiModel
+class Post extends MainModel
 {
     const TYPE_FRONT = 1;
     const TYPE_TARGET = 2;
@@ -29,12 +31,13 @@ class Post extends MainApiModel
     public $type;
     public $content;
     public $name;
-
+/*
     public function __construct($apiClient)
     {
         $this->apiClient = $apiClient;
         parent::__construct([]);
     }
+*/
 
     /**
      * {@inheritdoc}

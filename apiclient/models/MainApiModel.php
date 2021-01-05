@@ -4,8 +4,9 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveRecord;
 
-class MainApiModel extends Model
+class MainApiModel extends ActiveRecord
 {
     //******************** допустимые символы текста названий, пунктов приказа и пр.
     const PATTERN_TEXT = '#^[А-ЯІЇЄҐа-яіїєґ0-9A-Za-z ().№ʼ,«»\'"\-:;/]+$#u';
@@ -148,7 +149,7 @@ class MainApiModel extends Model
 
     }
 
-    public function validateNotEmpty($attribute, $params)
+    public function validateNotEmpty($attribute)
     {
         if (empty($this->$attribute)) {
             $this->addError($attribute, 'Необхідно заповнити ' . $this->attributeLabels()[$attribute]);
@@ -195,5 +196,15 @@ class MainApiModel extends Model
 
         return !$this->hasErrors();
     }
+
+    /**
+     * {@inheritdoc}
+     * @return ActiveQuery the newly created [[ActiveQuery]] instance.
+     */
+    public static function find()
+    {
+        return Yii::createObject(ActiveQuery::className(), [get_called_class()]);
+    }
+
 
 }
