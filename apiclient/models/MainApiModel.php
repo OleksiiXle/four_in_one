@@ -2,11 +2,10 @@
 
 namespace app\models;
 
+use app\components\models\apiQueryModels\ApiActiveRecord;
 use Yii;
-use yii\base\Model;
-use yii\db\ActiveRecord;
 
-class MainApiModel extends ActiveRecord
+class MainApiModel extends ApiActiveRecord
 {
     //******************** допустимые символы текста названий, пунктов приказа и пр.
     const PATTERN_TEXT = '#^[А-ЯІЇЄҐа-яіїєґ0-9A-Za-z ().№ʼ,«»\'"\-:;/]+$#u';
@@ -25,6 +24,12 @@ class MainApiModel extends ActiveRecord
         'apiClient',
         'response',
     ];
+
+    public function init()
+    {
+        parent::init();
+        $this->apiClient = \Yii::$app->xapi;
+    }
 
     public function __get($name)
     {
@@ -195,15 +200,6 @@ class MainApiModel extends ActiveRecord
         $this->afterValidate();
 
         return !$this->hasErrors();
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return ActiveQuery the newly created [[ActiveQuery]] instance.
-     */
-    public static function find()
-    {
-        return Yii::createObject(ActiveQuery::className(), [get_called_class()]);
     }
 
 

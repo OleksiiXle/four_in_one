@@ -19,3 +19,5 @@ RewriteRule ^apiclient(/(.*))?$ apiclient/web/$2 [S=1]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+/web)/.*$ $1/index.php
+
+Options All -Indexes

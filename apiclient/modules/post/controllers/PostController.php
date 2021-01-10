@@ -4,6 +4,7 @@ namespace app\modules\post\controllers;
 
 use app\modules\post\grids\PostGrid;
 use app\modules\post\models\Post;
+use common\models\UserM;
 use Yii;
 use common\components\AccessControl;
 use yii\filters\VerbFilter;
@@ -34,7 +35,7 @@ class PostController extends MainController
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'create', 'view', 'delete', 'grid'
+                        'index', 'create', 'view', 'delete', 'grid', 'test', 'error'
                     ],
                     'roles'      => ['@', '?', ],
                 ],
@@ -237,6 +238,30 @@ class PostController extends MainController
 
     }
 
-
+    /**
+     * @return string
+     */
+    public function actionTest()
+    {
+        //    $this->layout = '@app/modules/adminxx/views/layouts/testLayout.php';
+        //  $this->layout = false;
+        $tmp = 1;
+      //  $ret = Post::updateAll(['name' => 'lokoko'], ['id' => 77]);
+      //  $ret = Post::findOne(['id' => 1]);
+        $ret = Post::find()
+            ->select('post.*, post_media.*')
+            ->where(['>', 'post.id' , 1])
+            ->leftJoin('post_media', ['post.id' => 'post_media.post_id'])
+          //  ->asArray()
+            ->orderBy('post.type')
+            ->one();
+        /*
+        $tmp = $ret[0];
+        $tmp->setAttributes(Yii::$app->request->post());
+        $tmp->name = 'lokoko';
+        $tmp->save();
+        */
+        return $this->render('test', ['ret' => $ret]);
+    }
 
 }

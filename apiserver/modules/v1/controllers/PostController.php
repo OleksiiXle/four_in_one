@@ -33,7 +33,7 @@ class PostController extends Controller
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'view', 'grid'
+                        'index', 'view', 'grid', 'test',
                     ],
                     'roles'      => ['@', '?' ],
                 ],
@@ -65,6 +65,28 @@ class PostController extends Controller
             'update' => ['POST'],
             'delete' => ['POST'],
         ];
+    }
+
+    public function actionTest()
+    {
+        $data = \Yii::$app->request->post();
+        Functions::log('*************** actionTest');
+        Functions::log($data);
+        unset($data['queryData']['modelClass']);
+        $p = Post::find();
+        \Yii::configure($p, $data['queryData']);
+        switch ($data['operation']) {
+            case 'queryAll':
+                $ret = $p->all();
+                break;
+            case 'queryOne':
+                $ret = $p->one();
+                break;
+        }
+        Functions::log($p);
+        Functions::log($ret);
+        return $ret;
+
     }
 
     public function actionIndex()

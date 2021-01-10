@@ -39,7 +39,8 @@ class PostFilter extends GridFilter
 
     public function getCustomQuery()
     {
-        $query = Post::find();
+       // $query = Post::find();
+        $query = null;
 
         return $query;
     }
@@ -58,4 +59,18 @@ class PostFilter extends GridFilter
 
         return $query;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getFilterContent()
+    {
+        $this->_filterContent = '';
+        if (!empty($this->name)){
+            $this->_filterContent .= Yii::t('app', 'name') . ' = ' . $this->name . '; ' ;
+        }
+
+        return $this->_filterContent;
+    }
+
 }

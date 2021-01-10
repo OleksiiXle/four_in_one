@@ -12,25 +12,11 @@ use yii\helpers\Html;
 
 <div class="site-error">
     <h1><?= Html::encode($this->title) ?></h1>
-    <br>
-    <br>
-    <div class= "col-md-12 " align="center">
+    <div class= "col-md-12 "">
         <div class="row">
-            <br>
-            <br>
-            <br>
             <div class="alert alert-danger">
                 <h3><?= nl2br(Html::encode($message)) ?></h3>
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-
         </div>
     </div>
 

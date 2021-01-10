@@ -35,50 +35,43 @@ class UserController extends MainController
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => [ 'error', 'forget-password', 'test', 'login', 'invitation-confirm' ],
+                    'actions' => ['error', 'forget-password', 'test', 'login', 'invitation-confirm'],
                     'roles' => ['?'],
                 ],
                 [
                     'allow' => true,
-                    'actions' => ['error', 'test', 'change-password', 'update-profile', 'conservation', 'logout', 'invitation-confirm' ],
+                    'actions' => ['error', 'test', 'change-password', 'update-profile', 'conservation', 'logout', 'invitation-confirm'],
                     'roles' => ['@'],
                 ],
                 [
-                    'allow'      => true,
-                    'actions'    => [
-                        'php-info', 'test' ,
+                    'allow' => true,
+                    'actions' => [
+                        'php-info', 'test',
                     ],
-                    'roles'      => ['menuAdminxMain'],
+                    'roles' => ['menuAdminxMain'],
                 ],
                 [
-                    'allow'      => true,
-                    'actions'    => [
+                    'allow' => true,
+                    'actions' => [
                         'index', 'view',
                         'export-to-exel-count', 'export-to-exel-get-partition', 'upload-report',
                     ],
-                    'roles'      => ['adminUsersView'],
+                    'roles' => ['adminUsersView'],
                 ],
                 [
-                    'allow'      => true,
-                    'actions'    => [
+                    'allow' => true,
+                    'actions' => [
                         'signup-by-admin', 'change-user-activity', 'update-by-admin',
                         'conservation', 'conserve-delete', 'delete-by-admin'
                     ],
-                    'roles'      => ['adminUserCreate', 'adminUserUpdate', 'adminSuper' ],
+                    'roles' => ['adminUserCreate', 'adminUserUpdate', 'adminSuper'],
                 ],
                 [
-                    'allow'      => true,
-                    'actions'    => [
+                    'allow' => true,
+                    'actions' => [
                         'update-user-assignments',
                     ],
-                    'roles'      => ['adminChangeUserAssignments', 'adminUsersAdvanced'],
-                ],
-                [
-                    'allow'      => true,
-                    'actions'    => [
-                        'change-sort',
-                    ],
-                    'roles'      => ['_orgStatChangeSort'],
+                    'roles' => ['adminChangeUserAssignments', 'adminUsersAdvanced'],
                 ],
             ],
             /*
@@ -112,7 +105,7 @@ class UserController extends MainController
      */
     public function actionIndex()
     {
-      //  $this->layout = '@app/modules/adminxx/views/layouts/adminxx.php';
+        //  $this->layout = '@app/modules/adminxx/views/layouts/adminxx.php';
         $usersGrid = new UsersGrid();
         if (Yii::$app->request->isPost) {
             Yii::$app->getResponse()->format = Response::FORMAT_HTML;
@@ -135,16 +128,16 @@ class UserController extends MainController
         if ($model->load(Yii::$app->request->post())) {
             if ($model->updateUser()) {
                 $session = \Yii::$app->session;
-                if ($session->get('searchIid')){
+                if ($session->get('searchIid')) {
                     $session->remove('searchIid');
                 }
-                $session->set('searchIid', $model->id );
+                $session->set('searchIid', $model->id);
 
                 return $this->redirect(Url::toRoute('index'));
             }
         }
 
-      //  return $this->render('updateUser', [
+        //  return $this->render('updateUser', [
         return $this->render('signupByAdmin', [
             'model' => $model,
             'defaultRoles' => $defaultRoles,
@@ -164,7 +157,7 @@ class UserController extends MainController
         $auth = Yii::$app->authManager;
         $roles = $auth->getRolesByUser($id);
         $userRoles = [];
-        if (!empty($roles)){
+        if (!empty($roles)) {
             foreach ($roles as $key => $role) {
                 $userRoles[$key] = $role->description;
             }
@@ -235,9 +228,9 @@ class UserController extends MainController
         if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {// && $model->forgetPassword()
             $res = $model->forgetPassword();
 
-            if($res===null){
+            if ($res === null) {
                 Yii::$app->getSession()->setFlash('userNotFound', 'User was not found.');
-            }elseif($res){
+            } elseif ($res) {
                 Yii::$app->getSession()->setFlash('newPwdSended', 'New password was sended.');
             }
         }
@@ -260,9 +253,9 @@ class UserController extends MainController
         $conservation = ((isset($conservationJson[0]['conservation'])))
             ? json_decode($conservationJson[0]['conservation'], true)
             : [];
-        return $this->render('conservation' , [
-            'conservation' => $conservation,
-            'user_id' => $user_id]
+        return $this->render('conservation', [
+                'conservation' => $conservation,
+                'user_id' => $user_id]
         );
     }
 
@@ -309,13 +302,13 @@ class UserController extends MainController
     public function actionInvitationConfirm($token)
     {
         $user = new UserM();
-        try{
+        try {
             if ($user->confirmation($token)) {
                 \Yii::$app->session->setFlash('success', \Yii::t('app', 'Регистрация успешно подтверждена'));
                 return $this->redirect($this->getUserLoginUrl());
 
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             \Yii::$app->session->setFlash('error', $e->getMessage());
         }
 
@@ -337,10 +330,13 @@ class UserController extends MainController
      */
     public function actionTest()
     {
-        $this->layout = '@app/modules/adminxx/views/layouts/testLayout.php';
-      //  $this->layout = false;
-        $t = 1;
-        return $this->render('test');
+        //    $this->layout = '@app/modules/adminxx/views/layouts/testLayout.php';
+        //  $this->layout = false;
+        $tmp = 1;
+        $ret = UserM::find()
+            ->where(['id' => 1])
+            ->all();
+        return $this->render('test', ['ret' => $ret]);
     }
 
     /**
@@ -349,10 +345,10 @@ class UserController extends MainController
      */
     public function actionDeleteByAdmin($id)
     {
-        if (\Yii::$app->request->isPost){
+        if (\Yii::$app->request->isPost) {
             $userDel = UserM::findOne($id)->delete();
-            if ($userDel === 0){
-                \yii::$app->getSession()->addFlash("warning","Ошибка при удалении.");
+            if ($userDel === 0) {
+                \yii::$app->getSession()->addFlash("warning", "Ошибка при удалении.");
             }
         }
         return $this->redirect(Url::toRoute('index'));
@@ -370,11 +366,11 @@ class UserController extends MainController
     {
         $response['status'] = false;
         $response['data'] = ['Данні не знайдено'];
-        $_post    = \yii::$app->request->post();
+        $_post = \yii::$app->request->post();
         if (isset($_post['user_id'])) {
             $user = UserM::findOne($_post['user_id']);
-            if (isset($user)){
-                switch ($user->status){
+            if (isset($user)) {
+                switch ($user->status) {
                     case UserM::STATUS_ACTIVE:
                         $ret = $user->deactivate();
                         $response['data'] = 'inactive';
@@ -387,7 +383,7 @@ class UserController extends MainController
                         $response['data'] = 'Невірний статус';
                         return json_encode($response);
                 }
-                if (!$ret){
+                if (!$ret) {
                     $response['data'] = $user->showErrors();
                 } else {
                     $response['status'] = true;
@@ -407,13 +403,13 @@ class UserController extends MainController
      */
     public function actionExportToExelCount()
     {
-        try{
+        try {
             $_post = \Yii::$app->request->post();
-            if (isset($_post['exportQuery'])){
+            if (isset($_post['exportQuery'])) {
                 $userId = \Yii::$app->user->getId();
                 $fileFullName = \Yii::getAlias('@app/web/tmp/report_') . $userId . '.xls';
 
-                if (file_exists($fileFullName)){
+                if (file_exists($fileFullName)) {
                     unlink($fileFullName);
                 }
                 $exportQuery = [
@@ -422,14 +418,14 @@ class UserController extends MainController
                     'sort' => json_decode($_post['exportQuery']['sort'], true),
                 ];
                 $query = new $exportQuery['filterModelClass'];
-                if (!empty($exportQuery['filter'])){
+                if (!empty($exportQuery['filter'])) {
                     $query->setAttributes($exportQuery['filter']);
                 }
                 $ret = $query->getQuery();
                 $this->result['data'] = $ret->count();
                 $this->result['status'] = true;
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->result['data'] = $e->getMessage();
         }
         return json_encode($this->result);
@@ -441,9 +437,9 @@ class UserController extends MainController
      */
     public function actionExportToExelGetPartition()
     {
-        try{
+        try {
             $_post = \Yii::$app->request->post();
-            if (isset($_post['exportQuery']) && isset($_post['limit']) && isset($_post['offset'])){
+            if (isset($_post['exportQuery']) && isset($_post['limit']) && isset($_post['offset'])) {
                 $userId = \Yii::$app->user->getId();
                 $fileFullName = \Yii::getAlias('@app/web/tmp/report_') . $userId . '.xls';
 
@@ -454,26 +450,26 @@ class UserController extends MainController
                     'sort' => json_decode($_post['exportQuery']['sort'], true),
                 ];
                 $query = new $exportQuery['filterModelClass'];
-                if (!empty($exportQuery['filter'])){
+                if (!empty($exportQuery['filter'])) {
                     $query->setAttributes($exportQuery['filter']);
                 }
                 $ret = $query->getQuery();
-                if (!empty($exportQuery['sort'])){
+                if (!empty($exportQuery['sort'])) {
                     $ret->addOrderBy($exportQuery['sort']);
                 }
                 $users = $ret
                     ->limit($_post['limit'])
                     ->offset($_post['offset'])
                     ->all();
-                if (!empty($users)){
-                    foreach ($users as $user){
+                if (!empty($users)) {
+                    foreach ($users as $user) {
 
-                        $result[]= $user->userProfileStrShort;
+                        $result[] = $user->userProfileStrShort;
                     }
-                    $this->result = Functions::exportToExelUniversal($result, $fileFullName,  'Список', false );
+                    $this->result = Functions::exportToExelUniversal($result, $fileFullName, 'Список', false);
                 }
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->result['data'] = $e->getMessage();
         }
         return json_encode($this->result);
@@ -483,12 +479,13 @@ class UserController extends MainController
      * +++ 3. АЯКС вывод собранного файла upload-report
      * @return array
      */
-    public function actionUploadReport(){
+    public function actionUploadReport()
+    {
         $userId = \Yii::$app->user->getId();
 
         $pathToFile = \Yii::getAlias('@app/web/tmp/report_') . $userId . '.xls';
 
-        $ret = Functions::uploadFileXle($pathToFile,true);
+        $ret = Functions::uploadFileXle($pathToFile, true);
         return $ret;
     }
 
@@ -503,31 +500,31 @@ class UserController extends MainController
     {
         $_get = \Yii::$app->request->get();
         $_post = \Yii::$app->request->post();
-        if (isset($_get['exportQuery'])){
+        if (isset($_get['exportQuery'])) {
             $exportQuery = $_get['exportQuery'];
-        } elseif (isset($_post['exportQuery'])){
+        } elseif (isset($_post['exportQuery'])) {
             $exportQuery = $_post['exportQuery'];
         } else {
             $exportQuery = [];
         }
-        if (!empty($exportQuery)){
+        if (!empty($exportQuery)) {
             $query = new $exportQuery['filterModelClass'];
-            if (!empty($exportQuery['filter'])){
+            if (!empty($exportQuery['filter'])) {
                 $query->setAttributes($exportQuery['filter']);
             }
             $ret = $query->getQuery();
-            if (!empty($exportQuery['sort'])){
+            if (!empty($exportQuery['sort'])) {
                 $ret->addOrderBy($exportQuery['sort']);
             }
             $users = $ret->all();
-            if (!empty($users)){
-                foreach ($users as $user){
+            if (!empty($users)) {
+                foreach ($users as $user) {
 
-                    $result[]= $user->userProfileStrShort;
+                    $result[] = $user->userProfileStrShort;
                 }
                 $pathToFile = \Yii::getAlias('@app/web/tmp');
                 $userId = \Yii::$app->user->getId();
-                Functions::exportToExel($result, $pathToFile, $userId, 'report_' );
+                Functions::exportToExel($result, $pathToFile, $userId, 'report_');
                 return true;
             }
         }
@@ -541,34 +538,34 @@ class UserController extends MainController
     public function actionExportToExelPrepare()
     {
         ini_set("memory_limit", "512M");
-        try{
+        try {
             $_post = \Yii::$app->request->post();
-            if (isset($_post['exportQuery'])){
+            if (isset($_post['exportQuery'])) {
                 $exportQuery = [
                     'filterModelClass' => $_post['exportQuery']['filterModelClass'],
                     'filter' => json_decode($_post['exportQuery']['filter'], true),
                     'sort' => json_decode($_post['exportQuery']['sort'], true),
                 ];
                 $query = new $exportQuery['filterModelClass'];
-                if (!empty($exportQuery['filter'])){
+                if (!empty($exportQuery['filter'])) {
                     $query->setAttributes($exportQuery['filter']);
                 }
                 $ret = $query->getQuery();
-                if (!empty($exportQuery['sort'])){
+                if (!empty($exportQuery['sort'])) {
                     $ret->addOrderBy($exportQuery['sort']);
                 }
                 $users = $ret->all();
-                if (!empty($users)){
-                    foreach ($users as $user){
+                if (!empty($users)) {
+                    foreach ($users as $user) {
 
-                        $result[]= $user->userProfileStrShort;
+                        $result[] = $user->userProfileStrShort;
                     }
                     $pathToFile = \Yii::getAlias('@app/web/tmp');
                     $userId = \Yii::$app->user->getId();
-                    $this->result = Functions::exportToExel($result, $pathToFile, $userId, 'report_', 'Список', false );
+                    $this->result = Functions::exportToExel($result, $pathToFile, $userId, 'report_', 'Список', false);
                 }
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->result['data'] = $e->getMessage();
         }
         return json_encode($this->result);
@@ -581,7 +578,7 @@ class UserController extends MainController
     public function actionUpdateProfile()
     {
         $id = \Yii::$app->user->getId();
-        if (!empty($id)){
+        if (!empty($id)) {
             $model = Update::findOne($id);
             $model->first_name = $model->userDatas->first_name;
             $model->middle_name = $model->userDatas->middle_name;
@@ -591,8 +588,8 @@ class UserController extends MainController
                 $data = \Yii::$app->getRequest()->post('Update');
                 $model->setAttributes($data);
                 $model->first_name = $data['first_name'];
-                $model->middle_name =  $data['middle_name'];
-                $model->last_name =  $data['last_name'];
+                $model->middle_name = $data['middle_name'];
+                $model->last_name = $data['last_name'];
 
                 if ($model->updateUser()) {
                     return $this->goHome();
@@ -605,7 +602,7 @@ class UserController extends MainController
 
             ]);
         } else {
-            \yii::$app->getSession()->addFlash("warning","Неверный ИД пользователя");
+            \yii::$app->getSession()->addFlash("warning", "Неверный ИД пользователя");
             return $this->redirect(\Yii::$app->request->referrer);
 
         }

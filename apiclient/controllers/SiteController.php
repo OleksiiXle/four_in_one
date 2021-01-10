@@ -72,9 +72,6 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -485,6 +482,7 @@ app\components\clients\Facebook#1
     public function actionError()
     {
        // $this->layout = '@app/views/layouts/commonLayout.php';
+        $this->layout = false;
 
         $exception = \Yii::$app->errorHandler->exception;
         if ($exception !== null) {

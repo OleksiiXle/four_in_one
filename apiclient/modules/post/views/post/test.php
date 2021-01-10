@@ -1,6 +1,14 @@
 <?php
-$file =  \Yii::getAlias('@web') . '/images/VID.mp4';
+
+
+$this->title = Yii::t('app', 'Тест');
+
 ?>
-<video class="responsive-video" controls>
-    <source src="<?=$file?>" type="video/mp4">
-</video>
+
+<div class="row xContent">
+    <div class="xCard">
+        <?php
+        echo var_dump($ret);
+        ?>
+    </div>
+</div>
