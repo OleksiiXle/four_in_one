@@ -5,6 +5,7 @@ use app\modules\post\models\Post;
 use Yii;
 use common\components\AccessControl;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 
 class DefaultController extends MainController
 {
@@ -33,8 +34,26 @@ class DefaultController extends MainController
     public function actionIndex()
     {
         $tmp=1;
-        return $this->render('index', [
-          //  'dataProvider'  => $dataProvider,
-        ]);
+        if (Yii::$app->user->isGuest) {
+            return $this->render('index', [
+                //  'dataProvider'  => $dataProvider,
+            ]);
+        } else {
+            $posts = Post::find()
+               // ->where(['>', 'id', 1])
+                ->requiredFields(['id', 'user_id', 'content', 'mainImage', 'name'])
+                ->requiredExtraFields(['ownerLastName'])
+                ->asArray()
+                ->all();
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $posts,
+                'pagination' => [
+                    'pageSize' => 2,
+                ],
+            ]);
+            return $this->render('posts', [
+                  'dataProvider'  => $dataProvider,
+            ]);
+        }
     }
 }

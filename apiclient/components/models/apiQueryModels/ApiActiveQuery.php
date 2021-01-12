@@ -7,6 +7,32 @@ use yii\helpers\ArrayHelper;
 
 class ApiActiveQuery extends ActiveQuery
 {
+    public $fields = false; // = ['*'];
+    public $extraFields = false; //= [];
+
+    /**
+     * Если заданы $this->fields или $this->extraFields, то не зависимо от значения $this->asArray
+     * вернется массив, полученный с помощью ->toArray($this->fields, $this->extraFields)
+     * для каждой единицы результата
+     * @param array $fields
+     * @return $this
+     */
+    public function requiredFields($fields)
+    {
+        $this->fields = $fields;
+        return $this;
+    }
+
+    /**
+     * @param array $extraFields
+     * @return $this
+     */
+    public function requiredExtraFields($extraFields)
+    {
+        $this->extraFields = $extraFields;
+        return $this;
+    }
+
     /**
      * Creates a API command that can be used to execute this query.
      * @param null $db the DB connection used to create the DB command.

@@ -100,22 +100,45 @@ class QueryController extends Controller
             Functions::log('*************** QUERY ***********');
             Functions::log($data);
             $modelName = self::MODELS[$data['modelName']];
+            Functions::log('*************** QUERY DATA***********');
+            Functions::log($data['queryData']);
+       //     $asArray = (isset($data['queryData']['asArray']) && $data['queryData']['asArray'] == '1') ? true : false;
+            $fields = $data['queryData']['fields'] ?? false;
+            $extraFields = $data['queryData']['extraFields'] ?? false;
+
             unset($data['queryData']['modelClass']);
+            unset($data['queryData']['fields']);
+            unset($data['queryData']['extraFields']);
+            if ($fields || $extraFields) {
+                unset($data['queryData']['asArray']);
+            }
             $model = ($modelName)::find();
             \Yii::configure($model, $data['queryData']);
             switch ($data['operation']) {
                 case 'queryAll':
-                    $result = $model->all();
+                    if ($fields || $extraFields) {
+                        $ret = $model->all();
+                        $result = [];
+                        foreach ($ret as $item) {
+                            $result[] = $item->toArray(($fields ?? []), ($extraFields ?? []));
+                        }
+                    } else {
+                        $result = $model->all();
+                    }
                     break;
                 case 'queryOne':
-                    $result = $model->one();
+                    if ($fields || $extraFields) {
+                        $result = $model->one()->toArray(($fields ?? []), ($extraFields ?? []));
+                   } else {
+                        $result = $model->one();
+                    }
                     break;
                 case 'queryScalar':
                     $result = $model->select($data['selectExpression'])->scalar();
                     break;
             }
-        //    Functions::log($model);
-       //     Functions::log($result);
+            Functions::log($model);
+            Functions::log($result);
         } catch (\Exception $e) {
             $result = $e->getTraceAsString();
             Functions::log('*************** QUERY ERROR ***********');

@@ -175,7 +175,9 @@ class PostMedia extends MainModel
      */
     public function getUrlToFile()
     {
-        $this->_urlToFile = \Yii::getAlias('@web'). \Yii::$app->params['pathToFiles']
+        $params = \Yii::$app->params;
+        $alias = str_replace($params['appAlias'], $params['userHostName'], \Yii::getAlias('@web'));
+        $this->_urlToFile = Yii::$app->request->hostInfo . $alias . $params['pathToFiles']
             . '/' . self::TYPE_LIST[$this->type] . '/' . $this->post->user_id . '/' . $this->file_name;
         return $this->_urlToFile;
     }

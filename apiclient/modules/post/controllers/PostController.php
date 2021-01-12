@@ -253,6 +253,7 @@ class PostController extends MainController
         $tmp = 1;
       //  $ret = Post::updateAll(['name' => 'lokoko'], ['id' => 77]);
       //  $ret = Post::findOne(['id' => 1]);
+        /*
         $ret = Post::find()
             ->select('post.*, post_media.*')
             ->where(['>', 'post.id' , 1])
@@ -261,11 +262,30 @@ class PostController extends MainController
             ->orderBy('post.type')
             ->one();
         /*
+         * */
+        /*
         $tmp = $ret[0];
         $tmp->setAttributes(Yii::$app->request->post());
         $tmp->name = 'lokoko';
         $tmp->save();
         */
+        /*
+        $r = UserM::find()
+            ->where('id > 5')
+            ->all();
+        foreach ($r as $rr) {
+            $ret[] = $rr->toArray(['*'], ['eee']);
+        }
+        */
+        $ret = Post::find()
+            ->where(['>', 'id', 1])
+            ->requiredFields(['id', 'user_id', 'images', 'mainImage'])
+            ->requiredExtraFields(['ownerLastName'])
+            ->asArray()
+            ->all();
+
+/*
+*/
         return $this->render('test', ['ret' => $ret]);
     }
 
