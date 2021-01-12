@@ -72,9 +72,6 @@ class SiteController extends Controller
     public function actions()
     {
         return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
@@ -255,9 +252,9 @@ app\components\clients\Facebook#1
         }
 
      //  Functions::logRequest();
-        //  https://74b8ca35d403.ngrok.io
-        //  https://74b8ca35d403.ngrok.io/dstest/apiclient
-        //  https://74b8ca35d403.ngrok.io/dstest/apiclient/site/auth?authclient=facebook
+        //  https://ndl.univd.edu.ua
+        //  https://ndl.univd.edu.ua/dstest/apiclient
+        //  https://ndl.univd.edu.ua/dstest/apiclient/site/auth?authclient=facebook
 
         switch ($mode) {
             case 'withoutSignup':
@@ -485,6 +482,7 @@ app\components\clients\Facebook#1
     public function actionError()
     {
        // $this->layout = '@app/views/layouts/commonLayout.php';
+        $this->layout = false;
 
         $exception = \Yii::$app->errorHandler->exception;
         if ($exception !== null) {

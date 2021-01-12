@@ -72,7 +72,7 @@ class TokenAuth extends AuthMethod
 
         $accessToken = $this->getAccessToken();
         Functions::log("SERVER API --- токен:");
-        Functions::log($accessToken);
+        Functions::log($accessToken->access_token);
 
         if (!$this->checkScopes($this->scopes, $accessToken->scope)) {
             throw new UnauthorizedHttpException(Yii::t('conquer/oauth2', 'The access token does not have required scopes.'));
@@ -87,8 +87,8 @@ class TokenAuth extends AuthMethod
         if (empty($identity)) {
             throw new Exception(Yii::t('conquer/oauth2', 'User is not found.'), Exception::ACCESS_DENIED);
         }
-        Functions::log("SERVER API --- обновляем и возвращаем identity:");
-        Functions::log($identity);
+        Functions::log("SERVER API --- обновляем и возвращаем identity");
+      //  Functions::log($identity);
 
         $user->setIdentity($identity);
 

@@ -3,9 +3,12 @@
 namespace apiserver\modules\v1\controllers;
 
 use apiserver\modules\v1\models\Post;
+use app\modules\v1\models\filters\PostFilter;
 use common\helpers\Functions;
+use yii\db\Query;
 use yii\rest\Controller;
 use yii\web\Response;
+use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use common\components\AccessControl;
@@ -31,7 +34,7 @@ class PostController extends Controller
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'view',
+                        'index', 'view', 'grid', 'test',
                     ],
                     'roles'      => ['@', '?' ],
                 ],
@@ -65,10 +68,49 @@ class PostController extends Controller
         ];
     }
 
+    public function actionTest()
+    {
+        $data = \Yii::$app->request->post();
+        Functions::log('*************** actionTest');
+        Functions::log($data);
+        unset($data['queryData']['modelClass']);
+        $p = Post::find();
+        \Yii::configure($p, $data['queryData']);
+        switch ($data['operation']) {
+            case 'queryAll':
+                $ret = $p->all();
+                break;
+            case 'queryOne':
+                $ret = $p->one();
+                break;
+            case 'queryScalar':
+                $ret = $p->select($data['selectExpression'])->scalar();
+                break;
+        }
+        Functions::log($p);
+        Functions::log($ret);
+        return $ret;
+    }
+
     public function actionIndex()
     {
         $ret = Post::find()->all();
         return $ret;
+    }
+
+    public function actionGrid()
+    {
+        Functions::log('actionGrid');
+        Functions::logRequest();
+        $filter = new PostFilter();
+        $data = $filter->runClientProviderQuery();
+        Functions::log('$data:');
+        Functions::log($data);
+        if (isset($data)){
+            return $data;
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
 
     public function actionView($id)

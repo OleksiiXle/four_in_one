@@ -64,4 +64,17 @@ class MainController extends Controller
         }
         return $this->_configs;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
+    }
+
 }

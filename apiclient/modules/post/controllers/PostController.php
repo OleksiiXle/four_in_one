@@ -2,7 +2,9 @@
 
 namespace app\modules\post\controllers;
 
+use app\modules\post\grids\PostGrid;
 use app\modules\post\models\Post;
+use common\models\UserM;
 use Yii;
 use common\components\AccessControl;
 use yii\filters\VerbFilter;
@@ -10,6 +12,7 @@ use yii\httpclient\Client;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use app\components\AuthHandler;
+use yii\web\Response;
 
 class PostController extends MainController
 {
@@ -33,7 +36,7 @@ class PostController extends MainController
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'create', 'view', 'delete',
+                        'index', 'create', 'view', 'delete', 'grid', 'test', 'error'
                     ],
                     'roles'      => ['@', '?', ],
                 ],
@@ -110,6 +113,19 @@ class PostController extends MainController
             return $this->goBack();
 
         }
+    }
+
+    public function actionGrid()
+    {
+        $postProvider = new PostGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $postProvider->reload(Yii::$app->request->post());
+        }
+        return $this->render('grid', [
+            'postProvider' => $postProvider,
+        ]);
+
     }
 
     public function actionCreate()
@@ -227,6 +243,50 @@ class PostController extends MainController
 
     }
 
+    /**
+     * @return string
+     */
+    public function actionTest()
+    {
+        //    $this->layout = '@app/modules/adminxx/views/layouts/testLayout.php';
+        //  $this->layout = false;
+        $tmp = 1;
+      //  $ret = Post::updateAll(['name' => 'lokoko'], ['id' => 77]);
+      //  $ret = Post::findOne(['id' => 1]);
+        /*
+        $ret = Post::find()
+            ->select('post.*, post_media.*')
+            ->where(['>', 'post.id' , 1])
+            ->leftJoin('post_media', ['post.id' => 'post_media.post_id'])
+          //  ->asArray()
+            ->orderBy('post.type')
+            ->one();
+        /*
+         * */
+        /*
+        $tmp = $ret[0];
+        $tmp->setAttributes(Yii::$app->request->post());
+        $tmp->name = 'lokoko';
+        $tmp->save();
+        */
+        /*
+        $r = UserM::find()
+            ->where('id > 5')
+            ->all();
+        foreach ($r as $rr) {
+            $ret[] = $rr->toArray(['*'], ['eee']);
+        }
+        */
+        $ret = Post::find()
+            ->where(['>', 'id', 1])
+            ->requiredFields(['id', 'user_id', 'images', 'mainImage'])
+            ->requiredExtraFields(['ownerLastName'])
+            ->asArray()
+            ->all();
 
+/*
+*/
+        return $this->render('test', ['ret' => $ret]);
+    }
 
 }

@@ -14,6 +14,7 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
         '@common'   => dirname(dirname(__DIR__)) . '/common',
+        '@console'   => dirname(dirname(__DIR__)) . '/console',
     ],
 
     'components' => [
@@ -35,6 +36,32 @@ $config = [
         ],
         'db' => $db,
         'backGroundDb' => $backGroundDb,
+        'authClientCollection' => [
+            'class'   => 'app\components\CollectionX',
+        ],
+        /*
+        'authClientCollection' => [
+            'class'   => 'yii\authclient\Collection',
+            'clients' => [
+                'xapi' => [
+                    'class'        => 'app\components\XapiAuthClient',
+                    'clientId'     => $params['clientId'],
+                    'clientSecret' => $params['clientSecret'],
+                    'tokenUrl'     => $params['tokenUrl'],
+                    'authUrl'      => $params['authUrl'],
+                    'signupUrl'      => $params['signupUrl'],
+                    'apiBaseUrl'   => $params['apiBaseUrl'],
+
+                    'stateStorage' => 'app\components\XapiStateStorage'
+                ],
+            ],
+        ],
+        */
+        'xapi'  => [
+            'class'      => 'app\components\XapiV1Client',
+            //'apiBaseUrl' => $providers['xapi']['api_base_url'], //todo брать из authClientCollection
+        ],
+
     ],
     'params' => $params,
     /*

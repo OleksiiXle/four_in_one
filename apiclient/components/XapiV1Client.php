@@ -9,7 +9,6 @@ use yii\httpclient\Client;
 use yii\httpclient\Request;
 use yii\helpers\VarDumper;
 
-
 class XapiV1Client extends Component {
 
     /** Handler result consts */
@@ -115,33 +114,6 @@ class XapiV1Client extends Component {
         }
     }
 
-    public function userRegister($params, $data) {
-        $ret = $this->callMethod('/user/register', $params, 'POST', $data);
-        return $ret;
-    }
-
-    public function userView($id, $expand = false) {
-        $params = ['id' => $id];
-        if ($expand) {
-            $params['expand']  = 'email';
-            $params['nocheck'] = true;
-        }
-        return $this->callMethod('/user/view', $params);
-    }
-
-    public function userList($expand = false) {
-        $params = [];
-        if ($expand) {
-            $params['expand'] = 'email';
-        }
-        return $this->callMethod('/user', $params);
-    }
-
-    public function userCompanies($userId) {
-        $params = ['user_id' => $userId];
-        return $this->callMethod('/user/companies', $params);
-    }
-
     /**
      * Создаёт запрос к API серверу, получает ответ и обрабатывает его.
      * Возвращает результат обработки запроса.
@@ -154,10 +126,28 @@ class XapiV1Client extends Component {
      */
     public function callMethod($link, $getParams = [], $method = 'GET', $data = null)
     {
+        $token = false;
+        if (!Yii::$app->user->isGuest) {
+            //авторизованый пользователь
+            /** @var \yii\authclient\Collection $authCollection */
+            $authCollection = \Yii::$app->authClientCollection;
+            /** @var \app\components\clients\XapiAuthClient $XapiAuthClient */
+            $xapiAuthClient = $authCollection->getClient('xapi');
+            $token = $xapiAuthClient->getAccessToken();
+            if (!$token) {
+                \yii::$app->getResponse()->redirect(Url::toRoute($this->authRedirect))->send();
+                \yii::$app->end();
+            }
+        }
+
         if ($getParams){
             $link           = $link . '?' . http_build_query($getParams);
         }
         $this->request  = $this->createRequest($method, $link);
+
+        if ($token) {
+            $this->request->setHeaders(['Authorization' => 'Bearer ' . $token->params['access_token']]);
+        }
         $this->request->setOptions([
             'maxRedirects' => 0,
         ]);
@@ -165,22 +155,7 @@ class XapiV1Client extends Component {
         if ($data) {
             $this->request->setData($data);
         }
-        if (!Yii::$app->user->isGuest) {
-            //авторизованый пользователь
-            /** @var \yii\authclient\Collection $authCollection */
-            $authCollection = \Yii::$app->authClientCollection;
-            /** @var \app\components\XapiAuthClient $XapiAuthClient */
-            $XapiAuthClient = $authCollection->getClient('xapi');
-            $token = $XapiAuthClient->getAccessToken();
-            if ($token) {
-                \yii::$app->getResponse()->redirect(Url::toRoute($this->authRedirect))->send();
-                \yii::$app->end();
-                $this->request->setHeaders(['Authorization' => 'Bearer ' . $token->params['access_token']]);
-            } else {
-                \yii::$app->getResponse()->redirect(Url::toRoute($this->authRedirect))->send();
-                \yii::$app->end();
-           }
-        }
+
         $this->response = $this->request->send();
 
         $this->handleResult();
@@ -208,7 +183,6 @@ class XapiV1Client extends Component {
 
         if ($this->ajaxResponse) {
             $this->jHeaders();
-            //\yii::trace(\yii\helpers\VarDumper::dumpAsString(\yii::$app->response->headers), "upzapi");
             return $this->ajaxResult;
         } else {
             return $result;
@@ -385,7 +359,7 @@ class XapiV1Client extends Component {
     protected function createRequest($method = 'GET', $url) {
         return $this->getHttpClient()
             ->createRequest()
-            ->setFormat(Client::FORMAT_JSON)
+          //  ->setFormat(Client::FORMAT_JSON)
             ->setMethod($method)
             ->setUrl($this->apiBaseUrl . $url);
     }

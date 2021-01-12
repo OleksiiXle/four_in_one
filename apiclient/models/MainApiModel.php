@@ -2,10 +2,10 @@
 
 namespace app\models;
 
+use app\components\models\apiQueryModels\ApiActiveRecord;
 use Yii;
-use yii\base\Model;
 
-class MainApiModel extends Model
+class MainApiModel extends ApiActiveRecord
 {
     //******************** допустимые символы текста названий, пунктов приказа и пр.
     const PATTERN_TEXT = '#^[А-ЯІЇЄҐа-яіїєґ0-9A-Za-z ().№ʼ,«»\'"\-:;/]+$#u';
@@ -24,6 +24,12 @@ class MainApiModel extends Model
         'apiClient',
         'response',
     ];
+
+    public function init()
+    {
+        parent::init();
+        $this->apiClient = \Yii::$app->xapi;
+    }
 
     public function __get($name)
     {
@@ -148,7 +154,7 @@ class MainApiModel extends Model
 
     }
 
-    public function validateNotEmpty($attribute, $params)
+    public function validateNotEmpty($attribute)
     {
         if (empty($this->$attribute)) {
             $this->addError($attribute, 'Необхідно заповнити ' . $this->attributeLabels()[$attribute]);
@@ -195,5 +201,6 @@ class MainApiModel extends Model
 
         return !$this->hasErrors();
     }
+
 
 }

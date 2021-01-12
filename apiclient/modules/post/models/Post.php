@@ -2,6 +2,7 @@
 
 namespace app\modules\post\models;
 
+use common\models\MainModel;
 use Yii;
 use app\models\MainApiModel;
 
@@ -20,21 +21,31 @@ use app\models\MainApiModel;
  * @property PostMedia[] $postMedia
  */
 class Post extends MainApiModel
+//class Post extends MainModel
 {
     const TYPE_FRONT = 1;
     const TYPE_TARGET = 2;
     const API_ROUTE_CREATE = '/post/create';
 
+    public $id;
     public $user_id;
     public $type;
     public $content;
     public $name;
 
+    public static function primaryKey()
+    {
+        return  ['id'];
+    }
+/*
     public function __construct($apiClient)
     {
         $this->apiClient = $apiClient;
         parent::__construct([]);
     }
+*/
+
+
 
     /**
      * {@inheritdoc}
@@ -68,7 +79,7 @@ class Post extends MainApiModel
         ];
     }
 
-    public function save($runValidation = true, $attributeNames = null)
+    public function save__($runValidation = true, $attributeNames = null)
     {
         $tmp = 1;
         $data = [
@@ -83,7 +94,7 @@ class Post extends MainApiModel
         return $this->response['status'];
     }
 
-    public static function findOne($condition)
+    public static function findOne__($condition)
     {
         $model = new self();
 

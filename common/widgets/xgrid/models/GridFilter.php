@@ -88,7 +88,7 @@ abstract class GridFilter extends Model
             }
         }
 
-        $tmp = $this->_defaultQuery->createCommand()->getSql();
+     //   $tmp = $this->_defaultQuery->createCommand()->getSql();
         return $this->_defaultQuery;
     }
 
