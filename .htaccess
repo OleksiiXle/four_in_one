@@ -1,5 +1,8 @@
 RewriteEngine On
 
+RewriteCond %{HTTPS} =off 
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [QSA,L]
+
 # End the processing, if a rewrite already occurred
 RewriteRule ^(apiuser|apiadmin|apiserver|apiclient)/web/ - [L]
 
@@ -19,3 +22,5 @@ RewriteRule ^apiclient(/(.*))?$ apiclient/web/$2 [S=1]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+/web)/.*$ $1/index.php
+
+Options All -Indexes
