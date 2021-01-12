@@ -19,6 +19,9 @@ use common\models\UserData;
                 <div class="xCard">
                     <?php
                     echo $form->field($filter, 'name');
+                    //todo***************** обязательные поля
+                    echo $form->field($filter, 'showOnlyChecked')->checkbox();
+                    echo $form->field($filter, 'allRowsAreChecked')->hiddenInput()->label(false);
                     ?>
                 </div>
             </div>
@@ -29,16 +32,17 @@ use common\models\UserData;
             <div class="form-group" align="center" style="padding: 20px">
                 <?php
                 //  echo  Html::submitButton('Шукати', ['class' => 'btn btn-primary', 'id' => 'subBtn']);
-                echo  Html::submitButton(Yii::t('app', 'Применить фильтр'), [
+                echo  Html::button(Yii::t('app', 'Применить фильтр'), [
                     'class' => 'btn btn-primary',
                     'id' => 'subBtn',
-                  //  'onclick' => 'useFilter();'
+                    'onclick' => 'useFilter();'
                 ]);
                 ?>
                 <?= Html::button(Yii::t('app', 'Очистить фильтр'), [
                     'class' => 'btn btn-danger',
                     'id' => 'cleanBtn',
-                    'onclick' => 'cleanPostFilter();',
+                  //  'onclick' => 'cleanPostFilter();',
+                    'onclick' => 'cleanFilter(true);',
                 ]) ?>
            </div>
         </div>

@@ -3,32 +3,23 @@
 namespace app\components\models\apiQueryModels;
 
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 class ApiActiveQuery extends ActiveQuery
 {
     /**
-     * Creates a DB command that can be used to execute this query.
-     * @param Connection|null $db the DB connection used to create the DB command.
+     * Creates a API command that can be used to execute this query.
+     * @param null $db the DB connection used to create the DB command.
      * If `null`, the DB connection returned by [[modelClass]] will be used.
-     * @return Command the created DB command instance.
+     * @return ApiCommand the created DB command instance.
      */
-    public function createCommand()
+    public function createCommand($db = NULL)
     {
         /* @var $modelClass ApiActiveRecord */
-        $modelClass = $this->modelClass;
-/*
-        if ($this->sql === null) {
-            list($sql, $params) = $this->createQueryBuilder()->build($this);
-        } else {
-            $sql = $this->sql;
-            $params = $this->params;
-        }
-*/
-
         $command = \Yii::createObject(ApiCommand::class);
+        $buff = explode('\\', $this->modelClass);
+        $command->modelName = $buff[count($buff) -1 ];
         $command->query = $this;
-
-//        $command = $db->createCommand($sql, $params);
         $this->setCommandCache($command);
 
         return $command;
@@ -36,7 +27,8 @@ class ApiActiveQuery extends ActiveQuery
 
     public function createQueryBuilder()
     {
-        return new ApiQueryBuilder();
+       // return new ApiQueryBuilder();
+        return false;
     }
 
     public function populate($rows)
@@ -71,6 +63,37 @@ class ApiActiveQuery extends ActiveQuery
         return parent::populate($models);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function queryScalar($selectExpression, $db)
+    {
+        /* @var $modelClass ApiActiveRecord */
+        $command = \Yii::createObject(ApiCommand::class);
+        $buff = explode('\\', $this->modelClass);
+        $command->modelName = $buff[count($buff) -1 ];
+        $command->query = $this;
+        $command->selectExpression = $selectExpression;
+
+        return $command->queryScalar();
+
+
+        if ($db === null) {
+            $db = $modelClass::getDb();
+        }
+
+        if ($this->sql === null) {
+            return parent::queryScalar($selectExpression, $db);
+        }
+
+        $command = (new Query())->select([$selectExpression])
+            ->from(['c' => "({$this->sql})"])
+            ->params($this->params)
+            ->createCommand($db);
+        $this->setCommandCache($command);
+
+        return $command->queryScalar();
+    }
 
     /**
      * todo не переписано Removes duplicated models by checking their primary key values.
@@ -125,6 +148,4 @@ class ApiActiveQuery extends ActiveQuery
 
         return array_values($models);
     }
-
-
 }

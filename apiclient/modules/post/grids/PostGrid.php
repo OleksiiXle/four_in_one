@@ -4,12 +4,13 @@ namespace app\modules\post\grids;
 
 use app\modules\post\grids\filters\PostFilter;
 use common\widgets\menuAction\MenuActionWidget;
+use common\widgets\xgrid\models\Grid;
 use common\widgets\xgrid\models\GridApi;
 use Yii;
 use yii\helpers\Url;
 use common\widgets\menuAction\MenuActionAsset;
 
-class PostGrid extends GridApi
+class PostGrid extends Grid
 {
     /**
      * @return array
@@ -19,13 +20,19 @@ class PostGrid extends GridApi
         return [
             'name' => 'apiPostGrid',
             'dataProvider' => $this->provider,
-            'useAjax' => false,
-            'useActions' => false,
-            'useCustomUploadFunction' => true,
+            'useAjax' => true,
+            'useActions' => true,
+            'useCustomUploadFunction' => false,
             'assetsToRegister' => [MenuActionAsset::class],
             'filterView' => '@app/modules/post/grids/views/_filterPost',
             //-------------------------------------------
             'columns' => [
+                [
+                    'label' => '',
+                    'headerOptions' => ['style' => 'width: 2%;overflow: hidden; '],
+                    'contentOptions' => ['style' => 'width: 2%; white-space: nowrap; overflow: hidden;'],
+                    'options' => ['class' => 'row-check'],
+                ],
                 [
                     'class' => 'yii\grid\SerialColumn',
                     'headerOptions' => ['style' => 'width: 3%;'],
@@ -79,10 +86,10 @@ class PostGrid extends GridApi
     {
         return [
             'filterModelClass' => PostFilter::class,
-            'link' => '/post/grid',
+           // 'link' => '/post/grid',
             'conserveName' => 'apiPostGrid',
             'pageSize' => 1,
-            'apiMethod' => 'POST',
+          //  'apiMethod' => 'POST',
             'sort' => [
                 'attributes' => [
                     'name' => [

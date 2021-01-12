@@ -39,8 +39,8 @@ class PostFilter extends GridFilter
 
     public function getCustomQuery()
     {
-       // $query = Post::find();
-        $query = null;
+        $query = Post::find();
+       // $query = null;
 
         return $query;
     }

@@ -5,6 +5,7 @@ namespace apiserver\modules\v1\controllers;
 use apiserver\modules\v1\models\Post;
 use app\modules\v1\models\filters\PostFilter;
 use common\helpers\Functions;
+use yii\db\Query;
 use yii\rest\Controller;
 use yii\web\Response;
 use yii\rest\ActiveController;
@@ -82,11 +83,13 @@ class PostController extends Controller
             case 'queryOne':
                 $ret = $p->one();
                 break;
+            case 'queryScalar':
+                $ret = $p->select($data['selectExpression'])->scalar();
+                break;
         }
         Functions::log($p);
         Functions::log($ret);
         return $ret;
-
     }
 
     public function actionIndex()

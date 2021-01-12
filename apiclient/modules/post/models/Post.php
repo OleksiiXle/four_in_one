@@ -32,6 +32,11 @@ class Post extends MainApiModel
     public $type;
     public $content;
     public $name;
+
+    public static function primaryKey()
+    {
+        return  ['id'];
+    }
 /*
     public function __construct($apiClient)
     {
@@ -39,6 +44,8 @@ class Post extends MainApiModel
         parent::__construct([]);
     }
 */
+
+
 
     /**
      * {@inheritdoc}

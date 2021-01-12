@@ -32,8 +32,6 @@ class ApiActiveRecord extends ActiveRecord
      */
     public static function populateRecord($record, $row)
     {
-        $tmp = 1;
-       // $columns = array_flip($record->attributes());
         $attributes = array_keys($record->getAttributes());
         foreach ($row as $name => $value) {
             if (in_array($name, $attributes)) {
@@ -41,28 +39,6 @@ class ApiActiveRecord extends ActiveRecord
                 $record->$name = $value;
             }
         }
-      //  $record->_oldAttributes = $record->_attributes;
-      //  $record->_related = [];
-     //   $record->_relationsDependencies = [];
-    }
-
-
-    /**
-     * Returns the schema information of the DB table associated with this AR class.
-     * @return TableSchema the schema information of the DB table associated with this AR class.
-     * @throws InvalidConfigException if the table for the AR class does not exist.
-     */
-    public static function getTableSchema__()
-    {
-        $tableSchema = static::getDb()
-            ->getSchema()
-            ->getTableSchema(static::tableName());
-
-        if ($tableSchema === null) {
-            throw new InvalidConfigException('The table does not exist: ' . static::tableName());
-        }
-
-        return $tableSchema;
     }
 
     /**
@@ -137,7 +113,4 @@ class ApiActiveRecord extends ActiveRecord
 
         return $result;
     }
-
-
-
 }

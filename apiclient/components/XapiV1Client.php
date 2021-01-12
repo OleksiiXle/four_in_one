@@ -114,33 +114,6 @@ class XapiV1Client extends Component {
         }
     }
 
-    public function userRegister($params, $data) {
-        $ret = $this->callMethod('/user/register', $params, 'POST', $data);
-        return $ret;
-    }
-
-    public function userView($id, $expand = false) {
-        $params = ['id' => $id];
-        if ($expand) {
-            $params['expand']  = 'email';
-            $params['nocheck'] = true;
-        }
-        return $this->callMethod('/user/view', $params);
-    }
-
-    public function userList($expand = false) {
-        $params = [];
-        if ($expand) {
-            $params['expand'] = 'email';
-        }
-        return $this->callMethod('/user', $params);
-    }
-
-    public function userCompanies($userId) {
-        $params = ['user_id' => $userId];
-        return $this->callMethod('/user/companies', $params);
-    }
-
     /**
      * Создаёт запрос к API серверу, получает ответ и обрабатывает его.
      * Возвращает результат обработки запроса.
@@ -158,7 +131,7 @@ class XapiV1Client extends Component {
             //авторизованый пользователь
             /** @var \yii\authclient\Collection $authCollection */
             $authCollection = \Yii::$app->authClientCollection;
-            /** @var \app\components\XapiAuthClient $XapiAuthClient */
+            /** @var \app\components\clients\XapiAuthClient $XapiAuthClient */
             $xapiAuthClient = $authCollection->getClient('xapi');
             $token = $xapiAuthClient->getAccessToken();
             if (!$token) {
@@ -210,7 +183,6 @@ class XapiV1Client extends Component {
 
         if ($this->ajaxResponse) {
             $this->jHeaders();
-            //\yii::trace(\yii\helpers\VarDumper::dumpAsString(\yii::$app->response->headers), "upzapi");
             return $this->ajaxResult;
         } else {
             return $result;

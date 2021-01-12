@@ -5,7 +5,7 @@ use app\helpers\Functions;
 use yii\helpers\FileHelper;
 use yii\web\Controller;
 use common\components\AccessControl;
-use console\controllers\backgroundTasks\models\BackgroundTask;
+use app\commands\backgroundTasks\models\BackgroundTask;
 
 /**
  * Class BackgroundTasksController

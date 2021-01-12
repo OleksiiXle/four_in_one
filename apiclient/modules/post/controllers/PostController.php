@@ -12,6 +12,7 @@ use yii\httpclient\Client;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use app\components\AuthHandler;
+use yii\web\Response;
 
 class PostController extends MainController
 {
@@ -117,6 +118,10 @@ class PostController extends MainController
     public function actionGrid()
     {
         $postProvider = new PostGrid();
+        if (Yii::$app->request->isPost) {
+            Yii::$app->getResponse()->format = Response::FORMAT_HTML;
+            return $postProvider->reload(Yii::$app->request->post());
+        }
         return $this->render('grid', [
             'postProvider' => $postProvider,
         ]);

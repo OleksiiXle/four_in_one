@@ -3,8 +3,8 @@
 namespace app\modules\adminxx\controllers;
 
 use Yii;
-use console\controllers\backgroundTasks\models\BackgroundTask;
-use console\controllers\backgroundTasks\tasks\TestTaskWorker;
+use app\commands\backgroundTasks\models\BackgroundTask;
+use app\commands\backgroundTasks\tasks\TestTaskWorker;
 use common\components\conservation\ActiveDataProviderConserve;
 use common\components\AccessControl;
 use app\modules\adminxx\grids\BackgroundTaskGrid;
