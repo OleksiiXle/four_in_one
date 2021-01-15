@@ -36,7 +36,7 @@ class PostController extends MainController
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index', 'create', 'view', 'delete', 'grid', 'test', 'error'
+                        'index', 'create', 'view', 'delete', 'grid', 'test', 'error', 'rest'
                     ],
                     'roles'      => ['@', '?', ],
                 ],
@@ -162,92 +162,15 @@ class PostController extends MainController
         ]);
     }
 
-    public function actionChoiseSeats($seansId)
-    {
-        $t=1;
-        if (!\Yii::$app->request->isPost){
-            //  $client = new Client();
-            $response = $this->getXapi()->callMethod('/sale/get-seans', ['id' => $seansId]);
-            //      return $this->render('debug' , ['response' => $response] );
-            if ($response['status']){
-                return $this->render('seans',[
-                    'seans' => $response['data'],
-                ]);
-            } else {
-                //   $session = Yii::$app->session;
-                //   $session->setFlash('error', $response['data']);
-                return $this->goBack();
-
-            }
-
-            $response = $client->createRequest()
-                ->setMethod('GET')
-                ->setUrl('http://api.server/v1/sale/get-seans')
-                ->setData(['id' => $seansId])
-                ->send();
-            $seans = $response->isOk ? $response->data : [];
-            $result['data'] = $response->data;
-            $result['code'] = $response->headers['http-code'];
-            $result['headers'] = $response->headers;
-            return $this->render('seans',[
-                'seans' => $seans,
-                'response' => $response,
-                'result' => $result,
-            ]);
-
-        } else {
-            $_post = \Yii::$app->request->post();
-            if (isset($_post['reservation'])){
-                $datas = json_decode($_post['reservation'], true);
-                if (!empty($datas)){
-                    return $this->redirect(['/seans/make-reservation',
-                        'seansId' => $seansId,
-                        'reservation' => $_post['reservation'],
-                    ]);
-                }
-                return $this->redirect('/seans/seanses-list');
-            } else {
-                throw new NotFoundHttpException('Сеанс не найден');
-            }
-        }
-    }
-
-    public function actionMakeReservation($seansId, $reservation)
-    {
-        $datas = json_decode($reservation, true);
-        foreach ($datas as $data){
-            $buf = json_decode($data, true);
-            $myReservation[] = [
-                'rowNumber' => $buf['rowNumber'],
-                'seatNumber' => $buf['seatNumber'],
-                'persona' => 'lokoko',
-            ];
-        }
-        if (!empty($myReservation)){
-            $client = new Client();
-            $response = $client->createRequest()
-                ->setMethod('POST')
-                ->setUrl('http://api.server/v1/sale/get-reservation')
-                ->setData(['seansId' => $seansId, 'reservation' => $myReservation] )
-                ->send();
-            $this->checkResponse($response);
-            //    return $this->render('debug' , ['response' => $response] );
-            if ($response->isOk){
-                return $this->render('seansSuccessMessage', ['reservation' => $response->data]);
-            } else {
-                return $this->redirect(['/seans/choise-seats', 'seansId' => $seansId]);
-            }
-        } else {
-            throw new NotFoundHttpException('Данные пусты');
-        }
-
-    }
-
     /**
      * @return string
      */
     public function actionTest()
     {
+
+        $response = $this->getXapi()->callMethod('/post/index', []);
+        return $this->render('test', ['ret' => $response]);
+
         //    $this->layout = '@app/modules/adminxx/views/layouts/testLayout.php';
         //  $this->layout = false;
         $tmp = 1;
@@ -288,5 +211,15 @@ class PostController extends MainController
 */
         return $this->render('test', ['ret' => $ret]);
     }
+
+    public function actionRest()
+    {
+        $xapiRest = \Yii::$app->xapi;
+        $response = $xapiRest->callMethod('/post-rest/1', []);
+      //  $xapiRest = \Yii::$app->xapiRest;
+     //   $response = $xapiRest->callRestMethod('/rest/post/1', []);
+        return $this->render('test', ['ret' => $response]);
+    }
+
 
 }

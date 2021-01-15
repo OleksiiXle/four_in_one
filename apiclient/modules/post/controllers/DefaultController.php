@@ -21,7 +21,7 @@ class DefaultController extends MainController
                 [
                     'allow'      => true,
                     'actions'    => [
-                        'index',
+                        'index', 'rest'
                     ],
                     'roles'      => [ '@', '?'],
                 ],
@@ -56,4 +56,5 @@ class DefaultController extends MainController
             ]);
         }
     }
+
 }

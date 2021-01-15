@@ -12,7 +12,7 @@ $config = [
     'id' => 'app-api-server',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'controllerNamespace' => 'apiserverr\controllers',
+    'controllerNamespace' => 'apiserver\controllers',
     'defaultRoute' => 'site/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -27,6 +27,12 @@ $config = [
         'oauth2' => [
             'class' => 'apiserver\modules\oauth2\Module',
         ],
+        /*
+        'rest' => [
+            'basePath' => '@apiserver/modules/rest',
+            'class' => 'apiserver\modules\rest\Module'
+        ]
+        */
     ],
 
     'components' => [
@@ -85,8 +91,49 @@ $config = [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,//true,
             'showScriptName' => false,
             'rules' => [
+                /*
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/post-rest',
+                    'pluralize' => false,
+                ],
+                */
+                'PUT,PATCH v1/post-rest/<id>' => 'v1/post-rest/update',
+                'DELETE v1/post-rest/<id>' => 'v1/post-rest/delete',
+                'GET,HEAD v1/post-rest/<id>' => 'v1/post-rest/view',
+                'POST v1/post-rest' => 'v1/post-rest/create',
+                'GET,HEAD v1/post-rest' => 'v1/post-rest/index',
+                'v1/post-rest/<id>' => 'v1/post-rest/options',
+                'v1/post-rest' => 'v1/post-rest/options',
+                /*
+                              */
+                /*
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'rest/post',
+                    'pluralize' => false,
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>'
+                    ]
+                ],
+                */
+                /*
+                [
+                    'pattern' => 'post/view/<id:\d+>',
+                    'route' => 'post/view',
+                    ],
+                */
+              //  'post/view/<id:\d+>' => 'post/view',
+              //  'PUT,PATCH post/<id>' => 'post/update',
+             //   'DELETE post/<id>' => 'post/delete',
+             //   'GET,HEAD post/<id>' => 'post/view',
+             //   'POST post' => 'post/create',
+             //   'GET,HEAD post' => 'post/index',
+             //   'post/<id>' => 'post/options',
+           //     'post' => 'post/options',
             ],
         ],
         'i18n' => [

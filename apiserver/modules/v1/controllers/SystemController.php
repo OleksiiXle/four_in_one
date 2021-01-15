@@ -2,6 +2,7 @@
 
 namespace apiserver\modules\v1\controllers;
 
+use app\helpers\Functions;
 use yii\rest\Controller;
 
 class SystemController extends Controller
@@ -48,6 +49,8 @@ class SystemController extends Controller
                 $errorResponse['code'] = $code;
             }
         }
+        \common\helpers\Functions::log('**************** class SystemController');
+        \common\helpers\Functions::log($errorResponse);
    //     \yii::trace('************************************************ $exception' , "dbg");
       //  \yii::trace(\yii\helpers\VarDumper::dumpAsString($exception), "dbg");
       //  \yii::trace(\yii\helpers\VarDumper::dumpAsString($errorResponse), "dbg");

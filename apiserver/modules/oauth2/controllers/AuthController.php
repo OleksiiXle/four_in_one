@@ -2,6 +2,7 @@
 
 namespace apiserver\modules\oauth2\controllers;
 
+use apiserver\modules\oauth2\Exception;
 use yii\web\Controller;
 use common\helpers\Functions;
 use apiserver\modules\oauth2\AuthorizeFilter;
@@ -9,7 +10,7 @@ use apiserver\modules\oauth2\models\LoginForm;
 use apiserver\modules\oauth2\models\SignupForm;
 use apiserver\modules\oauth2\TokenAction;
 
-class AuthController extends Controller
+class AuthController extends \yii\rest\Controller
 {
     public function beforeAction($action)
     {
@@ -97,6 +98,12 @@ class AuthController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionError()
+    {
+        Functions::log('****************** error action');
+        throw new Exception('exeption');
     }
 }
 

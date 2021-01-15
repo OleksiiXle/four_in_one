@@ -28,6 +28,9 @@ class XapiV1Client extends Component {
     /** Ajax header message */
     const AJAX_MESSAGE_HEADER_NAME = 'x-response-message';
 
+    public $authClient;
+    public $authClientName;
+
     public $ajaxResponse = false;
     public $ajaxResult;
 
@@ -67,7 +70,7 @@ class XapiV1Client extends Component {
     public $authMessage;
     public $authMessageType   = "error";
     public $authCallback;
-    public $authRedirect      = 'apiclient/site/login';
+    public $authRedirect      = 'site/login';
     public $useDefAuthMessage = true;
 
     /** Permission error */
@@ -87,13 +90,20 @@ class XapiV1Client extends Component {
     public $noSuccessMessageType = "error";
     public $noSuccessCallback;
 
+    public function init()
+    {
+        parent::init();
+        $this->authClient = \Yii::$app->authClientCollection->getClient($this->authClientName);
+
+    }
+
     /**
      * @return mixed
      */
     public function getApiBaseUrl()
     {
         if ($this->_apiBaseUrl === null) {
-            $this->_apiBaseUrl = Yii::$app->authClientCollection->getClientInfo('xapi')['api_base_url'];
+            $this->_apiBaseUrl = $this->authClient->apiBaseUrl;
         }
         return $this->_apiBaseUrl;
     }
@@ -127,15 +137,17 @@ class XapiV1Client extends Component {
     public function callMethod($link, $getParams = [], $method = 'GET', $data = null)
     {
         $token = false;
+  //      $authUrl = Yii::$app->request->absoluteUrl . $this->authRedirect;
         if (!Yii::$app->user->isGuest) {
             //авторизованый пользователь
             /** @var \yii\authclient\Collection $authCollection */
-            $authCollection = \Yii::$app->authClientCollection;
+          //  $authCollection = \Yii::$app->authClientCollection;
             /** @var \app\components\clients\XapiAuthClient $XapiAuthClient */
-            $xapiAuthClient = $authCollection->getClient('xapi');
-            $token = $xapiAuthClient->getAccessToken();
+         //   $xapiAuthClient = $authCollection->getClient('xapi');
+            $token = $this->authClient->getAccessToken();
             if (!$token) {
-                \yii::$app->getResponse()->redirect(Url::toRoute($this->authRedirect))->send();
+                Yii::$app->user->logout();
+                \yii::$app->getResponse()->redirect(Yii::$app->request->absoluteUrl . $this->authRedirect)->send();
                 \yii::$app->end();
             }
         }
@@ -148,6 +160,7 @@ class XapiV1Client extends Component {
         if ($token) {
             $this->request->setHeaders(['Authorization' => 'Bearer ' . $token->params['access_token']]);
         }
+
         $this->request->setOptions([
             'maxRedirects' => 0,
         ]);
@@ -188,6 +201,69 @@ class XapiV1Client extends Component {
             return $result;
         }
     }
+
+    public function callRestMethod($link, $getParams = [], $method = 'GET', $data = null)
+    {
+        $token = false;
+        if (!Yii::$app->user->isGuest) {
+            $token = $this->authClient->getAccessToken();
+            if (!$token) {
+                Yii::$app->user->logout();
+                \yii::$app->getResponse()->redirect(Yii::$app->request->absoluteUrl . $this->authRedirect)->send();
+                \yii::$app->end();
+            }
+        }
+
+        if ($getParams){
+            $link           = $link . '?' . http_build_query($getParams);
+        }
+        $this->request  = $this->createRequest($method, $link);
+
+        if ($token) {
+            $this->request->setHeaders(['Authorization' => 'Bearer ' . $token->params['access_token']]);
+        }
+
+        $this->request->setOptions([
+            'maxRedirects' => 0,
+        ]);
+
+        if ($data) {
+            $this->request->setData($data);
+        }
+
+        $this->response = $this->request->send();
+
+        $this->handleResult();
+        $result = [
+            'status'       => $this->response->isOk,
+            'data'         => $this->response->data,
+            'headers'      => $this->response->headers,
+            'returnStatus' => $this->responseStatus,
+            'authError'    => false,
+        ];
+        try {
+            switch ($this->responseStatus) {
+                case 0:
+                case self::RETURN_AUTH_ERROR:
+                    $result['authError'] = 'Authorization required';
+                break;
+                case self::RETURN_PERMS_ERROR:
+                    $result['authError'] = 'Success denied';
+                    break;
+            }
+        } catch (\Exception $ex) {
+            //exit(\yii::$app->runAction($this->authRedirect));
+            $result['authError'] = 'Authorization required';
+        }
+
+        if ($this->ajaxResponse) {
+            $this->jHeaders();
+            return $this->ajaxResult;
+        } else {
+            return $result;
+        }
+    }
+
 
     /**
      * Обрабатывает ответ API, определяет статус,

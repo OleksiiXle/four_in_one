@@ -1,7 +1,7 @@
 RewriteEngine On
 
-RewriteCond %{HTTPS} =off 
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [QSA,L]
+#RewriteCond %{HTTPS} =off
+#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [QSA,L]
 
 # End the processing, if a rewrite already occurred
 RewriteRule ^(apiuser|apiadmin|apiserver|apiclient)/web/ - [L]

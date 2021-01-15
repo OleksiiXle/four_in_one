@@ -51,6 +51,7 @@ $config = [
         */
         'xapi'  => [
             'class'      => 'app\components\XapiV1Client',
+            'authClientName' => 'xapi',
             //'apiBaseUrl' => $providers['xapi']['api_base_url'], //todo брать из authClientCollection
         ],
         'authManager' => [
