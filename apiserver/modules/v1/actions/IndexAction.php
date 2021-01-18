@@ -111,7 +111,7 @@ class IndexAction extends Action
             $query->andWhere($filter);
         }
 
-        return Yii::createObject([
+        $dataProvider = Yii::createObject([
             'class' => ActiveDataProvider::className(),
             'query' => $query,
             'pagination' => [
@@ -121,5 +121,7 @@ class IndexAction extends Action
                 'params' => $requestParams,
             ],
         ]);
+
+        return $dataProvider;
     }
 }

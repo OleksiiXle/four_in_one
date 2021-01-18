@@ -3,10 +3,52 @@
 namespace apiserver\modules\v1\controllers;
 
 use yii\rest\ActiveController;
+use \apiserver\components\AccessControl;
+use apiserver\modules\oauth2\TokenAuth;
+use yii\web\ForbiddenHttpException;
 
 class PostRestController extends ActiveController
 {
     public $modelClass = 'apiserver\modules\v1\models\Post';
+
+    public function behaviors()
+    {
+        //  Functions::logRequest();
+        $behaviors = parent::behaviors();
+        if (!in_array($this->action->id, [
+            'index',
+        ]) ) {
+            $behaviors['tokenAuth'] = [
+                'class' => TokenAuth::class,
+            ];
+        }
+        $behaviors['access'] = [
+            'class' => AccessControl::class,
+            'rules' => [
+                [
+                    'allow'      => true,
+                    'actions'    => [
+                        'index',  'grid', 'test',
+                    ],
+                    'roles'      => ['@', '?' ],
+                ],
+                [
+                    'allow'      => true,
+                    'actions'    => [
+                        'create', 'update', 'delete', 'view',
+                    ],
+                    'roles'      => ['postCRUD', ],
+                    /*
+                    'denyCallback' => function($rule, $action) {
+                        throw new ForbiddenHttpException(\Yii::t('yii', 'You are not allowed to perform this action.'));
+                    },
+                    */
+                ],
+            ],
+        ];
+        return $behaviors;
+    }
+
 
     /**
      * {@inheritdoc}

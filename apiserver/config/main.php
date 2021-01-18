@@ -69,7 +69,6 @@ $config = [
             'name' => 'api-server',
         ],
         'log' => [
-            //  'traceLevel' => YII_DEBUG ? 3 : 0,
             'traceLevel' => 1,
             'targets' => [
                 [
@@ -108,31 +107,6 @@ $config = [
                 'GET,HEAD v1/post-rest' => 'v1/post-rest/index',
                 'v1/post-rest/<id>' => 'v1/post-rest/options',
                 'v1/post-rest' => 'v1/post-rest/options',
-                /*
-                              */
-                /*
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => 'rest/post',
-                    'pluralize' => false,
-                    'tokens' => [
-                        '{id}' => '<id:\\d+>'
-                    ]
-                ],
-                */
-                /*
-                [
-                    'pattern' => 'post/view/<id:\d+>',
-                    'route' => 'post/view',
-                    ],
-                */
-              //  'post/view/<id:\d+>' => 'post/view',
-              //  'PUT,PATCH post/<id>' => 'post/update',
-             //   'DELETE post/<id>' => 'post/delete',
-             //   'GET,HEAD post/<id>' => 'post/view',
-             //   'POST post' => 'post/create',
-             //   'GET,HEAD post' => 'post/index',
-             //   'post/<id>' => 'post/options',
            //     'post' => 'post/options',
             ],
         ],

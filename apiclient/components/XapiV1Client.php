@@ -120,7 +120,7 @@ class XapiV1Client extends Component {
                 }
             }
         } catch (\Exception $ex) {
-            \yii::trace(VarDumper::dumpAsString($ex), "upzapi");
+            \yii::trace(VarDumper::dumpAsString($ex), "xapi");
         }
     }
 
@@ -201,69 +201,6 @@ class XapiV1Client extends Component {
             return $result;
         }
     }
-
-    public function callRestMethod($link, $getParams = [], $method = 'GET', $data = null)
-    {
-        $token = false;
-        if (!Yii::$app->user->isGuest) {
-            $token = $this->authClient->getAccessToken();
-            if (!$token) {
-                Yii::$app->user->logout();
-                \yii::$app->getResponse()->redirect(Yii::$app->request->absoluteUrl . $this->authRedirect)->send();
-                \yii::$app->end();
-            }
-        }
-
-        if ($getParams){
-            $link           = $link . '?' . http_build_query($getParams);
-        }
-        $this->request  = $this->createRequest($method, $link);
-
-        if ($token) {
-            $this->request->setHeaders(['Authorization' => 'Bearer ' . $token->params['access_token']]);
-        }
-
-        $this->request->setOptions([
-            'maxRedirects' => 0,
-        ]);
-
-        if ($data) {
-            $this->request->setData($data);
-        }
-
-        $this->response = $this->request->send();
-
-        $this->handleResult();
-        $result = [
-            'status'       => $this->response->isOk,
-            'data'         => $this->response->data,
-            'headers'      => $this->response->headers,
-            'returnStatus' => $this->responseStatus,
-            'authError'    => false,
-        ];
-        try {
-            switch ($this->responseStatus) {
-                case 0:
-                case self::RETURN_AUTH_ERROR:
-                    $result['authError'] = 'Authorization required';
-                break;
-                case self::RETURN_PERMS_ERROR:
-                    $result['authError'] = 'Success denied';
-                    break;
-            }
-        } catch (\Exception $ex) {
-            //exit(\yii::$app->runAction($this->authRedirect));
-            $result['authError'] = 'Authorization required';
-        }
-
-        if ($this->ajaxResponse) {
-            $this->jHeaders();
-            return $this->ajaxResult;
-        } else {
-            return $result;
-        }
-    }
-
 
     /**
      * Обрабатывает ответ API, определяет статус,
@@ -935,7 +872,7 @@ class XapiV1Client extends Component {
                 break;
         }
         $msg["msg"] = "{$this->responseStatus}. {$msg["msg"]}";
-     //   \yii::$level(\yii\helpers\VarDumper::dumpAsString($msg), "upzapi");
+     //   \yii::$level(\yii\helpers\VarDumper::dumpAsString($msg), "lokoko");
     }
 
 }
