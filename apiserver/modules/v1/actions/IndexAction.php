@@ -2,6 +2,7 @@
 
 namespace apiserver\modules\v1\actions;
 
+use common\helpers\Functions;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\DataFilter;
@@ -84,6 +85,7 @@ class IndexAction extends Action
     protected function prepareDataProvider()
     {
         $requestParams = Yii::$app->getRequest()->getBodyParams();
+
         if (empty($requestParams)) {
             $requestParams = Yii::$app->getRequest()->getQueryParams();
         }

@@ -16,6 +16,7 @@ $this->title = Yii::t('app', 'Тест');
                 ['class' => 'yii\grid\SerialColumn'],
                 'id',
                 'name',
+                'type',
                 [
                     'label' => 'Картинка',
                     'format' => 'raw',

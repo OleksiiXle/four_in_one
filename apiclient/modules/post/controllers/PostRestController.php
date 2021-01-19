@@ -5,6 +5,7 @@ namespace app\modules\post\controllers;
 use app\components\ApiDataProvider;
 use app\modules\post\grids\PostGrid;
 use app\modules\post\models\Post;
+use app\widgets\restGrid\models\AutoFilter;
 use common\models\UserM;
 use Yii;
 use common\components\AccessControl;
@@ -125,6 +126,36 @@ class PostRestController extends MainController
 
                 ],
                 'enableMultiSort' => true,
+            ],
+            'autoFilter' => [
+                'attributes' => [
+                    'name' => [
+                        'col' => 1,
+                        'label' => 'Название',
+                        'condition' => 'LIKE',
+                        'renderType' => 'input',
+                    ],
+                    'id' => [
+                        'col' => 2,
+                        'condition' => '=',
+                        'renderType' => 'input',
+                    ],
+                    'type' => [
+                        'col' => 2,
+                        'condition' => '=',
+                        'renderType' => 'dropdownList',
+                        'list' => [
+                            0 => 'Все',
+                            1 => 'Главная страница',
+                            2 => 'Привязка к цели',
+                        ],
+                    ],
+                ],
+                'rules' => [
+                    [['id', 'type'], 'integer'],
+                    [['name'], 'string', 'min' => 3, 'max' =>20],
+                    [['name'], 'match', 'pattern' => AutoFilter::PATTERN_TEXT, 'message' => AutoFilter::PATTERN_TEXT_ERROR_MESSAGE,],
+                ],
             ],
 
             //  'conserveName'  => 'restPostGrid',

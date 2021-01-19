@@ -2,6 +2,9 @@
 
 namespace apiserver\modules\v1\controllers;
 
+use Yii;
+use common\helpers\Functions;
+use yii\data\ActiveDataProvider;
 use yii\rest\ActiveController;
 use \apiserver\components\AccessControl;
 use apiserver\modules\oauth2\TokenAuth;
@@ -60,6 +63,9 @@ class PostRestController extends ActiveController
                 'class' => 'apiserver\modules\v1\actions\IndexAction',
                 'modelClass' => $this->modelClass,
                 'checkAccess' => [$this, 'checkAccess'],
+                'prepareDataProvider' => function($action, $filter){
+                     return $this->prepareDataProvider($action, $filter);
+                }
             ],
             'view' => [
                 'class' => 'apiserver\modules\v1\actions\ViewAction',
@@ -117,6 +123,39 @@ class PostRestController extends ActiveController
      */
     public function checkAccess($action, $model = null, $params = [])
     {
+    }
+
+    public function prepareDataProvider($action, $filter)
+    {
+        $requestParams = Yii::$app->getRequest()->getBodyParams();
+
+        if (empty($requestParams)) {
+            $requestParams = Yii::$app->getRequest()->getQueryParams();
+        }
+
+        /* @var $modelClass \yii\db\BaseActiveRecord */
+        $modelClass = $this->modelClass;
+
+        $query = $modelClass::find();
+        if (isset($requestParams['filter'])) {
+            foreach ($requestParams['filter'] as $attribute => $params) {
+                $query->andWhere([$params['condition'], $attribute, $params['value']]);
+            }
+        }
+
+        $dataProvider = Yii::createObject([
+            'class' => ActiveDataProvider::className(),
+            'query' => $query,
+            'pagination' => [
+                'params' => $requestParams,
+            ],
+            'sort' => [
+                'params' => $requestParams,
+            ],
+        ]);
+
+        return $dataProvider;
+
     }
 
 }

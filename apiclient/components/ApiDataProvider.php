@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use app\widgets\restGrid\models\AutoFilter;
 use Yii;
 use yii\data\BaseDataProvider;
 //use app\components\Sort;
@@ -33,17 +34,54 @@ class ApiDataProvider extends BaseDataProvider {
     protected $params = null;
     protected $_sort;
     private $_queryParams = null;
+    /*
+          'autoFilter' => [
+                'attributes' => [                       - список аттрибутов для фильтра
+                    'name' => [
+                        'col' => 1,                     - в какой колонки вьюхи выводить поле (до 4-х)
+                        'label' => 'Название',          - подпись
+                        'condition' => 'LIKE',          - условие, потом обрабатывается, как $query->andWhere([$params['condition'], $attribute, $params['value']]);
+                        'renderType' => 'input',        - тип поля для вьюхи (пока только input, dropdownList)
+                    ],
+                    'id' => [
+                        'col' => 2,
+                        'condition' => '=',
+                        'renderType' => 'input',
+                    ],
+                    'type' => [
+                        'col' => 2,
+                        'condition' => '=',
+                        'renderType' => 'dropdownList',
+                        'list' => [                     - для dropdownList - список возможных значений
+                            0 => 'Все',
+                            1 => 'Главная страница',
+                            2 => 'Привязка к цели',
+                        ],
+                    ],
+                ],
+                'rules' => [                            - правила валидации для $_autoFilterModel
+                    [['id', 'type'], 'integer'],
+                    [['name'], 'string', 'min' => 3, 'max' =>20],
+                    [['name'], 'match', 'pattern' => AutoFilter::PATTERN_TEXT, 'message' => AutoFilter::PATTERN_TEXT_ERROR_MESSAGE,],
+                ],
+            ],
+     */
+    public $autoFilter = [];
+    /*
+     * Модель авто-фильтра, которая динамически создается с использованием $autoFilter
+     * @var app\widgets\restGrid\models\AutoFilter
+     */
+    private $_autoFilterModel = null;
 
     /**
      * @var \yii\base\Model
      */
     public $filterModel;
 
-    /**
-     * @var \UAConserve
-     */
-    public $conserve;
+    private $_xapi = null;
+    public $xapiParams = [];
 
+    //---------------------------------------------------------------------------------- ГЕТТЕРЫ
     /**
      * @return mixed
      */
@@ -65,30 +103,28 @@ class ApiDataProvider extends BaseDataProvider {
         }
         return $this->_queryParams;
     }
-    public $conservePart = 'grids';
-    public $conserveName = '';
-    
-    private $_xapi = null;
-    public $xapiParams = [];
+
+    /**
+     * @return mixed
+     */
+    public function getAutoFilterModel()
+    {
+        if ($this->_autoFilterModel === null) {
+            $this->_autoFilterModel = new AutoFilter();
+            if (!empty($this->autoFilter)) {
+                $this->_autoFilterModel->prepare($this->autoFilter);
+            }
+        }
+        return $this->_autoFilterModel;
+    }
+
+    //----------------------------------------------------------------------------------
 
     public function init() {
         parent::init();
+        $tmp = $this->autoFilterModel;
 
         try {
-
-            $queryParams = $this->queryParams;
-            /*
-            $this->pagination = ($this->usePagination)
-                ? [
-                    'class'            => 'common\components\conservation\PaginationConserve',
-                    'conserveName' => $this->conserveName,
-                    'pageSize' => $this->pageSize,
-                    'startPage' => $this->conserves['startPage'],
-                    'totalCount' => 0,
-                    'searchId' => $this->searchId,
-                ]
-                : false;
-            */
 
             if ($this->pagination) {
                 if (isset($this->queryParams[$this->pagination->pageParam]) &&
@@ -106,49 +142,22 @@ class ApiDataProvider extends BaseDataProvider {
                 $this->apiLinkParams[$sort->sortParam] = $this->queryParams[$sort->sortParam];
             }
 
-            if (($filter = $this->getFilter()) !== false) {
+            if (!empty($this->autoFilter) && isset($this->queryParams['filter'])) {
+                $filterArray = json_decode($this->queryParams['filter'], true);
+                $filter = $this->autoFilterModel->getFilter($filterArray);
                 foreach ($filter as $key => $value) {
-                    $this->apiLinkParams["filter"][$key] = $value;
+                    //    $this->apiLinkParams["filter"][$key] = $value;
+                    $this->apiBodyParams["filter"][$key] = $value;
                 }
             }
-
-
         } catch (\Exception $ex) {
+            throw new \Exception($ex->getTraceAsString());
 
         }
         if (!empty($params)) {
             $this->api->setHandlerParams($params);
         }
         return true;
-        /*
-
-        if (trim($this->conserveName) == "") {
-            $this->conserveName = $this->modelClass;
-        }
-        if (empty($this->conserveName)) {
-            return true;
-        }
-        $this->conserve = Yii::$app->uac->data->getConserve($this->conservePart,
-            $this->conserveName);
-        if (($sort           = $this->getSort()) !== false) {
-            $sort->setAttributeOrders($this->conserve ? $this->conserve->get("sort.orders",
-                [], false) : []);
-            $sort->defaultOrder = $this->conserve ? $this->conserve->get("sort.orders",
-                [], false) : [];
-        }
-        if (($this->filterModel !== false) && !is_null($this->filterModel)) {
-            if (is_string($this->filterModel)) {
-                $this->filterModel = Yii::createObject($this->filterModel);
-            }
-            if ($this->filterModel instanceof \yii\base\Model) {
-                if ($this->conserve) {
-                    $this->filterModel->setAttributes($this->conserve->get("filter.filters"));
-                } else {
-                    $this->filterModel->load(\Yii::$app->request->post());
-                }
-            }
-        }
-        */
     }
 
     /**
@@ -249,11 +258,4 @@ class ApiDataProvider extends BaseDataProvider {
         }
     }
 
-    public function getFilter() {
-        if (!is_null($this->filterModel) && ($this->filterModel instanceof \yii\base\Model)) {
-            return $this->filterModel;
-        } else {
-            return false;
-        }
-    }
 }
