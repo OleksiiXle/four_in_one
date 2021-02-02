@@ -512,12 +512,13 @@ JSON-тексту виду:
      */
     public function buildAuthUrl(array $params = [])
     {
-        $tmp = 12;
+        $authState = $this->generateAuthState();
+        $this->setState('authState', $authState);
         $defaultParams = [
             'response_type' => 'code',
             'client_id' => $this->clientId,
             'auth_type' =>  Yii::$app->params['diya']['auth_type'],
-            'state' => $this->generateAuthState(),
+            'state' => $authState,
             'redirect_uri' => $this->getReturnUrl(),
         ];
 
