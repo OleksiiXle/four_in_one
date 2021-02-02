@@ -201,12 +201,11 @@ class DsAuthClient extends OAuth2
             &cert=
          */
         try{
-            $cert = Yii::$app->params['diya']['cert'];
             $data = [
                 'access_token' => $access_token,
                 'user_id' => $user_id,
-                'fields' => 'issuer,issuercn,serial,subject,subjectcn,locality,state,o,ou,title,lastname,middlename,givenname,email,address,phone,dns,edrpoucode,drfocode',
-                'cert' => $cert,
+                'fields' => Yii::$app->params['diya']['fields'],
+                'cert' => Yii::$app->params['diya']['cert'],
 
             ];
             $this->userProfile = $this->api('/get-user-info', 'POST', $data, [] );
@@ -517,7 +516,7 @@ JSON-тексту виду:
         $defaultParams = [
             'response_type' => 'code',
             'client_id' => $this->clientId,
-            'auth_type' => 'dig_sign', // dig_sign,bank_id,mobile
+            'auth_type' =>  Yii::$app->params['diya']['auth_type'],
             'state' => $this->generateAuthState(),
             'redirect_uri' => $this->getReturnUrl(),
         ];
