@@ -226,7 +226,7 @@ class DsAuthClient extends OAuth2
                 'fields' => Yii::$app->params['diya']['fields'],
                 'cert' => Yii::$app->params['diya']['cert'],
             ];
-            $this->userProfile = $this->api($this->apiBaseUrl . '/get-user-info', 'POST', $data, [] );
+            $this->userProfile = $this->api('/get-user-info', 'POST', $data, [] );
             Functions::log('************************************************ getUserProfile');
             Functions::log($this->userProfile);
             //-- должно прийти:
@@ -485,15 +485,16 @@ JSON-тексту виду:
      */
     public function api($apiSubUrl, $method = 'GET', $data = [], $headers = [])
     {
+        $apiUrl = $this->apiBaseUrl .  $apiSubUrl;
         Functions::log("CLIENT --- public function api(apiSubUrl, method = 'GET', data = [], headers = [])");
-        Functions::log("CLIENT --- apiSubUrl = $apiSubUrl");
+        Functions::log("CLIENT --- apiSubUrl = $apiUrl");
         Functions::log("CLIENT --- method = $method");
         Functions::log("CLIENT --- data:");
         Functions::log($data);
 
         $request = $this->createApiRequest()
             ->setMethod($method)
-            ->setUrl($apiSubUrl)
+            ->setUrl($apiUrl)
             ->addHeaders($headers);
 
         if (!empty($data)) {
