@@ -507,7 +507,7 @@ JSON-тексту виду:
      //   Functions::log("CLIENT --- подготовленный запрос:");
       //  Functions::log((string)$request);
         Functions::log("CLIENT --- отправляем ...");
-        $response = $this->sendRequest($request);
+        $response = $this->sendRequest($request, true);
         Functions::log("CLIENT --- получили ответ:");
         Functions::log($response);
 
