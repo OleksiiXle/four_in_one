@@ -48,6 +48,22 @@ class DsAuthClient extends OAuth2
     {
         $this->errorMessage = '';
         $response = $request->send();
+        if ($debug) {
+            //  Functions::log('++++++++GET');
+            //   Functions::log($_GET);
+            //   Functions::log('++++++++POST');
+            //    Functions::log($_POST);
+            Functions::log('++++++++$response');
+            Functions::log((string)$response);
+            Functions::log('++++++++$response getFormat');
+            Functions::log($response->getFormat());
+            //  Functions::log('++++++++$response getContent');
+            //  Functions::log($response->getContent());
+            Functions::log('++++++++$response getHeaders');
+            Functions::log($response->getHeaders());
+            Functions::log('++++++++$response getStatusCode');
+            Functions::log($response->getStatusCode());
+        }
 
         $this->requestIsOk = $response->getIsOk();
         $this->requestSendCode = $response->getStatusCode();
@@ -56,20 +72,6 @@ class DsAuthClient extends OAuth2
             $this->requestSendMessage = 'Request failed with code:' . $this->requestSendCode . ' - ' . $responseData['name']
                 . '<br>' . str_replace(PHP_EOL, '<br>' , $responseData['message']);
             return [];
-        }
-        if ($debug) {
-          //  Functions::log('++++++++GET');
-         //   Functions::log($_GET);
-         //   Functions::log('++++++++POST');
-        //    Functions::log($_POST);
-            Functions::log('++++++++$response');
-            Functions::log((string)$response);
-            Functions::log('++++++++$response getFormat');
-            Functions::log($response->getFormat());
-          //  Functions::log('++++++++$response getContent');
-          //  Functions::log($response->getContent());
-            Functions::log('++++++++$response getHeaders');
-            Functions::log($response->getHeaders());
         }
 
         return $response->getData();
@@ -127,7 +129,7 @@ class DsAuthClient extends OAuth2
 
         $request = $this->createRequest()
             ->setMethod('POST')
-            ->setFormat(Client::FORMAT_JSON)
+          //  ->setFormat(Client::FORMAT_JSON)
             ->setUrl($this->tokenUrl)
             ->setData($defaultParams);
 
