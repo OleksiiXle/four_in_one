@@ -5,6 +5,7 @@ namespace app\components\clients;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\authclient\OAuthToken;
+use yii\httpclient\Client;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use app\models\User;
@@ -126,6 +127,7 @@ class DsAuthClient extends OAuth2
 
         $request = $this->createRequest()
             ->setMethod('POST')
+            ->setFormat(Client::FORMAT_JSON)
             ->setUrl($this->tokenUrl)
             ->setData($defaultParams);
 
