@@ -56,6 +56,7 @@ class DsAuthClient extends OAuth2
             $response = $request->send();
         } catch (\Exception $e) {
             Functions::log('---------------------------------   Exception');
+            Functions::log($e->getMessage());
             Functions::log($e->getTraceAsString());
         }
         if ($debug) {
