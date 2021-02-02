@@ -56,6 +56,18 @@ class DsAuthClient extends OAuth2
                 . '<br>' . str_replace(PHP_EOL, '<br>' , $responseData['message']);
             return [];
         }
+        Functions::log('++++++++GET');
+        Functions::log($_GET);
+        Functions::log('++++++++POST');
+        Functions::log($_POST);
+        Functions::log('++++++++$response');
+        Functions::log((string)$response);
+        Functions::log('++++++++$response getFormat');
+        Functions::log($response->getFormat());
+        Functions::log('++++++++$response getContent');
+        Functions::log($response->getContent());
+        Functions::log('++++++++$response getHeaders');
+        Functions::log($response->getHeaders());
 
         return $response->getData();
     }
