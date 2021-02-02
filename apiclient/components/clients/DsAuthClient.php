@@ -149,7 +149,7 @@ class DsAuthClient extends OAuth2
         //   Functions::log((string)$request);
         Functions::log("CLIENT --- посылаем запрос на получение токена...");
 
-        $response = $this->sendRequest($request, true);
+        $response = $this->sendRequest($request);
         //-- должно прийти:
         /*
          Content-Type: application/json
@@ -164,21 +164,22 @@ class DsAuthClient extends OAuth2
         Functions::log("CLIENT --- обрабатываем ответ ...");
         Functions::log("CLIENT --- пришло:");
         Functions::log($response);
-        return false;
+        //return false;
 
         if (!$this->requestIsOk) {
             $this->removeState('authState');
             $this->errorMessage = $this->requestSendMessage;
             return false;
         }
+        /*
         Functions::log("CLIENT --- пытаемся извлечь токен из того что пришло");
         $token = $this->createToken(['params' => $response]);
 
         Functions::log("CLIENT --- сохраняем токен в сессию");
         $this->setAccessToken($token);
-
-        $user_id = '777';
-        $token = 'qwertty';
+*/
+        $user_id = $response['user_id'];
+        $token = $response['access_token'];
         $ret = $this->getUserProfile($token, $user_id);
 
         Functions::log("CLIENT --- обработка токена закончена");
@@ -224,9 +225,10 @@ class DsAuthClient extends OAuth2
                 'user_id' => $user_id,
                 'fields' => Yii::$app->params['diya']['fields'],
                 'cert' => Yii::$app->params['diya']['cert'],
-
             ];
             $this->userProfile = $this->api('/get-user-info', 'POST', $data, [] );
+            Functions::log('************************************************ getUserProfile');
+            Functions::log($this->userProfile);
             //-- должно прийти:
             /*
              * обробка сервером ідентифікації запиту шляхом формування зашифрованої (з
