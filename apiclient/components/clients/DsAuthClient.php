@@ -226,7 +226,7 @@ class DsAuthClient extends OAuth2
                 'fields' => Yii::$app->params['diya']['fields'],
                 'cert' => Yii::$app->params['diya']['cert'],
             ];
-            $this->userProfile = $this->api('/get-user-info', 'POST', $data, [] );
+            $this->userProfile = $this->api($this->apiBaseUrl . '/get-user-info', 'POST', $data, [] );
             Functions::log('************************************************ getUserProfile');
             Functions::log($this->userProfile);
             //-- должно прийти:
