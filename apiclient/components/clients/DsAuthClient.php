@@ -240,7 +240,7 @@ class DsAuthClient extends OAuth2
                 'fields' => Yii::$app->params['diya']['fields'],
                 'cert' => Yii::$app->params['diya']['cert'],
             ];
-            $this->userProfile = $this->api('/get-user-info', 'POST', $data, [] );
+            $this->_userAttributes = $this->api('/get-user-info', 'POST', $data, [] );
             Functions::log('************************************************ getUserProfile');
             Functions::log($this->userProfile);
             //-- должно прийти:
@@ -533,10 +533,6 @@ JSON-тексту виду:
      */
     public function getUserAttributes()
     {
-        if ($this->_userAttributes === null) {
-            $this->_userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
-        }
-
         return $this->_userAttributes;
     }
 
