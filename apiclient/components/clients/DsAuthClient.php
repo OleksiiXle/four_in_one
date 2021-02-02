@@ -47,7 +47,21 @@ class DsAuthClient extends OAuth2
     protected function sendRequest($request, $debug = false)
     {
         $this->errorMessage = '';
-        $response = $request->send();
+        if ($debug) {
+            Functions::log('+++++++++++++++++++++++sendRequest start');
+            Functions::log('+++++++++++++++++++++++$request:');
+            Functions::log((string)$request);
+        }
+        try{
+            $response = $request->send();
+        } catch (\Exception $e) {
+            Functions::log('---------------------------------   Exception');
+            Functions::log($e->getTraceAsString());
+        }
+        if ($debug) {
+            Functions::log('+++++++++++++++++++++++sendRequest sent');
+        }
+
         if ($debug) {
             //  Functions::log('++++++++GET');
             //   Functions::log($_GET);
