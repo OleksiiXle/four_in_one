@@ -43,7 +43,7 @@ class DsAuthClient extends OAuth2
      * @throws InvalidResponseException on invalid remote response.
      * @since 2.1
      */
-    protected function sendRequest($request)
+    protected function sendRequest($request, $debug = false)
     {
         $this->errorMessage = '';
         $response = $request->send();
@@ -56,18 +56,20 @@ class DsAuthClient extends OAuth2
                 . '<br>' . str_replace(PHP_EOL, '<br>' , $responseData['message']);
             return [];
         }
-        Functions::log('++++++++GET');
-        Functions::log($_GET);
-        Functions::log('++++++++POST');
-        Functions::log($_POST);
-        Functions::log('++++++++$response');
-        Functions::log((string)$response);
-        Functions::log('++++++++$response getFormat');
-        Functions::log($response->getFormat());
-        Functions::log('++++++++$response getContent');
-        Functions::log($response->getContent());
-        Functions::log('++++++++$response getHeaders');
-        Functions::log($response->getHeaders());
+        if ($debug) {
+          //  Functions::log('++++++++GET');
+         //   Functions::log($_GET);
+         //   Functions::log('++++++++POST');
+        //    Functions::log($_POST);
+            Functions::log('++++++++$response');
+            Functions::log((string)$response);
+            Functions::log('++++++++$response getFormat');
+            Functions::log($response->getFormat());
+          //  Functions::log('++++++++$response getContent');
+          //  Functions::log($response->getContent());
+            Functions::log('++++++++$response getHeaders');
+            Functions::log($response->getHeaders());
+        }
 
         return $response->getData();
     }
@@ -119,7 +121,7 @@ class DsAuthClient extends OAuth2
          //   'redirect_uri' => $this->getReturnUrl(),
         ];
         Functions::log("CLIENT --- подготовка запроса на получение токена");
-        Functions::log("CLIENT --- параметры запроса:");
+        Functions::log("CLIENT --- первичные параметры запроса:");
         Functions::log($defaultParams);
 
         $request = $this->createRequest()
@@ -137,13 +139,13 @@ class DsAuthClient extends OAuth2
             &client_secret=82ec2ce6bc71bf78cbca7228021f7ac4840a80e1
          */
         Functions::log("CLIENT --- добавляем в запрос ClientCredentials");
-        Functions::log("CLIENT --- данные запроса:");
+        Functions::log("CLIENT --- остаточные данные запроса:");
         Functions::log($request->getFullUrl());
         Functions::log($request->getData());
         //   Functions::log((string)$request);
         Functions::log("CLIENT --- посылаем запрос на получение токена...");
 
-        $response = $this->sendRequest($request);
+        $response = $this->sendRequest($request, true);
         //-- должно прийти:
         /*
          Content-Type: application/json
