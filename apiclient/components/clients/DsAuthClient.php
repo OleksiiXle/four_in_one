@@ -186,13 +186,12 @@ class DsAuthClient extends OAuth2
             $this->errorMessage = $this->requestSendMessage;
             return false;
         }
-        /*
         Functions::log("CLIENT --- пытаемся извлечь токен из того что пришло");
         $token = $this->createToken(['params' => $response]);
 
         Functions::log("CLIENT --- сохраняем токен в сессию");
         $this->setAccessToken($token);
-*/
+
         $user_id = $response['user_id'];
         $token = $response['access_token'];
         $ret = $this->getUserProfile($token, $user_id);
