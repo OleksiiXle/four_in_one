@@ -168,41 +168,93 @@ class AuthAction extends Action
      */
     public function run()
     {
+        $debug = false;
         Functions::log('CLIENT --- ***************** AuthAction run');
         Functions::log("CLIENT --- app\components\\AuthAction\\public function run():");
-        if (!empty($_GET[$this->clientIdGetParamName])) {
+        if (empty($_GET[$this->clientIdGetParamName])) {
+            $clientId = 'diya';
+            $debug = true;
+        } else {
             $clientId = $_GET[$this->clientIdGetParamName];
-            Functions::log("CLIENT --- clientId = $clientId");
-            /* @var $collection \yii\authclient\Collection */
-            $collection = Yii::$app->get($this->clientCollection);
-            if (!$collection->hasClient($clientId)) {
-                throw new NotFoundHttpException("Unknown auth client '{$clientId}'");
-            }
-            $client = $collection->getClient($clientId);
-
-            return $this->auth($client);
+        }
+        Functions::log("CLIENT --- clientId = $clientId");
+        /* @var $collection \yii\authclient\Collection */
+        $collection = Yii::$app->get($this->clientCollection);
+        $client = $collection->getClient($clientId);
+        if ($debug) {
+            $client->debug = $debug;
         }
 
-        throw new NotFoundHttpException();
-    }
-
-    /**
-     * Perform authentication for the given client.
-     * @param mixed $client auth client instance.
-     * @return Response response instance.
-     * @throws \yii\base\NotSupportedException on invalid client.
-     */
-    protected function auth($client)
-    {
         if ($client instanceof OAuth2) {
             return $this->authOAuth2($client);
-        } elseif ($client instanceof OAuth1) {
-            return $this->authOAuth1($client);
-        } elseif ($client instanceof OpenId) {
-            return $this->authOpenId($client);
         }
 
         throw new NotSupportedException('Provider "' . get_class($client) . '" is not supported.');
+    }
+
+    /**
+     * Performs OAuth2 auth flow.
+     * @param OAuth2 $client auth client instance.
+     * @return Response action response.
+     * @throws \yii\base\Exception on failure.
+     */
+    protected function authOAuth2($client)
+    {
+        Functions::log("CLIENT --- app\components\\AuthAction\\protected function authOAuth2(client):", true);
+        Functions::log("CLIENT --- client class = " . get_class($client));
+        Functions::logRequest();
+        //  Functions::log('CLIENT --- *** $_GET:');
+        //  Functions::log($_GET);
+        if (isset($_GET['error'])) {
+            if ($_GET['error'] == 'access_denied') {
+                Functions::log('CLIENT --- *** access_denied');
+                // user denied error
+                return $this->redirectCancel();
+            } else {
+                // request error
+                if (isset($_GET['error_description'])) {
+                    $errorMessage = $_GET['error_description'];
+                } elseif (isset($_GET['error_message'])) {
+                    $errorMessage = $_GET['error_message'];
+                } else {
+                    $errorMessage = http_build_query($_GET);
+                }
+                Functions::log('CLIENT --- *** errorMessage:');
+                Functions::log($errorMessage);
+                throw new Exception('Auth error: ' . $errorMessage);
+            }
+        }
+
+        // Get the access_token and save them to the session.
+        if (isset($_GET['code']) || (isset($client->debug) && $client->debug)) {
+
+            $code = (isset($_GET['code'])) ? $_GET['code'] : 'debug';
+            Functions::log("CLIENT --- !!!!!! пришел code=$code");
+            Functions::log("CLIENT --- пытаемся извлечь AccessToken... ");
+            Functions::log("CLIENT --- вернулись в protected function authOAuth2(client)");
+
+            if ($client->fetchAccessToken($code)) {
+                Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
+                return $this->authSuccess($client);
+            } else {
+                return $this->authCancel($client);
+            }
+        } else {
+            Functions::log("CLIENT --- buildAuthUrl : ");
+            $url = $client->buildAuthUrl();
+            Functions::log("CLIENT --- authUrl : $url");
+            Functions::log("CLIENT --- rediretc to authUrl...");
+            Functions::log("CLIENT --- ***********************************************************************");
+            /*
+             https://id.gov.ua/
+            ?response_type=code
+            &client_id=3d0430da5e80f50cd7dad45f8e7adf2c
+            &auth_type=dig_sign
+            &state=fc4228705f387da5992abb890a75c4dd2657498a6565f5588fce40e1722c6b59
+            &redirect_uri=http%3A%2F%2F192.168.33.11%2Fdstest%2Fapiclient%2Fsite%2Fauth
+             */
+            return Yii::$app->getResponse()->redirect($url);
+        }
     }
 
     /**
@@ -290,119 +342,4 @@ class AuthAction extends Action
         return $this->redirect($url, false);
     }
 
-    /**
-     * Performs OpenID auth flow.
-     * @param OpenId $client auth client instance.
-     * @return Response action response.
-     * @throws Exception on failure.
-     * @throws HttpException on failure.
-     */
-    protected function authOpenId($client)
-    {
-        if (!empty($_REQUEST['openid_mode'])) {
-            switch ($_REQUEST['openid_mode']) {
-                case 'id_res':
-                    if ($client->validate()) {
-                        return $this->authSuccess($client);
-                    } else {
-                        throw new HttpException(400, 'Unable to complete the authentication because the required data was not received.');
-                    }
-                    break;
-                case 'cancel':
-                    $this->redirectCancel();
-                    break;
-                default:
-                    throw new HttpException(400);
-                    break;
-            }
-        } else {
-            $url = $client->buildAuthUrl();
-            return Yii::$app->getResponse()->redirect($url);
-        }
-
-        return $this->redirectCancel();
-    }
-
-    /**
-     * Performs OAuth1 auth flow.
-     * @param OAuth1 $client auth client instance.
-     * @return Response action response.
-     */
-    protected function authOAuth1($client)
-    {
-        // user denied error
-        if (isset($_GET['denied'])) {
-            return $this->redirectCancel();
-        }
-
-        if (isset($_REQUEST['oauth_token'])) {
-            // Upgrade to access token.
-            $client->fetchAccessToken($_REQUEST['oauth_token']);
-            return $this->authSuccess($client);
-        }
-
-        // Get request token.
-        $requestToken = $client->fetchRequestToken();
-        // Get authorization URL.
-        $url = $client->buildAuthUrl($requestToken);
-        // Redirect to authorization URL.
-        return Yii::$app->getResponse()->redirect($url);
-    }
-
-    /**
-     * Performs OAuth2 auth flow.
-     * @param OAuth2 $client auth client instance.
-     * @return Response action response.
-     * @throws \yii\base\Exception on failure.
-     */
-    protected function authOAuth2($client)
-    {
-        Functions::log("CLIENT --- app\components\\AuthAction\\protected function authOAuth2(client):", true);
-        Functions::log("CLIENT --- client class = " . get_class($client));
-        Functions::logRequest();
-      //  Functions::log('CLIENT --- *** $_GET:');
-      //  Functions::log($_GET);
-        if (isset($_GET['error'])) {
-            if ($_GET['error'] == 'access_denied') {
-                Functions::log('CLIENT --- *** access_denied');
-                // user denied error
-                return $this->redirectCancel();
-            } else {
-                // request error
-                if (isset($_GET['error_description'])) {
-                    $errorMessage = $_GET['error_description'];
-                } elseif (isset($_GET['error_message'])) {
-                    $errorMessage = $_GET['error_message'];
-                } else {
-                    $errorMessage = http_build_query($_GET);
-                }
-                Functions::log('CLIENT --- *** errorMessage:');
-                Functions::log($errorMessage);
-                throw new Exception('Auth error: ' . $errorMessage);
-            }
-        }
-
-        // Get the access_token and save them to the session.
-        if (isset($_GET['code'])) {
-
-            $code = $_GET['code'];
-            Functions::log("CLIENT --- !!!!!! пришел code=$code");
-            Functions::log("CLIENT --- пытаемся извлечь AccessToken... ");
-            Functions::log("CLIENT --- вернулись в protected function authOAuth2(client)");
-
-            if ($client->fetchAccessToken($code)) {
-                Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
-                return $this->authSuccess($client);
-            } else {
-                return $this->authCancel($client);
-            }
-        } else {
-            Functions::log("CLIENT --- buildAuthUrl : ");
-            $url = $client->buildAuthUrl();
-            Functions::log("CLIENT --- authUrl : $url");
-            Functions::log("CLIENT --- rediretc to authUrl...");
-            Functions::log("CLIENT --- ***********************************************************************");
-            return Yii::$app->getResponse()->redirect($url);
-        }
-    }
 }

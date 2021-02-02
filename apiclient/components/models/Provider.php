@@ -32,6 +32,10 @@ class Provider extends MainModel
                     $this->_properties[$clientAttribute] = $this->{$dbAttribute};
                 }
             }
+            if ($this->name == 'diya') {
+                $this->_properties['clientId'] = Yii::$app->params['diya']['client_id'];
+                $this->_properties['clientSecret'] = Yii::$app->params['diya']['secret'];
+            }
         }
         return $this->_properties;
     }
