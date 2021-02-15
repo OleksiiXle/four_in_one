@@ -1,0 +1,35 @@
+IIT
+
+sudo apt install checkinstall build-essential autoconf automake
+sudo apt-get install libgimp2.0-dev
+
+
+tar –xf eusphpei.64.7.2.2.tar
+sudo cp * /usr/lib/php/eusphpe_extension
+
+створити каталог /usr/lib/php/eusphpe_extension
+sudo mkdir /usr/lib/php/eusphpe_extension
+
+tar –-xC /usr/lib/php/eusphpe_extension –f eusphpei.64.7.2.2.tar
+
+sudo nano /etc/apache2/envvars
+export LD_LIBRARY_PATH=/usr/lib/php/eusphpe_extension
+
+sudo nano /etc/php/7.2/apache2/php.ini
+extension=/usr/lib/php/eusphpe_extension/eusphpe.so
+
+sudo systemctl restart apache2
+
+
+
+
+sudo nano /etc/php/7.2/apache2/php.ini
+
+extension = /usr/lib/php/eusphpe/eusphpe.so
+
+
+
+
+
+
+
