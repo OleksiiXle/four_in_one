@@ -130,13 +130,17 @@ $sTAB = '&nbsp&nbsp&nbsp&nbsp';
 //========================================================================================
 
 /* Set charset for in/out strings parameters */
-
-$iResult = euspe_setcharset($iEncoding);
-if (!handle_result("SetCharset", $iResult, 0)) {
-    echo 'Set charset for in/out strings parameters not ok';
-    Exit;
-} else {
-    echo 'Set charset for in/out strings parameters ok';
+echo ' TRY Set charset for in/out strings parameters';
+try {
+    $iResult = euspe_setcharset($iEncoding);
+    if (!handle_result("SetCharset", $iResult, 0)) {
+        echo 'Set charset for in/out strings parameters not ok';
+        Exit;
+    } else {
+        echo 'Set charset for in/out strings parameters ok';
+    }
+} catch (Exception $e){
+    echo $e->getTraceAsString();
 }
 
 //----------------------------------------------------------------------------------------
