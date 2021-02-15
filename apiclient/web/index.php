@@ -132,8 +132,12 @@ $sTAB = '&nbsp&nbsp&nbsp&nbsp';
 /* Set charset for in/out strings parameters */
 
 $iResult = euspe_setcharset($iEncoding);
-if (!handle_result("SetCharset", $iResult, 0))
+if (!handle_result("SetCharset", $iResult, 0)) {
+    echo 'Set charset for in/out strings parameters not ok';
     Exit;
+} else {
+    echo 'Set charset for in/out strings parameters ok';
+}
 
 //----------------------------------------------------------------------------------------
 
@@ -141,7 +145,12 @@ if (!handle_result("SetCharset", $iResult, 0))
 
 $iResult = euspe_init($iErrorCode);
 if (!handle_result("Initialize", $iResult, $iErrorCode))
+{
+    echo 'Initialize library not ok';
     Exit;
+} else {
+    echo 'Initialize library ok';
+}
 
 //----------------------------------------------------------------------------------------
 
@@ -162,7 +171,12 @@ $iResult = euspe_getfilestoresettings(
     $bSaveLoadedCerts, $iExpireTime,
     $iErrorCode);
 if (!handle_result("GetFileStoreSettings", $iResult, $iErrorCode))
+{
+    echo 'Get filestore settings not ok';
     Exit;
+} else {
+    echo 'Get filestore settings ok';
+}
 
 print_result('File store settings', '');
 print_result($sTAB.'path', $sFileStorePath);
