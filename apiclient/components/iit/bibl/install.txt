@@ -1,31 +1,74 @@
-IIT
+Установка библиотеки на Centos
+рабочий вариант - eusphpei.64.7.4.4.tar
 
-sudo apt install checkinstall build-essential autoconf automake
-sudo apt-get install libgimp2.0-dev
+Для встановлення бібліотеки для web-серверу Apache, де PHP завантажується як модуль Apache необхідно:
+    • створити каталог
+        sudo mkdir /usr/lib64/php/eusphpe_extension
+    • разархівувати бібліотеки з архіву eusphpei.tar до каталогу:
+        sudo cp eusphpei.64.7.4.4.tar /usr/lib64/php/eusphpe_extension
+        cd /usr/lib64/php/eusphpe_extension
+        tar -x–f eusphpei.64.7.4.4.tar (или подругому, неважно)
+    • до файлу /etc/profile додати:
+        sudo vi /etc/profile
+        -> export LD_LIBRARY_PATH="/usr/lib64/php/eusphpe_extension"
+    • до файлу /etc/php.ini додати:
+        sudo vi /etc/php.ini
+        extension=/usr/lib64/php/eusphpe_extension/eusphpe.so
+    • перзапустити apache:
+        sudo systemctl restart httpd.service
+
+        3.3 Параметри роботи бібліотеки
+        Параметри, що використовуються бібліотекою,
+    в файлі конфігурації з використанням кодування CP-1251.
+        В ОС Linux/Unix, SunOS параметри, що використовуються бібліотекою,
+    зберігаються у файлі конфігурації osplm.ini
+        Пошук файла конфігурації в цих системах виконується в наступній послідовності:
+            • в каталогах, що внесені у змінну оточення LD_LIBRARY_PATH (ОС Linux, Sun OS, FreeBSD), LIBPATH (ОС AIX);
+            • в поточному каталозі;
+            • в каталозі з програмою.
+        У випадку, якщо не знайдено файл конфігурації osplm.ini,
+    бібліотекою буде виконано пошук файлу конфігурації ospcu.ini у послідовності, що вказана вище.
+        Якщо файли конфігурації не знайдено, файл osplm.ini буде створено в каталозі з програмою
+        Якщо права запису до файлу конфігурації відсутні, параметри буде збережено у внутрішньому стані бібліотеки.
+        Якщо зміни вносяться безпосередньо до файл конфігурації або реєстру (без використання відповідних функцій бібліотеки),
+для застосування встановлених параметрів необхідно переініціалізувати бібліотеку (перезапустити web-сервер, інтерпретатор PHP).
+
+Настройка параметров в файле
+find / -name osplm.ini
+* /opt/iit/eu/sw/osplm.ini
+
+sudo mkdir /etc/pki/iit
+
+в файле osplm.ini
+sudo vi /opt/iit/eu/sw/osplm.ini
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\FileStore]
+ExpireTime=3600
+SaveLoadedCerts=1
+AutoDownloadCRLs=0
+FullAndDeltaCRLs=1
+OnlyOwnCRLs=1
+AutoRefresh=0
+CheckCRLs=0
+Path=/etc/pki/iit  ********* сюда
+
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\CMP]
+Use=0
+CommonName=
+Address=ca.iit.com.ua    ********* сюда
+Port=80                  ********* сюда
 
 
-tar –xf eusphpei.64.7.2.2.tar
-sudo cp * /usr/lib/php/eusphpe_extension
-
-створити каталог /usr/lib/php/eusphpe_extension
-sudo mkdir /usr/lib/php/eusphpe_extension
-
-tar –-xC /usr/lib/php/eusphpe_extension –f eusphpei.64.7.2.2.tar
-
-sudo nano /etc/apache2/envvars
-export LD_LIBRARY_PATH=/usr/lib/php/eusphpe_extension
-
-sudo nano /etc/php/7.2/apache2/php.ini
-extension=/usr/lib/php/eusphpe_extension/eusphpe.so
-
-sudo systemctl restart apache2
 
 
 
 
-sudo nano /etc/php/7.2/apache2/php.ini
 
-extension = /usr/lib/php/eusphpe/eusphpe.so
+
+
+
+
+
+
 
 
 

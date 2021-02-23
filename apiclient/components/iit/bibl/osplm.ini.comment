@@ -1,0 +1,156 @@
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User]
+/*Параметри файлового сховища сертифікатів та СВС
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\FileStore]
+/* Час зберігання стану перевіреного сертифіката (у секундах):
+ExpireTime=3600
+/* Признак необхідності автоматичного збереження сертифікатів
+/* отриманих з LDAP-сервера чи за протоколом OCSP у файлове сховище (1 – зберігати, 0 – не зберігати):
+SaveLoadedCerts=1
+/* Признак необхідності автоматичного завантаження СВС
+/* (1 – завантажувати автоматично, 0 – не завантажувати). Не має значення, якщо признак CheckCRLs не встановлено
+AutoDownloadCRLs=0
+/* Признак необхідності перевірки наявності двох діючих СВС – повного та часткового
+/* (1 – перевіряти наявність двох діючих СВС, 0 – перевіряти наявність хоча б одного діючого СВС).
+/* Не має значення, якщо признак CheckCRLs е встановлено
+FullAndDeltaCRLs=1
+/* Признак необхідності використання СВС тільки власного ЦСК користувача
+/* (1 – використовувати СВС тільки власного ЦСК, 0 – використовувати всі СВС).
+/* Не має значення, якщо признак CheckCRLs не встановлено
+OnlyOwnCRLs=1
+/* Признак необхідності автоматичного виявлення змін у файловому сховищі при записі,
+/* модифікації чи видаленні сертифікатів та СВС (1 – контролювати зміни, 0 – не контролювати):
+AutoRefresh=0
+/* Признак необхідності використання СВС при визначенні статусу сертифіката (1 – використовувати СВС, 0 – не використовувати):
+CheckCRLs=0
+/* Каталог, в якому розміщуються сертифікати та СВС:
+Path=/data/certificates
+
+/* Параметри proxy-сервера
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\Proxy]
+/* Признак зберігання пароля доступу до proxy-сервера у системному реєстрі
+/* (1 – пароль зберігається у параметрі Password, 0 – не зберігається)
+SavePassword=0
+/* Пароль доступу користувача до proxy-сервера. Не має значення, якщо признак SavePassword не встановлено
+Password=
+/* Ім’я користувача proxy-сервера
+User=
+/* Признак анонімного proxy-сервера. (1 – використовується анонімний proxy-сервер.
+/* 0 – для доступу до proxy-сервера потрібні ім’я користувача та пароль доступу).
+Anonymous=1
+/* TCP-порт proxy-сервера
+Port=
+/* ІР-адреса або DNS-ім’я proxy-сервера
+Address=
+/* Признак необхідності підключення до ЦСК через proxy-сервер (1 – підключатися через proxy-сервер, 0 – не підключатися).
+/* Інші параметри підрозділу не мають значення якщо даний признак не встановлено
+Use=0
+
+/* Параметри протоколу OCSP
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\OCSP]
+/* TCP-порт OCSP-сервера за замовчанням:
+Port=
+/* ІР-адреса або DNS-ім’я OCSP-сервера за замовчанням:
+Address=
+OtherAddresses=
+/* Признак черговості перевірки статусу сертифіката (1 - статус сертифіката перевіряється спочатку за допомогою OCSP-протоколу,
+/*  потім за допомогою файлового сховища, 0 – перевірка здійснюється спочатку за допомогою файлового сховища,
+/*  а потім (якщо статус не визначено за файловим сховищем) - за допомогою OCSP-протоколу)
+BeforeFStore=0
+/* Признак необхідності використання механізму визначення статусу сертифікатів за допомогою протоколу OCSP.
+/* Інші параметри підрозділу не мають значення якщо даний признак не встановлено:
+Use=0
+
+/* Параметри протоколу TSP
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\TSP]
+/* TCP-порт TSP-сервера за замовчанням (використовується, якщо в сертифікаті підписувача відсутній порт TSP-сервера)
+Port=
+/* ІР-адреса або DNS-ім’я TSP-сервера за замовчанням (використовується, якщо в сертифікаті підписувача відсутня точка доступа до TSP-сервера)
+Address=
+/* Признак необхідності отримувати позначки часу під час формування підпису (1 – отримувати позначки часу, 0 – не отримувати).
+/*  Інші параметри підрозділу не мають значення якщо даний признак не встановлено
+GetStamps=0
+
+/* Параметри LDAP-сервера
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\LDAP]
+/* Признак необхідності пошуку сертифікатів у LDAP-каталозі (1 – шукати, 0 – не шукати)
+LookupCert=0
+/* Пароль доступу користувача до LDAP-сервера. Не має значення, якщо признак Anonimous встановлено
+Password=
+/* Ім’я користувача LDAP –сервера Не має значення, якщо признак Anonimous встановлено
+User=
+/*Признак анонімного доступу до LDAP-сервера (1 – анонімний доступ, 0 – доступ на основі імені користувача User та пароля Password)
+Anonimous=1
+/* TCP-порт LDAP-сервера
+Port=
+/* ІР-адреса або DNS-ім’я LDAP-сервера
+Address=
+/* Признак необхідності використання LDAP-сервера (1 – використовувати, 0 – не використовувати).
+/*  Інші параметри підрозділу не мають значення якщо даний признак не встановлено
+Use=0
+
+
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\CMP]
+Use=0
+CommonName=
+Address=
+Port=
+
+/* Режими роботи
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\Mode]
+/* Признак роботи в off-line режимі (1 – off-line режим, 0 – on-line режим)
+Offline=1
+/* 0 - фіксований параметр
+ResetPKey=0
+/* Признак необхідності генерації ос. ключа у вигляді контейнеру pfx (0 –не генерувати, 0 – генерувати)
+MakePKeyPFXContainer=1
+
+/* Параметри реєстрації подій
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\Log]
+/* Признак необхідності записувати інформацію про події до системного журналу (1 – записувати, 0 – не записувати)
+System=1
+/* Признак необхідності відправляти інформацію про події до агенту моніторингу (1 – відправляти, 0 – не відправляти)
+ReportAgent=0
+/* ІР-адреса або DNS-ім’я серверу агента моніторингу
+Address=
+/* UDP-порт серверу агента моніторингу
+Port=10111
+/* Признак необхідності реєструвати лише події, що пов'язані з помилками (1 – реєструвати тільки помилки, 0 – реєструвати всі події)
+OnlyErrors=1
+
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\Libraries\Sign]
+
+/* Параметри НКІ
+[\SOFTWARE\Institute of Informational Technologies\Certificate Authority-1.3\End User\Libraries\Sign\KeyMedia]
+ProtectPassword=0
+/* Пароль доступу до НКІ
+Password=
+/* Порядковий номер НКІ, починаючи з 0. Для файлової системи список НКІ доступний у файлі /etc/mtab.
+   Примітка. Якщо в якості НКІ використовується МКМ “Гряда-301”,
+   та перелік пристроїв вказаний за допомогою параметрів \NCM Gryada-301\Modules,
+   необхідно враховувати що такий НКІ має 6 модулів для ключів. Таким чином перша ячейка другого МКМ “Гряда-301” буде мати значення 7
+Device=0
+/* Порядковий номер типу НКІ, починаючи з 0
+   Примітка. Порядок номерів типів НКІ визначається набором бібліотек km.*.so (ОС Linux\Unix)
+   та змінюється в залежності від їх наявності\відсутності. Імена типів НКІ є фіксованими назвами та не змінюються.
+Type=3
+/* 0 - фіксований параметр
+ShowErrors=0
+/* Фіксований параметр.   2 – параметри зчитуються з файлу
+SourceType=2
+
+
+[\SOFTWARE\Institute of Informational Technologies\Key Medias]
+[\SOFTWARE\Institute of Informational Technologies\Key Medias\File System]
+[\SOFTWARE\Institute of Informational Technologies\Key Medias\File System\Folders]
+[\SOFTWARE\Institute of Informational Technologies\Key Medias\File System\Folders\/data/certificates]
+OrderNumber=0
+Path=/data/certificates
+[\SOFTWARE\Institute of Informational Technologies\Key Medias\NCM Gryada-301]
+
+/* Реєстрація МКМ “Гряда-301”
+[\SOFTWARE\Institute of Informational Technologies\Key Medias\NCM Gryada-301\Modules]
+[\SOFTWARE\Institute of Informational Technologies\Key Medias\NCM Gryada-301\Modules\001]
+OrderNumber=0
+SN=001
+Address=20.0.0.1
+AddressMask=255.0.0.0
