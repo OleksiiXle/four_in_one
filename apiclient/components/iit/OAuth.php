@@ -100,8 +100,8 @@ class OAuth
 
 	const REDIRECT_URI							= "https://ndl.univd.edu.ua/dstest/apiclient/site/auth";
 	const ID_SERVER_URI							= "https://id.gov.ua/";
-	const CLIENT_ID								= "3d0430da5e80f50cd7dad45f8e7adf2c";
-	const CLIENT_SECRET							= "82ec2ce6bc71bf78cbca7228021f7ac4840a80e1";
+	const CLIENT_ID								= "";
+	const CLIENT_SECRET							= "";
 
 	/*
 		Для шифрованого обміну з системою id.gov.ua необхідно вказати шлях до 

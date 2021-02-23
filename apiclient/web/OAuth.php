@@ -98,17 +98,17 @@ class OAuth
 
 //================================================================================
 
-	const REDIRECT_URI							= "";
-	const ID_SERVER_URI							= "https://id.gov.ua/";
-	const CLIENT_ID								= "";
-	const CLIENT_SECRET							= "";
+    const REDIRECT_URI							= "https://ndl.univd.edu.ua/dstest/apiclient/site/auth";
+    const ID_SERVER_URI							= "https://id.gov.ua/";
+    const CLIENT_ID								= "3d0430da5e80f50cd7dad45f8e7adf2c";
+    const CLIENT_SECRET							= "82ec2ce6bc71bf78cbca7228021f7ac4840a80e1";
 
 	/*
 		Для шифрованого обміну з системою id.gov.ua необхідно вказати шлях до 
 		ос. ключа в файлі, пароль та шлях до файла з сертифікатом ос. ключа 
 		призначеного для шифрування
 	*/
-	const PK_FILE_PATH							= "";
+	const PK_FILE_PATH							= "/etc/pki/iit";
 	const PK_PASSWORD							= "";
 	const PK_ENV_CERT_FILE_PATH					= "";
 
