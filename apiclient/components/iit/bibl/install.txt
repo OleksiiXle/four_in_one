@@ -36,7 +36,7 @@
 Настройка параметров в файле
 find / -name osplm.ini
 * /opt/iit/eu/sw/osplm.ini
-
+* /usr/lib64/php/eusphpe_extension/osplm.ini
 sudo mkdir /etc/pki/iit
 
 в файле osplm.ini

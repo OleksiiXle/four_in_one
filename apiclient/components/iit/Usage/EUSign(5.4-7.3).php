@@ -147,7 +147,7 @@ if (!handle_result("Initialize", $iResult, $iErrorCode))
 
 /* Get filestore settings */
 
-$sFileStorePath = '/etc/pki/iit';
+$sFileStorePath = '';
 $bCheckCRLs = false;
 $bAutoRefresh = false;
 $bOwnCRLsOnly = false;
