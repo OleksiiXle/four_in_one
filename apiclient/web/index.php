@@ -1203,6 +1203,11 @@ if (!handle_result("CtxCreate", $iResult, $iErrorCode))
 $iResult = euspe_ctxreadprivatekey($context, $pkContext, $iErrorCode);
 if (!handle_result("CtxReadPrivateKey", $iResult, $iErrorCode))
 {
+    var_dump($pkContext);
+    echo "<br>";
+    var_dump($iErrorCode);
+    echo "<br>";
+
     euspe_ctxfree($context);
     Exit;
 }

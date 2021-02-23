@@ -57,7 +57,7 @@ CommonName=
 Address=ca.iit.com.ua    ********* сюда
 Port=80                  ********* сюда
 
-
+sudo systemctl restart httpd.service
 
 
 
