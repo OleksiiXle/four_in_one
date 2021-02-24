@@ -216,6 +216,7 @@ while (1) {
 //----------------------------------------------------------------------------------------
 
 /* Read private key from settings */
+echo "fuck iit!!!" . PHP_EOL;
 
 $iResult = euspe_readprivatekey($iErrorCode);
 if (!handle_result("ReadPrivateKey", $iResult, $iErrorCode))
