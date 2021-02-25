@@ -174,6 +174,16 @@ print_result($sTAB.'auto download crls', bool_to_string($bAutoDownloadCRLs));
 print_result($sTAB.'save loaded certs', bool_to_string($bSaveLoadedCerts));
 print_result($sTAB.'expire time', $iExpireTime);
 
+/* Read private key file */
+
+$sPrivateKey = '/etc/pki/iit/Key-6.pfx';
+$sPrivateKeyPassword = 'lokoko140269';
+echo 'fackin iit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+$iResult = euspe_readprivatekeyfile(
+    $sPrivateKey, $sPrivateKeyPassword, $iErrorCode);
+if (!handle_result("ReadPrivateKeyFile", $iResult, $iErrorCode))
+    Exit;
+
 //----------------------------------------------------------------------------------------
 
 /* Enum key medias */
