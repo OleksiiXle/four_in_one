@@ -22,11 +22,11 @@ $iEncoding = EM_ENCODING_UTF8; // EM_ENCODING_CP1251 - default library encoding
 
 $sData = '--Test data string - 1234567890!@#$%^&*()--';
 
-$sTestDataFolder = 'D:\\TestData\\PHP\\';
+$sTestDataFolder = '/etc/pki/iit/';
 
 $iPrivateKeyKMTypeIndex = 7;
 $iPrivateKeyKMDeviceIndex = 2;
-$sPrivateKeyKMPassword = '12345677';
+$sPrivateKeyKMPassword = 'lokoko140269';
 
 $sPrivateKey = $sTestDataFolder.'Key-6.dat';
 $sPrivateKeyPassword = '12345677';
@@ -173,6 +173,10 @@ print_result($sTAB.'full and delta crls', bool_to_string($bFullAndDeltaCRLs));
 print_result($sTAB.'auto download crls', bool_to_string($bAutoDownloadCRLs));
 print_result($sTAB.'save loaded certs', bool_to_string($bSaveLoadedCerts));
 print_result($sTAB.'expire time', $iExpireTime);
+$iResult = euspe_setruntimeparameter(
+    EU_SUBJECT_CA_SERVER_SUB_TYPE_CMP, true, $iErrorCode);
+if (!handle_result("SetRuntimeParameter(EU_SUBJECT_CA_SERVER_SUB_TYPE_CMP)", $iResult, $iErrorCode))
+    Exit;
 
 /* Read private key file */
 
