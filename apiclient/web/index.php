@@ -173,10 +173,6 @@ print_result($sTAB.'full and delta crls', bool_to_string($bFullAndDeltaCRLs));
 print_result($sTAB.'auto download crls', bool_to_string($bAutoDownloadCRLs));
 print_result($sTAB.'save loaded certs', bool_to_string($bSaveLoadedCerts));
 print_result($sTAB.'expire time', $iExpireTime);
-$iResult = euspe_setruntimeparameter(
-    EU_SUBJECT_CA_SERVER_SUB_TYPE_CMP, true, $iErrorCode);
-if (!handle_result("SetRuntimeParameter(EU_SUBJECT_CA_SERVER_SUB_TYPE_CMP)", $iResult, $iErrorCode))
-    Exit;
 
 /* Read private key file */
 
