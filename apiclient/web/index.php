@@ -178,7 +178,10 @@ print_result($sTAB.'expire time', $iExpireTime);
 
 $sPrivateKey = '/etc/pki/iit/Key-6.pfx';
 $sPrivateKeyPassword = 'lokoko140269';
-echo 'fackin iit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+$tmp = file_get_contents('/etc/pki/iit/Key-6.pfx');
+echo '/etc/pki/iit/Key-6.pfx:' . '<br>';
+echo $tmp . '<br>';
+echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
 $iResult = euspe_readprivatekeyfile(
     $sPrivateKey, $sPrivateKeyPassword, $iErrorCode);
 if (!handle_result("ReadPrivateKeyFile", $iResult, $iErrorCode))
@@ -229,7 +232,7 @@ while (1) {
 
 $sPrivateKey = '/etc/pki/iit/Key-6.pfx';
 $sPrivateKeyPassword = 'lokoko140269';
-echo 'fackin iit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' . '<br>';
 $iResult = euspe_readprivatekeyfile(
     $sPrivateKey, $sPrivateKeyPassword, $iErrorCode);
 if (!handle_result("ReadPrivateKeyFile", $iResult, $iErrorCode))
