@@ -219,13 +219,13 @@ while (1) {
 
 $sPrivateKey = '/etc/pki/iit/Key-6.pfx';
 $sPrivateKeyPassword = 'lokoko140269';
+echo 'fackin iit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
 $iResult = euspe_readprivatekeyfile(
     $sPrivateKey, $sPrivateKeyPassword, $iErrorCode);
 if (!handle_result("ReadPrivateKeyFile", $iResult, $iErrorCode))
     Exit;
 
 /* Read private key from settings */
-echo 'fackin iit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
 $iResult = euspe_readprivatekey($iErrorCode);
 if (!handle_result("ReadPrivateKey", $iResult, $iErrorCode))
 	Exit;
