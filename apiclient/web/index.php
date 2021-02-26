@@ -130,11 +130,9 @@ $sTAB = '&nbsp&nbsp&nbsp&nbsp';
 //========================================================================================
 
 /* Set charset for in/out strings parameters */
-/*
 $iResult = euspe_setcharset($iEncoding);
 if (!handle_result("SetCharset", $iResult, 0))
 	Exit;
-*/
 
 //----------------------------------------------------------------------------------------
 
