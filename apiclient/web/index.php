@@ -144,6 +144,17 @@ if (!handle_result("Initialize", $iResult, $iErrorCode))
 	Exit;
 
 //----------------------------------------------------------------------------------------
+/* Read private key file */
+
+$sPrivateKey = '/etc/pki/iit/Key-6.pfx';
+$sPrivateKeyPassword = 'lokoko140269';
+$tmp = file_get_contents('/etc/pki/iit/Key-6.pfx');
+echo '/etc/pki/iit/Key-6.pfx:' . '<br>';
+echo $tmp . '<br>';
+$iResult = euspe_readprivatekeyfile(
+    $sPrivateKey, $sPrivateKeyPassword, $iErrorCode);
+if (!handle_result("ReadPrivateKeyFile", $iResult, $iErrorCode))
+    Exit;
 
 /* Get filestore settings */
 
@@ -181,7 +192,6 @@ $sPrivateKeyPassword = 'lokoko140269';
 $tmp = file_get_contents('/etc/pki/iit/Key-6.pfx');
 echo '/etc/pki/iit/Key-6.pfx:' . '<br>';
 echo $tmp . '<br>';
-echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
 $iResult = euspe_readprivatekeyfile(
     $sPrivateKey, $sPrivateKeyPassword, $iErrorCode);
 if (!handle_result("ReadPrivateKeyFile", $iResult, $iErrorCode))
