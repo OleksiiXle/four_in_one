@@ -172,7 +172,8 @@ class AuthAction extends Action
         Functions::log('CLIENT --- ***************** AuthAction run');
         Functions::log("CLIENT --- app\components\\AuthAction\\public function run():");
         if (empty($_GET[$this->clientIdGetParamName])) {
-            $clientId = 'diya';
+          //  $clientId = 'diya';
+            $clientId = 'Iit';
             $debug = true;
         } else {
             $clientId = $_GET[$this->clientIdGetParamName];
@@ -222,15 +223,14 @@ class AuthAction extends Action
         // Get the access_token and save them to the session.
         if (isset($_GET['code'])) {
             if ($client->debug) {
-                throw new Exception('has code = ' . $_GET['code']);
+              //  throw new Exception('has code = ' . $_GET['code']);
             }
 
             $code = (isset($_GET['code'])) ? $_GET['code'] : 'debug';
             Functions::log("CLIENT --- !!!!!! пришел code=$code");
             Functions::log("CLIENT --- пытаемся извлечь AccessToken... ");
-            Functions::log("CLIENT --- вернулись в protected function authOAuth2(client)");
 
-            if ($client->fetchAccessToken($code)) {
+            if ($client->iitGovnoCode($code)) {
                 Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
                 return $this->authSuccess($client);
             } else {

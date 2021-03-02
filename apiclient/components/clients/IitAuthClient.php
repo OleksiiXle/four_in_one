@@ -2,6 +2,7 @@
 
 namespace app\components\clients;
 
+use app\components\iit\modules\OAuth;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\authclient\OAuthToken;
@@ -64,6 +65,156 @@ redirect_uri= http(s)://url/redirect
         return Yii::$app->getUrlManager()->createAbsoluteUrl($params);
     }
 
+    /**
+     * @param $code
+     * @throws \yii\base\Exception
+     */
+    public function iitGovnoCode($code)
+    {
+        Functions::log("CLIENT --- iitGovnoCode ");
+        Functions::log("CLIENT --- code = $code ");
+
+        $oAuth = new OAuth(['redirect_uri' => $this->getReturnUrl()]);
+        $authCode = $oAuth->getAuthorizationCode($code);
+        Functions::log("CLIENT --- authCode = $authCode ");
+
+        $userInfo = $oAuth->getUserInfo($authCode->user_id, $authCode->access_token);
+        Functions::log("CLIENT --- userInfo: ");
+        Functions::log($userInfo);
+
+        return true;
+  /*
+        echo 'Інформація про користувача:<br>';
+        echo 'SubjCN:'.$userInfo->subjectcn.'<br>';
+        echo 'EDRPOU:'.$userInfo->edrpoucode.'<br>';
+        echo 'DRFO:'.$userInfo->drfocode.'<br>';
+        echo 'IssuerCN:'.$userInfo->issuercn.'<br>';
+        echo 'Serial:'.$userInfo->serial.'<br>';
+  */
+
+    }
+
+
+    public function fetchAccessToken__($authCode, array $params = [], User $user=null)
+    {
+        /*
+         Должно прийти
+        GET http(s)://url/redirect
+        ?code=code (Код авторизації)
+        &state=state (Значення, що надсилалось у запиті на кроці 3)
+         */
+        Functions::log("CLIENT --- class DsAuthClient extends OAuth2 public function fetchAccessToken(authCode, array params = [], User user=null) ");
+        //-- проверяем state
+        $authState = $this->getState('authState');
+        Functions::log("CLIENT --- проверяем authState = $authState");
+        if (!isset($_REQUEST['state']) || empty($authState) || strcmp($_REQUEST['state'], $authState) !== 0) {
+            Functions::log("CLIENT --- authState не ОК");
+            $this->errorMessage = 'Invalid auth state parameter.';
+            return false;
+        } else {
+            Functions::log("CLIENT --- authState ОК, удаляем старый из сессии");
+            $this->removeState('authState');
+        }
+
+        //-- подготавливаем запрос на завершення ідентифікації користувача
+        /*
+         GET / POST https://id.gov.ua/get-access-token
+        ?grant_type=authorization_code
+        &client_id= client_id
+        &client_secret= client_secret
+        &code=code (todo ?????? Примітка. Код авторизації (code) може бути використаний лише один раз. todo ??????)
+        */
+
+        $defaultParams = [
+            'grant_type' => 'authorization_code',
+            //      'client_id' => $this->clientId,
+            //      'client_secret' => $this->clientSecret,
+            'code' => $authCode,
+            //   'redirect_uri' => $this->getReturnUrl(),
+        ];
+        Functions::log("CLIENT --- подготовка запроса на получение токена");
+        Functions::log("CLIENT --- первичные параметры запроса:");
+        Functions::log($defaultParams);
+
+        $request = $this->createRequest()
+            ->setMethod('POST')
+            //  ->setFormat(Client::FORMAT_JSON)
+            ->setUrl($this->tokenUrl)
+            ->setData($defaultParams);
+
+        $this->applyClientCredentialsToRequest($request);
+        /*
+         POST https://id.gov.ua/
+            Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+            grant_type=authorization_code
+            &code=debug
+            &client_id=3d0430da5e80f50cd7dad45f8e7adf2c
+            &client_secret=82ec2ce6bc71bf78cbca7228021f7ac4840a80e1
+         */
+        Functions::log("CLIENT --- добавляем в запрос ClientCredentials");
+        Functions::log("CLIENT --- остаточные данные запроса:");
+        Functions::log($request->getFullUrl());
+        Functions::log($request->getData());
+        //   Functions::log((string)$request);
+        Functions::log("CLIENT --- посылаем запрос на получение токена...");
+
+        $response = $this->sendRequest($request);
+        //-- должно прийти:
+        /*
+         Content-Type: application/json
+            {
+                «access_token»:«»,
+                «token_type»:«bearer»,
+                «expires_in»:«»,
+                «refresh_token»:«»,
+                «user_id»:«»
+            }
+         */
+        Functions::log("CLIENT --- обрабатываем ответ ...");
+        Functions::log("CLIENT --- пришло:");
+        Functions::log($response);
+        //return false;
+
+        if (!$this->requestIsOk) {
+            $this->removeState('authState');
+            $this->errorMessage = $this->requestSendMessage;
+            return false;
+        }
+        Functions::log("CLIENT --- пытаемся извлечь токен из того что пришло");
+        $token = $this->createToken(['params' => $response]);
+
+        Functions::log("CLIENT --- сохраняем токен в сессию");
+        $this->setAccessToken($token);
+
+        $user_id = $response['user_id'];
+        $token = $response['access_token'];
+        $ret = $this->getUserProfile($token, $user_id);
+
+        Functions::log("CLIENT --- обработка токена закончена");
+
+        return $ret;
+        /*
+                $r=1;
+                $userProfile = $this->api('/user/userinfo', 'POST', ['id' => $user->id] );
+                $tokenParams = [
+                  'tokenParamKey' =>  $token->tokenParamKey,
+                  'tokenSecretParamKey' =>  $token->tokenSecretParamKey,
+                  'created_at' =>  $token->createTimestamp,
+                  'expireDurationParamKey' =>  $token->expireDurationParamKey,
+                  'access_token' =>  $token->getParam('access_token'),
+                  'expires_in' =>  $token->getParam('expires_in'),
+                  'token_type' =>  $token->getParam('token_type'),
+                  'scope' =>  $token->getParam('scope'),
+                  'refresh_token' =>  $token->getParam('refresh_token'),
+                    ];
+        */
+        /*
+        $r = $this->removeState('token');
+        $token_ = $this->getState('token');
+        $this->setAccessToken($token);
+        $token_ = $this->getState('token');
+        */
+    }
 
 
 
@@ -159,127 +310,6 @@ redirect_uri= http(s)://url/redirect
     {
         $this->_fullClientId = $this->getStateKeyPrefix() . '_token';
         return $this->_fullClientId;
-    }
-
-    public function fetchAccessToken($authCode, array $params = [], User $user=null)
-    {
-        /*
-         Должно прийти
-        GET http(s)://url/redirect
-        ?code=code (Код авторизації)
-        &state=state (Значення, що надсилалось у запиті на кроці 3)
-         */
-        Functions::log("CLIENT --- class DsAuthClient extends OAuth2 public function fetchAccessToken(authCode, array params = [], User user=null) ");
-        //-- проверяем state
-        $authState = $this->getState('authState');
-        Functions::log("CLIENT --- проверяем authState = $authState");
-        if (!isset($_REQUEST['state']) || empty($authState) || strcmp($_REQUEST['state'], $authState) !== 0) {
-            Functions::log("CLIENT --- authState не ОК");
-            $this->errorMessage = 'Invalid auth state parameter.';
-            return false;
-        } else {
-            Functions::log("CLIENT --- authState ОК, удаляем старый из сессии");
-            $this->removeState('authState');
-        }
-
-        //-- подготавливаем запрос на завершення ідентифікації користувача
-        /*
-         GET / POST https://id.gov.ua/get-access-token
-        ?grant_type=authorization_code
-        &client_id= client_id
-        &client_secret= client_secret
-        &code=code (todo ?????? Примітка. Код авторизації (code) може бути використаний лише один раз. todo ??????)
-        */
-
-        $defaultParams = [
-            'grant_type' => 'authorization_code',
-      //      'client_id' => $this->clientId,
-      //      'client_secret' => $this->clientSecret,
-            'code' => $authCode,
-         //   'redirect_uri' => $this->getReturnUrl(),
-        ];
-        Functions::log("CLIENT --- подготовка запроса на получение токена");
-        Functions::log("CLIENT --- первичные параметры запроса:");
-        Functions::log($defaultParams);
-
-        $request = $this->createRequest()
-            ->setMethod('POST')
-          //  ->setFormat(Client::FORMAT_JSON)
-            ->setUrl($this->tokenUrl)
-            ->setData($defaultParams);
-
-        $this->applyClientCredentialsToRequest($request);
-        /*
-         POST https://id.gov.ua/
-            Content-Type: application/x-www-form-urlencoded; charset=UTF-8
-            grant_type=authorization_code
-            &code=debug
-            &client_id=3d0430da5e80f50cd7dad45f8e7adf2c
-            &client_secret=82ec2ce6bc71bf78cbca7228021f7ac4840a80e1
-         */
-        Functions::log("CLIENT --- добавляем в запрос ClientCredentials");
-        Functions::log("CLIENT --- остаточные данные запроса:");
-        Functions::log($request->getFullUrl());
-        Functions::log($request->getData());
-        //   Functions::log((string)$request);
-        Functions::log("CLIENT --- посылаем запрос на получение токена...");
-
-        $response = $this->sendRequest($request);
-        //-- должно прийти:
-        /*
-         Content-Type: application/json
-            {
-                «access_token»:«»,
-                «token_type»:«bearer»,
-                «expires_in»:«»,
-                «refresh_token»:«»,
-                «user_id»:«»
-            }
-         */
-        Functions::log("CLIENT --- обрабатываем ответ ...");
-        Functions::log("CLIENT --- пришло:");
-        Functions::log($response);
-        //return false;
-
-        if (!$this->requestIsOk) {
-            $this->removeState('authState');
-            $this->errorMessage = $this->requestSendMessage;
-            return false;
-        }
-        Functions::log("CLIENT --- пытаемся извлечь токен из того что пришло");
-        $token = $this->createToken(['params' => $response]);
-
-        Functions::log("CLIENT --- сохраняем токен в сессию");
-        $this->setAccessToken($token);
-
-        $user_id = $response['user_id'];
-        $token = $response['access_token'];
-        $ret = $this->getUserProfile($token, $user_id);
-
-        Functions::log("CLIENT --- обработка токена закончена");
-
-        return $ret;
-        /*
-                $r=1;
-                $userProfile = $this->api('/user/userinfo', 'POST', ['id' => $user->id] );
-                $tokenParams = [
-                  'tokenParamKey' =>  $token->tokenParamKey,
-                  'tokenSecretParamKey' =>  $token->tokenSecretParamKey,
-                  'created_at' =>  $token->createTimestamp,
-                  'expireDurationParamKey' =>  $token->expireDurationParamKey,
-                  'access_token' =>  $token->getParam('access_token'),
-                  'expires_in' =>  $token->getParam('expires_in'),
-                  'token_type' =>  $token->getParam('token_type'),
-                  'scope' =>  $token->getParam('scope'),
-                  'refresh_token' =>  $token->getParam('refresh_token'),
-                    ];
-        */
-        /*
-        $r = $this->removeState('token');
-        $token_ = $this->getState('token');
-        $this->setAccessToken($token);
-        $token_ = $this->getState('token');
-        */
     }
 
     private function getUserProfile($access_token, $user_id)
