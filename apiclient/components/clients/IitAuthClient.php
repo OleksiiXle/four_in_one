@@ -76,7 +76,8 @@ redirect_uri= http(s)://url/redirect
 
         $oAuth = new OAuth(['redirect_uri' => $this->getReturnUrl()]);
         $authCode = $oAuth->getAuthorizationCode($code);
-        Functions::log("CLIENT --- authCode = $authCode ");
+        Functions::log("CLIENT --- authCode:");
+        Functions::log($authCode);
 
         $userInfo = $oAuth->getUserInfo($authCode->user_id, $authCode->access_token);
         Functions::log("CLIENT --- userInfo: ");
