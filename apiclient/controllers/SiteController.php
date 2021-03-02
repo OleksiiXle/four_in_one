@@ -263,12 +263,16 @@ app\components\clients\Facebook#1
                     //-- login without api
                     Functions::log('CLIENT --- Пришли данные для залогинивания на клиенте');
                     if ($model->load(Yii::$app->request->post()) && $model->login()){
+                        if ($model->provider == 'Iit') {
+                            return $this->redirect(Url::toRoute('/iit/check-bibl'));
+                        }
                         Functions::log('CLIENT --- Залогинились успешно, пытаемся залогинится на АПИ ' . $model->provider);
                         if ($model->provider != 'none') {
                             return $this->redirect(Url::toRoute(['auth', 'authclient' => $model->provider]));
                         } else {
                             Yii::$app->session->setFlash('success', 'Подключения к АПИ нет');
-                            return $this->goBack();
+                            return $this->redirect(Url::toRoute('/adminxx'));
+                         //   return $this->goBack();
                         }
                     }
                 }

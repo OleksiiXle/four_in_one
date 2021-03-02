@@ -17,6 +17,20 @@
     • перзапустити apache:
         sudo systemctl restart httpd.service
 
+
+ubunta:
+        sudo mkdir /usr/lib/php/eusphpe_extension
+разархівувати бібліотеки з архіву eusphpei.tar до каталогу /usr/lib/php/eusphpe_extension бібліотеки:
+tar –-xC /usr/lib/php5/eusphpe_extension –f /шлях_до_файлу/eusphpei.tar
+    • до файлу /etc/apache2/envvars додати:
+export LD_LIBRARY_PATH="/usr/lib/php/eusphpe_extension"
+    • до файлу /etc/php5/apache2/php.ini додати:
+extension=/usr/lib/php/eusphpe_extension/eusphpe.so
+    • перзапустити apache:
+sudo systemctl restart apache2
+
+
+
         3.3 Параметри роботи бібліотеки
         Параметри, що використовуються бібліотекою,
     в файлі конфігурації з використанням кодування CP-1251.
