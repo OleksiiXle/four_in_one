@@ -264,7 +264,7 @@ app\components\clients\Facebook#1
                     Functions::log('CLIENT --- Пришли данные для залогинивания на клиенте');
                     if ($model->load(Yii::$app->request->post()) && $model->login()){
                         if ($model->provider == 'Iit') {
-                            return $this->redirect(Url::toRoute('/iit/check-bibl'));
+                          //  return $this->redirect(Url::toRoute('/iit/check-bibl'));
                         }
                         Functions::log('CLIENT --- Залогинились успешно, пытаемся залогинится на АПИ ' . $model->provider);
                         if ($model->provider != 'none') {
