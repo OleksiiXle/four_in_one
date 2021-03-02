@@ -105,6 +105,7 @@ sudo service apache2 restart
 Административная часть
 
 
+
 1. Создание и настройка БД
 mysql -u root -p
 CREATE DATABASE test_api_server;
