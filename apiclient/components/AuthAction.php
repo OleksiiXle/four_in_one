@@ -251,7 +251,7 @@ class AuthAction extends Action
             &redirect_uri=http%3A%2F%2F192.168.33.11%2Fdstest%2Fapiclient%2Fsite%2Fauth
              */
             if ($client->debug) {
-                throw new Exception('redirect to ' . $url);
+              //  throw new Exception('redirect to ' . $url);
             }
             return Yii::$app->getResponse()->redirect($url);
         }
