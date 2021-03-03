@@ -154,9 +154,9 @@ class OAuth extends BaseObject
         Functions::log("CLIENT --- userId = $userId ");
         Functions::log("CLIENT --- accessToken = $accessToken ");
 
-        $euSign = !empty($this->pk_file_path) ? new EUSignCP() : null;
+    //    $euSign = !empty($this->pk_file_path) ? new EUSignCP() : null;
 
-      //  $euSign = false;
+        $euSign = false;
         if ($euSign) {
             $errorCode = $euSign->initialize($this->pk_file_path, $this->pk_password, $this->pk_env_sert_file_path);
             if ($errorCode != EUSignCP::EU_ERROR_NONE) {
