@@ -146,10 +146,11 @@ class EUSignCP
         Functions::log('ok');
 
         Functions::log('initialize *euspe_readprivatekeyfile*');
-        Functions::log("pkFilePath=$pkFilePath");
+        $pkFilename = $pkFilePath . 'Key-6.pfx';
+        Functions::log("pkFilename=$pkFilename");
         Functions::log("pkPassword=$pkPassword");
         if (!$isPKeyReaded) {
-            $result = euspe_readprivatekeyfile($pkFilePath, $pkPassword, $errorCode);
+            $result = euspe_readprivatekeyfile($pkFilename, $pkPassword, $errorCode);
             if ($result != EUSignCP::EM_RESULT_OK) {
                 $errorCode = $this->resultToErrorCode($result, $errorCode);
                 Functions::log('wrong');
