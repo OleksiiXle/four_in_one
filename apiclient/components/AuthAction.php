@@ -170,26 +170,21 @@ class AuthAction extends Action
     {
         $debug = false;
         Functions::log('CLIENT --- ***************** AuthAction run');
-        Functions::log("CLIENT --- app\components\\AuthAction\\public function run():");
+        /* @var $collection \yii\authclient\Collection */
+        $collection = Yii::$app->get($this->clientCollection);
         if (empty($_GET[$this->clientIdGetParamName])) {
-          //  $clientId = 'diya';
-            $clientId = 'Iit';
-            $debug = true;
+            Functions::log("CLIENT --- iit");
+            $client = $collection->getClient('Iit');
+            if ($client->govnoCodeDispatcher()) {
+                return $this->authSuccess($client);
+            } else {
+                return $this->authCancel($client);
+            }
         } else {
             $clientId = $_GET[$this->clientIdGetParamName];
         }
         Functions::log("CLIENT --- clientId = $clientId");
-        /* @var $collection \yii\authclient\Collection */
-        $collection = Yii::$app->get($this->clientCollection);
         $client = $collection->getClient($clientId);
-        if ($debug) {
-            $client->debug = $debug;
-        }
-
-        if ($clientId == 'Iit') {
-            $client->debug = true;
-            return $this->authOAuth2Iit($client);
-        }
 
         if ($client instanceof OAuth2) {
             return $this->authOAuth2($client);
@@ -197,66 +192,6 @@ class AuthAction extends Action
 
         throw new NotSupportedException('Provider "' . get_class($client) . '" is not supported.');
     }
-
-    protected function authOAuth2Iit($client)
-    {
-        Functions::log("CLIENT --- authOAuth2Iit:", true);
-        Functions::logRequest();
-        if (isset($_GET['error'])) {
-            if ($_GET['error'] == 'access_denied') {
-                Functions::log('CLIENT --- *** access_denied');
-                return $this->redirectCancel();
-            } else {
-                if (isset($_GET['error_description'])) {
-                    $errorMessage = $_GET['error_description'];
-                } elseif (isset($_GET['error_message'])) {
-                    $errorMessage = $_GET['error_message'];
-                } else {
-                    $errorMessage = http_build_query($_GET);
-                }
-                Functions::log('CLIENT --- *** errorMessage:');
-                Functions::log($errorMessage);
-                throw new Exception('Auth error: ' . $errorMessage);
-            }
-        }
-
-        // Get the access_token and save them to the session.
-        if (isset($_GET['code'])) {
-            if ($client->debug) {
-              //  throw new Exception('has code = ' . $_GET['code']);
-            }
-
-            $code = (isset($_GET['code'])) ? $_GET['code'] : 'debug';
-            Functions::log("CLIENT --- !!!!!! пришел code=$code");
-            Functions::log("CLIENT --- пытаемся извлечь AccessToken... ");
-
-            if ($client->iitGovnoCode($code)) {
-                Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
-                return $this->authSuccess($client);
-            } else {
-                return $this->authCancel($client);
-            }
-        } else {
-            Functions::log("CLIENT --- buildAuthUrl : ");
-            $url = $client->buildAuthUrl();
-            Functions::log("CLIENT --- authUrl : $url");
-            Functions::log("CLIENT --- rediretc to authUrl...");
-            Functions::log("CLIENT --- ***********************************************************************");
-            /*
-             https://id.gov.ua/
-            ?response_type=code
-            &client_id=3d0430da5e80f50cd7dad45f8e7adf2c
-            &auth_type=dig_sign
-            &state=fc4228705f387da5992abb890a75c4dd2657498a6565f5588fce40e1722c6b59
-            &redirect_uri=http%3A%2F%2F192.168.33.11%2Fdstest%2Fapiclient%2Fsite%2Fauth
-             */
-            if ($client->debug) {
-              //  throw new Exception('redirect to ' . $url);
-            }
-            return Yii::$app->getResponse()->redirect($url);
-        }
-    }
-
 
     /**
      * Performs OAuth2 auth flow.

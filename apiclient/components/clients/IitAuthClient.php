@@ -2,6 +2,7 @@
 
 namespace app\components\clients;
 
+use app\components\iit\modules\EUSignCP;
 use app\components\iit\modules\OAuth;
 use Yii;
 use yii\authclient\OAuth2;
@@ -16,7 +17,36 @@ use TheSeer\Tokenizer\Exception;
 
 class IitAuthClient extends OAuth2
 {
-    public $debug = false;
+
+    public $id_server_uri;
+    public $client_id;
+    public $client_secret;
+    public $pk_password;
+    public $pk_file_path;
+    public $pk_env_sert_file_path;
+    public $fields;
+    public $auth_type;
+    public $useCert = false;
+
+    public $codeResponse = [];
+
+    public $errorMessage = ['Unknowwn error'];
+    public $successMessage = [];
+    public $result = false;
+
+    public function init()
+    {
+        $params = Yii::$app->params;
+        $this->id_server_uri = $params['id_server_uri'];
+        $this->client_id = $params['client_id'];
+        $this->client_secret = $params['client_secret'];
+        $this->pk_password = $params['pk_password'];
+        $this->pk_file_path = $params['pk_file_path'];
+        $this->pk_env_sert_file_path = $params['pk_env_sert_file_path'];
+        $this->fields = $params['fields'];
+        $this->auth_type = $params['auth_type'];
+        $this->useCert = $params['iit']['useCert']; //"/etc/pki/iit/";
+    }
 
     /**
      * Composes user authorization URL.
@@ -27,32 +57,15 @@ class IitAuthClient extends OAuth2
     {
         $authState = $this->generateAuthState();
         $this->setState('authState', $authState);
-        $params = Yii::$app->params['iit'];
         $defaultParams = [
             'response_type' => 'code',
             'state' => $authState,
-            'client_id' => $params['client_id'],
+            'client_id' => $this->client_id,
             'redirect_uri' => $this->getReturnUrl(),
-            //   'auth_type' => $params['auth_type'],
+            //   'auth_type' => $this->auth_type,
         ];
-        /*
-         		return OAuth::ID_SERVER_URI.
-			"?response_type=code".
-			"&state=xyz".
-			"&scope=".
-			"&client_id=".OAuth::CLIENT_ID.
-			"&redirect_uri=".OAuth::REDIRECT_URI;
-
-         */
 
         return $this->composeUrl($this->authUrl, array_merge($defaultParams, $params));
-        /*
-         https://id.gov.ua/?response_type=code&
-client_id=client_id&
-auth_type=dig_sign,bank_id,mobile_id&
-state=state&
-redirect_uri= http(s)://url/redirect
-         */
     }
 
     /**
@@ -65,11 +78,251 @@ redirect_uri= http(s)://url/redirect
         return Yii::$app->getUrlManager()->createAbsoluteUrl($params);
     }
 
+    public function govnoCodeDispatcher()
+    {
+        if (isset($_GET['error'])) {
+            return $this->doErrorHandler();
+        } elseif (isset($_GET['code'])) {
+            if ($this->doGetAccessTocken($_GET['code'])) {
+                return $this->doGetUserInfo();
+            }
+        } else {
+            return $this->doRedirect();
+        }
+
+        return false;
+    }
+
+    private function doRedirect()
+    {
+        Functions::log("CLIENT --- buildAuthUrl : ");
+        $url = $this->buildAuthUrl();
+        Functions::log("CLIENT --- authUrl : $url");
+        Functions::log("CLIENT --- rediretc to authUrl...");
+        Functions::log("CLIENT --- ***********************************************************************");
+
+        return Yii::$app->getResponse()->redirect($url);
+    }
+
+    private function doGetAccessTocken($code)
+    {
+        $uri = $this->id_server_uri ."get-access-token"
+            . "?grant_type=authorization_code"
+            . "&client_id=" . $this->client_id
+            . "&client_secret=" . $this->client_secret
+            . "&code=" . $code;
+        $this->codeResponse = $this->makeRequest($uri);
+        if (
+            empty($this->codeResponse) || !is_array($this->codeResponse) ||
+            !isset($this->codeResponse['access_token']) || !isset($this->codeResponse['token_type']) ||
+            !isset($this->codeResponse['expires_in']) || !isset($this->codeResponse['refresh_token']) ||
+            !isset($this->codeResponse['user_id'])
+        ) {
+            //-- not ok
+            $this->errorMessage = [
+                'Wrong access token',
+                $this->codeResponse
+                ];
+            $this->result = false;
+            return false;
+        } else {
+            //--ok
+            return true;
+        }
+    }
+
+    private function doGetUserInfo()
+    {
+        Functions::log("CLIENT --- getUserInfo");
+        Functions::log("CLIENT --- userId = " . $this->codeResponse['user_id']);
+        Functions::log("CLIENT --- accessToken = "  . $this->codeResponse['access_token']);
+        $uri = $this->id_server_uri . "get-user-info"
+            . "?fields=" . $this->fields
+            . "&user_id=" . $this->codeResponse['user_id']
+            . "&access_token=" .$this->codeResponse['access_token'];
+
+        if ($this->useCert) {
+            $euSign = new EUSignCP();
+            if ($euSign) {
+                $errorCode = $euSign->initialize($this->pk_file_path, $this->pk_password, $this->pk_env_sert_file_path);
+                if ($errorCode != EUSignCP::EU_ERROR_NONE) {
+                    Functions::log("Crypto error: " . $euSign->getErrorDescription($errorCode));
+                    $this->errorMessage = [
+                        "Crypto error: " . $euSign->getErrorDescription($errorCode)
+                    ];
+                    $this->result = false;
+                    return false;
+                }
+            }
+            if ($euSign) {
+                $uri = $uri.'&cert='.urlencode(urlencode($euSign->getEnvelopCert()));
+            }
+        }
+
+        Functions::log('CLIENT --- $response = $this->makeRequest($uri)');
+        Functions::log($uri);
+        $response = $this->makeRequest($uri);
+        Functions::log("CLIENT --- response:  ");
+        Functions::logRequest();
+        Functions::log($response);
+
+        if ($this->useCert) {
+            $senderInfo = null;
+            $envResponse = new EnvelopedUserInfoResponse($response);
+            if (empty($envResponse->encryptedUserInfo)) {
+                throw new \Exception("Get user info failed: ". $envResponse->message. '('.$envResponse->error.')');
+            }
+            $errorCode = $euSign->develop(base64_decode($envResponse->encryptedUserInfo), $data, $senderInfo);
+            if ($errorCode != EUSignCP::EU_ERROR_NONE) {
+                throw new \Exception("Crypto error: ". $euSign->getErrorDescription($errorCode));
+            }
+            $response = json_decode($data, true);
+        }
+
+        $this->successMessage = $response;
+        $this->result = true;
+
+        return true;
+    }
+
+    private function doErrorHandler()
+    {
+        $this->errorMessage = array_merge($_REQUEST);
+        $this->result = false;
+
+        return false;
+    }
+
+    private function makeRequest($url)
+    {
+        $headers = array(
+            'Content-Type: application/json'
+        );
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, 1);
+        curl_setopt($ch, CURLOPT_FAILONERROR, 0);
+        curl_setopt($ch, CURLOPT_USERAGENT, "iit.oauth-client");
+
+        if ($this->useSSL)
+        {
+            curl_setopt($ch, CURLOPT_SSLVERSION, 6);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
+        }
+
+        if ($this->useProxy)
+        {
+            curl_setopt($ch, CURLOPT_PROXY, $this->proxyAddress);
+            curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyPort);
+            curl_setopt($ch, CURLOPT_PROXYTYPE,
+                $this->useSSL ? 'HTTPS' : 'HTTP');
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD,
+                $this->proxyLoginPassword);
+        }
+
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $response = curl_exec($ch);
+        if ($response === false)
+        {
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            throw new Exception($error);
+        }
+
+        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $response = substr($response, $headerSize);
+        curl_close($ch);
+
+        $response = json_decode($response, true);
+
+        return $response;
+    }
+
+    /**
+     * @return array list of user attributes
+     */
+    public function getUserAttributes()
+    {
+        return $this->successMessage;
+    }
+
+
+    protected function authOAuth2Iit___($client)
+    {
+        Functions::log("CLIENT --- authOAuth2Iit:", true);
+        Functions::logRequest();
+        if (isset($_GET['error'])) {
+            if ($_GET['error'] == 'access_denied') {
+                Functions::log('CLIENT --- *** access_denied');
+                return $this->redirectCancel();
+            } else {
+                if (isset($_GET['error_description'])) {
+                    $errorMessage = $_GET['error_description'];
+                } elseif (isset($_GET['error_message'])) {
+                    $errorMessage = $_GET['error_message'];
+                } else {
+                    $errorMessage = http_build_query($_GET);
+                }
+                Functions::log('CLIENT --- *** errorMessage:');
+                Functions::log($errorMessage);
+                throw new Exception('Auth error: ' . $errorMessage);
+            }
+        }
+
+        // Get the access_token and save them to the session.
+        if (isset($_GET['code'])) {
+            if ($client->debug) {
+                //  throw new Exception('has code = ' . $_GET['code']);
+            }
+
+            $code = (isset($_GET['code'])) ? $_GET['code'] : 'debug';
+            Functions::log("CLIENT --- !!!!!! пришел code=$code");
+            Functions::log("CLIENT --- пытаемся извлечь AccessToken... ");
+
+            if ($client->iitGovnoCode($code)) {
+                Functions::log("CLIENT --- если получилось извлечь токен - выполняем свой метод onAuthSuccess ...");
+                return $this->authSuccess($client);
+            } else {
+                return $this->authCancel($client);
+            }
+        } else {
+            Functions::log("CLIENT --- buildAuthUrl : ");
+            $url = $client->buildAuthUrl();
+            Functions::log("CLIENT --- authUrl : $url");
+            Functions::log("CLIENT --- rediretc to authUrl...");
+            Functions::log("CLIENT --- ***********************************************************************");
+            /*
+             https://id.gov.ua/
+            ?response_type=code
+            &client_id=3d0430da5e80f50cd7dad45f8e7adf2c
+            &auth_type=dig_sign
+            &state=fc4228705f387da5992abb890a75c4dd2657498a6565f5588fce40e1722c6b59
+            &redirect_uri=http%3A%2F%2F192.168.33.11%2Fdstest%2Fapiclient%2Fsite%2Fauth
+             */
+            if ($client->debug) {
+                //  throw new Exception('redirect to ' . $url);
+            }
+            return Yii::$app->getResponse()->redirect($url);
+        }
+    }
+
     /**
      * @param $code
      * @throws \yii\base\Exception
      */
-    public function iitGovnoCode($code)
+    public function getUserInfo__($code)
     {
         Functions::log("CLIENT --- iitGovnoCode ");
         Functions::log("CLIENT --- code = $code ");
@@ -94,7 +347,6 @@ redirect_uri= http(s)://url/redirect
   */
 
     }
-
 
     public function fetchAccessToken__($authCode, array $params = [], User $user=null)
     {
@@ -216,418 +468,4 @@ redirect_uri= http(s)://url/redirect
         $token_ = $this->getState('token');
         */
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-             if (!$response->getIsOk()) {
-            throw new InvalidResponseException($response, 'Request failed with code: ' . $response->getStatusCode() . ', message: ' . $response->getContent());
-        }
-
-     */
-    public $signupUrl;
-    public $errorMessage = '';
-    public $provider_id = 'iit';
-    public $requestIsOk = false;
-    public $requestSendMessage = '';
-    public $requestSendCode = 0;
-    public $userProfile = null;
-
-    private $_fullClientId;
-
-    /**
-     * @var array authenticated user attributes.
-     */
-    private $_userAttributes;
-
-    /**
-     * Sends the given HTTP request, returning response data.
-     * @param \yii\httpclient\Request $request HTTP request to be sent.
-     * @return array response data.
-     * @throws InvalidResponseException on invalid remote response.
-     * @since 2.1
-     */
-    protected function sendRequest($request, $debug = false)
-    {
-        $this->errorMessage = '';
-        if ($debug) {
-            Functions::log('+++++++++++++++++++++++sendRequest start');
-            Functions::log('+++++++++++++++++++++++$request:');
-            Functions::log((string)$request);
-        }
-        try{
-            $response = $request->send();
-        } catch (\Exception $e) {
-            Functions::log('---------------------------------   Exception');
-            Functions::log($e->getMessage());
-            Functions::log($e->getTraceAsString());
-        }
-        if ($debug) {
-            Functions::log('+++++++++++++++++++++++sendRequest sent');
-        }
-
-        if ($debug) {
-            //  Functions::log('++++++++GET');
-            //   Functions::log($_GET);
-            //   Functions::log('++++++++POST');
-            //    Functions::log($_POST);
-            Functions::log('++++++++$response');
-            Functions::log((string)$response);
-            Functions::log('++++++++$response getFormat');
-            Functions::log($response->getFormat());
-            //  Functions::log('++++++++$response getContent');
-            //  Functions::log($response->getContent());
-            Functions::log('++++++++$response getHeaders');
-            Functions::log($response->getHeaders());
-            Functions::log('++++++++$response getStatusCode');
-            Functions::log($response->getStatusCode());
-        }
-
-        $this->requestIsOk = $response->getIsOk();
-        $this->requestSendCode = $response->getStatusCode();
-        if (!$this->requestIsOk) {
-            $responseData = $response->getData();
-            $this->requestSendMessage = 'Request failed with code:' . $this->requestSendCode . ' - ' . $responseData['name']
-                . '<br>' . str_replace(PHP_EOL, '<br>' , $responseData['message']);
-            return [];
-        }
-
-        return $response->getData();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFullClientId()
-    {
-        $this->_fullClientId = $this->getStateKeyPrefix() . '_token';
-        return $this->_fullClientId;
-    }
-
-    private function getUserProfile($access_token, $user_id)
-    {
-        /*
-         Надо отправить:
-        GET / POST  https://id.gov.ua/get-user-info
-            ?&access_token=access_token
-            &user_id=36
-            &fields=issuer,issuercn,serial,subject,subjectcn,locality,state,o,ou,title,lastname,
-                    middlename,givenname,email,address,phone,dns,edrpoucode,drfocode
-            &cert=
-         */
-        try{
-            $data = [
-                'access_token' => $access_token,
-                'user_id' => $user_id,
-                'fields' => Yii::$app->params['diya']['fields'],
-                'cert' => Yii::$app->params['diya']['cert'],
-            ];
-            $this->_userAttributes = $this->api('/get-user-info', 'POST', $data, [] );
-            Functions::log('************************************************ getUserProfile');
-            Functions::log($this->userProfile);
-            //-- должно прийти:
-            /*
-             * обробка сервером ідентифікації запиту шляхом формування зашифрованої (з
-використанням бібліотеки підпису у вигляді модуля розширення PHP і мережного
-криптомодуля) відповіді з інформацією про ідентифікованого користувача у вигляді
-JSON-тексту виду:
-             Content-Type: application/json
-{
-«auth_type»:«dig_sign»,
-«issuer»:«»,
-«issuercn»:«»,
-«serial»:«»,
-«subject»:«»,
-«subjectcn»:«»,
-«locality»:«»,
-«state»:«»,
-«o»:«»,
-«ou»:«»,
-«title»:«»,
-«lastname»:«»,
-«givenname»:«»,
-«middlename»:«»,
-«email»:«»,
-«address»:«»,
-«phone»:«»,
-«dns»:«»,
-«edrpoucode»:«»,
-«drfocode»:«»
-}
-            или
-            Content-Type: application/json
-{
-«encryptedUserInfo»:«»
-}
-             */
-            return true;
-        } catch (\Exception $e){
-            $this->errorMessage = $e->getMessage();
-            return false;
-        }
-    }
-
-    /**
-     * Restores access token.
-     * @return OAuthToken auth token.
-     */
-    protected function restoreAccessToken()
-    {
-        $token = $this->getState('token');
-        if (!is_object($token)){
-            $token = $this->RestoreTokenFromDb();
-        }
-        if (is_object($token)) {
-            /* @var $token OAuthToken */
-            if ($token->getIsExpired() && $this->autoRefreshAccessToken) {
-                $token = $this->refreshAccessToken($token);
-            }
-        } else {
-            return false;
-          //  $token = $this->refreshAccessToken($token);
-          //  throw new \Exception($this->errorMessage);
-        }
-        return $token;
-    }
-
-    /**
-     * Gets new auth token to replace expired one.
-     * @param OAuthToken $token expired auth token.
-     * @return OAuthToken new auth token.
-     */
-    public function refreshAccessToken(OAuthToken $token)
-    {
-        $i=1;
-        $params = [
-            'grant_type' => 'refresh_token',
-            'refresh_token' => $token->getParam('refresh_token'),
-            'scope' =>  $token->getParam('scope'),
-         //   'redirect_uri' => $this->getReturnUrl(),
-        ];
-        $request = $this->createRequest()
-            ->setMethod('POST')
-            ->setUrl($this->tokenUrl)
-            ->setData($params);
-
-        $this->applyClientCredentialsToRequest($request);
-
-        $response = $this->sendRequest($request);
-        $token = $this->createToken(['params' => $response]);
-        $this->setAccessToken($token);
-
-        if (!$this->storeTokenToDb($token, false, true)){
-            return false;
-            throw new \Exception($this->errorMessage);
-        }
-        return $token;
-    }
-
-    /**
-     * Запись в БД токена клиента
-     * @param OAuthToken $token
-     * @param $client
-     * @param $profile - обновлять профиль или нет
-     * @return bool
-     */
-    public function storeTokenToDb(OAuthToken $token, $user, $profile = true)
-    {
-      //  if (\Yii::$app->user->isGuest){
-     //       return true;
-     //   }
-        $t=1;
-
-        try{
-            if (!$user ){
-                $clientId = \Yii::$app->user->id;
-                $user = User::findOne($clientId);
-                if (!isset($user)){
-                    $this->errorMessage = "Client $clientId not found";
-                    return false;
-                   // throw new NotFoundHttpException("Client $clientId not found");
-                }
-            }
-            $headers = [];
-
-         //   $headers = ['Authorization' => 'Bearer ' . $token->params['access_token']];
-
-            $userProfile = ($profile) ? $this->api('/user/userinfo', 'POST', ['id' => $user->id], $headers ) : [];
-            if (!$this->requestIsOk) {
-                $this->errorMessage = $this->requestSendMessage;
-                return false;
-            }
-            $tokenParams = [
-                'tokenParamKey' =>  $token->tokenParamKey,
-                'tokenSecretParamKey' =>  $token->tokenSecretParamKey,
-                'created_at' =>  $token->createTimestamp,
-                'expireDurationParamKey' =>  $token->expireDurationParamKey,
-                'access_token' =>  $token->getParam('access_token'),
-                'expires_in' =>  $token->getParam('expires_in'),
-                'token_type' =>  $token->getParam('token_type'),
-                'scope' =>  $token->getParam('scope'),
-                'refresh_token' =>  $token->getParam('refresh_token'),
-                'provider_id' =>  $this->provider_id,
-            ];
-            $ret = $user->refreshToken($this->getStateKeyPrefix() . '_token', $tokenParams, $userProfile );
-            if (!$ret){
-                $this->errorMessage = $user->getFirstError('id');
-                return false;
-            } else{
-                return true;
-            }
-
-        } catch (\Exception $e){
-            $this->errorMessage = $e->getMessage();
-            return false;
-        }
-    }
-
-    /**
-     * Извлечение токена из БД
-     * @return bool
-     */
-    public function RestoreTokenFromDb()
-    {
-        $token = false;//1571731601
-        if (\Yii::$app->user->isGuest){
-            return false;
-        }
-        try{
-            $clientId = \Yii::$app->user->id;
-            $provider = $this->getStateKeyPrefix() . '_token';
-            $dbToken = UserToken::findOne(['client_id' => $clientId, 'provider' => $provider]);
-            if (empty($dbToken)){
-                $this->errorMessage = "Token '$this->clientId' not found in DB for user= $clientId";
-                return false;
-
-            }
-            $token = $this->createToken(['params' => $dbToken->getAttributes()]);
-            $token = $this->refreshAccessToken($token);
-          //  $this->setAccessToken($token);
-        } catch (\Exception $e){
-            $this->errorMessage = $e->getMessage();
-        }
-        return $token;
-    }
-
-    /**
-     * Удаление на АПИ всех токенов юсера по провайдеру
-     */
-    public function removeTokens($userApi_id)
-    {
-        $i=1;
-        try{
-            $params = [
-                'grant_type' => 'logout',
-                'user_id' => $userApi_id,
-            ];
-            $request = $this->createRequest()
-                ->setMethod('POST')
-                ->setUrl($this->tokenUrl)
-                ->setData($params);
-
-            $this->applyClientCredentialsToRequest($request);
-            $response = $this->sendRequest($request);
-
-            $this->removeState($this->getStateKeyPrefix() . '_token');
-
-            $dbTokenDel = UserToken::deleteAll(['api_id' => $userApi_id, 'provider' => $this->fullClientId]);
-            return true;
-        } catch (\Exception $e){
-            $this->errorMessage = $e->getMessage();
-            return false;
-        }
-    }
-
-    /**
-     * Composes user authorization URL.
-     * @param array $params additional auth GET params.
-     * @return string authorization URL.
-     */
-    public function buildSignupUrl(array $params = [])
-    {
-        $defaultParams = [
-            'client_id' => $this->clientId,
-            'response_type' => 'code',
-            'redirect_uri' => $this->getReturnUrl(),
-            'xoauth_displayname' => Yii::$app->name,
-        ];
-        if (!empty($this->scope)) {
-            $defaultParams['scope'] = $this->scope;
-        }
-
-        if ($this->validateAuthState) {
-            $authState = $this->generateAuthState();
-            $this->setState('authState', $authState);
-            $defaultParams['state'] = $authState;
-        }
-
-        return $this->composeUrl($this->signupUrl, array_merge($defaultParams, $params));
-    }
-
-    protected function initUserAttributes()
-    {
-        return $this->api('user/userinfo', 'GET');
-    }
-
-    /**
-     * Performs request to the OAuth API returning response data.
-     * You may use [[createApiRequest()]] method instead, gaining more control over request execution.
-     * @see createApiRequest()
-     * @param string $apiSubUrl API sub URL, which will be append to [[apiBaseUrl]], or absolute API URL.
-     * @param string $method request method.
-     * @param array|string $data request data or content.
-     * @param array $headers additional request headers.
-     * @return array API response data.
-     */
-    public function api($apiSubUrl, $method = 'GET', $data = [], $headers = [])
-    {
-        $apiUrl = $this->apiBaseUrl .  $apiSubUrl;
-        Functions::log("CLIENT --- public function api(apiSubUrl, method = 'GET', data = [], headers = [])");
-        Functions::log("CLIENT --- apiSubUrl = $apiUrl");
-        Functions::log("CLIENT --- method = $method");
-        Functions::log("CLIENT --- data:");
-        Functions::log($data);
-
-        $request = $this->createApiRequest()
-            ->setMethod($method)
-            ->setUrl($apiUrl)
-            ->addHeaders($headers);
-
-        if (!empty($data)) {
-            if (is_array($data)) {
-                $request->setData($data);
-            } else {
-                $request->setContent($data);
-            }
-        }
-     //   Functions::log("CLIENT --- подготовленный запрос:");
-      //  Functions::log((string)$request);
-        Functions::log("CLIENT --- отправляем ...");
-        $response = $this->sendRequest($request, true);
-        Functions::log("CLIENT --- получили ответ:");
-        Functions::log($response);
-
-        return $response;
-    }
-
-    /**
-     * @return array list of user attributes
-     */
-    public function getUserAttributes()
-    {
-        return $this->_userAttributes;
-    }
-
-
-
-
 }

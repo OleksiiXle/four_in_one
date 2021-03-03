@@ -44,5 +44,16 @@ return [
     'aliasesForRoutesList' => [
         'app',
     ],
+    'iit' => [
+        'useCert'               => false,
+        'id_server_uri'         => "https://*****.ua/",
+        'client_id'             => '**********************************',
+        'client_secret'         => '**********************************',
+        'pk_password'           => '**********************************',
+        'pk_file_path'          => "/etc/*******.pfx",
+        'pk_env_sert_file_path' => "/etc/*************.cer",
+        'fields' => 'issuer,issuercn,serial,subject,subjectcn,locality,state,o,ou,title,lastname,middlename,givenname,email,address,phone,dns,edrpoucode,drfocode',
+        'auth_type' => 'dig_sign,bank_id,mobile',
+    ],
 
 ];
