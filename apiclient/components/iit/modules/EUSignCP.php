@@ -2,6 +2,8 @@
 
 namespace app\components\iit\modules;
 
+use common\helpers\Functions;
+
 class EUSignCP
 {
 
@@ -111,37 +113,51 @@ class EUSignCP
     public function initialize($pkFilePath, $pkPassword, $pkEnvCertFilePath)
     {
         $errorCode = EUSignCP::EU_ERROR_UNKNOWN;
+        Functions::log('initialize *euspe_setcharset*');
 
         $result = euspe_setcharset(EUSignCP::EM_ENCODING_UTF8);
         if ($result != EUSignCP::EM_RESULT_OK) {
             $errorCode = $this->resultToErrorCode($result, $errorCode);
+            Functions::log('wrong');
 
             return $errorCode;
         }
+        Functions::log('ok');
 
+        Functions::log('initialize *euspe_init*');
         $result = euspe_init($errorCode);
         if ($result != EUSignCP::EM_RESULT_OK) {
             $errorCode = $this->resultToErrorCode($result, $errorCode);
+            Functions::log('wrong');
 
             return $errorCode;
         }
+        Functions::log('ok');
 
+        Functions::log('initialize *euspe_isprivatekeyreaded*');
         $isPKeyReaded = false;
         $result = euspe_isprivatekeyreaded($isPKeyReaded, $errorCode );
         if ($result != EUSignCP::EM_RESULT_OK) {
             $errorCode = $this->resultToErrorCode($result, $errorCode);
+            Functions::log('wrong');
 
             return $errorCode;
         }
+        Functions::log('ok');
 
+        Functions::log('initialize *euspe_readprivatekeyfile*');
+        Functions::log("pkFilePath=$pkFilePath");
+        Functions::log("pkPassword=$pkPassword");
         if (!$isPKeyReaded) {
             $result = euspe_readprivatekeyfile($pkFilePath, $pkPassword, $errorCode);
             if ($result != EUSignCP::EM_RESULT_OK) {
                 $errorCode = $this->resultToErrorCode($result, $errorCode);
+                Functions::log('wrong');
 
                 return $errorCode;
             }
         }
+        Functions::log('ok');
 
         $pkEnvCert = file_get_contents($pkEnvCertFilePath,FILE_USE_INCLUDE_PATH);
         $this->pkEnvCert = base64_encode($pkEnvCert);
