@@ -239,7 +239,12 @@ app\components\clients\Facebook#1
 
     public function onAuthCancel($client)
     {
-        $errorMessage = "Авторизация через $client->name не удалась <br>" . $client->errorMessage;
+        if (is_array($client->errorMessage)) {
+            $errorMessage = implode('<br>', $client->errorMessage);
+        } else {
+            $errorMessage =$client->errorMessage;
+        }
+        $errorMessage = "Авторизация через $client->name не удалась <br>" . $errorMessage;
         Yii::$app->session->setFlash('error', $errorMessage);
         return $this->goHome();
    }

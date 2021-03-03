@@ -146,7 +146,7 @@ class EUSignCP
         Functions::log('ok');
 
         Functions::log('initialize *euspe_readprivatekeyfile*');
-        $pkFilename = $pkFilePath . 'Key-6.pfx';
+        $pkFilename = $pkFilePath;
         Functions::log("pkFilename=$pkFilename");
         Functions::log("pkPassword=$pkPassword");
         if (!$isPKeyReaded) {
@@ -163,7 +163,7 @@ class EUSignCP
         $pkEnvCert = file_get_contents($pkEnvCertFilePath,FILE_USE_INCLUDE_PATH);
         $this->pkEnvCert = base64_encode($pkEnvCert);
         Functions::log('initialize *$pkEnvCert = file_get_contents($pkEnvCertFilePath,FILE_USE_INCLUDE_PATH)*');
-        Functions::log("pkEnvCert=$pkEnvCert");
+     //   Functions::log("pkEnvCert=$pkEnvCert");
         Functions::log("pkEnvCertFilePath=$pkEnvCertFilePath");
         Functions::log("pkEnvCertConvert=$this->pkEnvCert");
 
