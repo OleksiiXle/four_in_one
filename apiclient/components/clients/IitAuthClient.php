@@ -223,7 +223,7 @@ class IitAuthClient extends OAuth2
         {
             curl_setopt($ch, CURLOPT_SSLVERSION, 6);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         }
 
         if ($this->useProxy)
