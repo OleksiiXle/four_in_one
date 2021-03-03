@@ -2,6 +2,7 @@
 
 namespace app\components\clients;
 
+use app\components\iit\modules\EnvelopedUserInfoResponse;
 use app\components\iit\modules\EUSignCP;
 use app\components\iit\modules\OAuth;
 use Yii;
@@ -185,11 +186,22 @@ class IitAuthClient extends OAuth2
             $senderInfo = null;
             $envResponse = new EnvelopedUserInfoResponse($response);
             if (empty($envResponse->encryptedUserInfo)) {
-                throw new \Exception("Get user info failed: ". $envResponse->message. '('.$envResponse->error.')');
+                $msg = "Get user info failed: ". $envResponse->message. '('.$envResponse->error.')';
+                Functions::log($msg);
+                $this->errorMessage = [
+                    $msg
+                ];
+                $this->result = false;
+                return false;
             }
             $errorCode = $euSign->develop(base64_decode($envResponse->encryptedUserInfo), $data, $senderInfo);
             if ($errorCode != EUSignCP::EU_ERROR_NONE) {
-                throw new \Exception("Crypto error: ". $euSign->getErrorDescription($errorCode));
+                Functions::log("Crypto error: " . $euSign->getErrorDescription($errorCode));
+                $this->errorMessage = [
+                    "Crypto error: " . $euSign->getErrorDescription($errorCode)
+                ];
+                $this->result = false;
+                return false;
             }
             $response = json_decode($data, true);
         }
