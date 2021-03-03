@@ -43,6 +43,10 @@ class IitAuthClient extends OAuth2
     public $result = false;
 
     private $useSSL = true;
+    private $useProxy = false;
+    private $proxyAddress = null;
+    private $proxyPort = null;
+    private $proxyLoginPassword = null;
 
 
     public function init()
