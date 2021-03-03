@@ -168,11 +168,12 @@ class OAuth extends BaseObject
             "givenname,email,address,phone,dns,edrpoucode,drfocode".
             "&user_id=".$userId.
             "&access_token=".$accessToken;
+        Functions::log('CLIENT --- $response = $this->makeRequest($uri)');
         if ($euSign) {
             $uri = $uri.'&cert='.urlencode(urlencode($euSign->getEnvelopCert()));
         }
+        Functions::log($uri);
         $response = $this->makeRequest($uri);
-        Functions::log('CLIENT --- $response = $this->makeRequest($uri)');
         Functions::log("CLIENT --- response:  ");
         Functions::logRequest();
         Functions::log($response);

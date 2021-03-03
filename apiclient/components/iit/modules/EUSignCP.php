@@ -162,6 +162,10 @@ class EUSignCP
 
         $pkEnvCert = file_get_contents($pkEnvCertFilePath,FILE_USE_INCLUDE_PATH);
         $this->pkEnvCert = base64_encode($pkEnvCert);
+        Functions::log('initialize *$pkEnvCert = file_get_contents($pkEnvCertFilePath,FILE_USE_INCLUDE_PATH)*');
+        Functions::log("pkEnvCert=$pkEnvCert");
+        Functions::log("pkEnvCertFilePath=$pkEnvCertFilePath");
+        Functions::log("pkEnvCertConvert=$this->pkEnvCert");
 
         return EUSignCP::EU_ERROR_NONE;
     }
