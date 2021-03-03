@@ -181,6 +181,12 @@ class IitAuthClient extends OAuth2
         Functions::log("CLIENT --- response:  ");
         Functions::logRequest();
         Functions::log($response);
+        if (isset($response['error'])) {
+            Functions::log($response);
+            $this->errorMessage = $response;
+            $this->result = false;
+            return false;
+        }
 
         if ($this->useCert) {
             $senderInfo = null;
