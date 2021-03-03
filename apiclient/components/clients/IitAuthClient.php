@@ -45,14 +45,14 @@ class IitAuthClient extends OAuth2
     public function init()
     {
         $params = Yii::$app->params;
-        $this->id_server_uri = $params['id_server_uri'];
-        $this->client_id = $params['client_id'];
-        $this->client_secret = $params['client_secret'];
-        $this->pk_password = $params['pk_password'];
-        $this->pk_file_path = $params['pk_file_path'];
-        $this->pk_env_sert_file_path = $params['pk_env_sert_file_path'];
-        $this->fields = $params['fields'];
-        $this->auth_type = $params['auth_type'];
+        $this->id_server_uri = $params['iit']['id_server_uri'];
+        $this->client_id = $params['iit']['client_id'];
+        $this->client_secret = $params['iit']['client_secret'];
+        $this->pk_password = $params['iit']['pk_password'];
+        $this->pk_file_path = $params['iit']['pk_file_path'];
+        $this->pk_env_sert_file_path = $params['iit']['pk_env_sert_file_path'];
+        $this->fields = $params['iit']['fields'];
+        $this->auth_type = $params['iit']['auth_type'];
         $this->useCert = $params['iit']['useCert']; //"/etc/pki/iit/";
     }
 
