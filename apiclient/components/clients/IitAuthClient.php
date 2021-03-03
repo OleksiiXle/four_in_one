@@ -7,6 +7,7 @@ use app\components\iit\modules\OAuth;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\authclient\OAuthToken;
+use yii\base\BaseObject;
 use yii\httpclient\Client;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -15,7 +16,7 @@ use app\models\UserToken;
 use common\helpers\Functions;
 use TheSeer\Tokenizer\Exception;
 
-class IitAuthClient extends OAuth2
+class IitAuthClient extends BaseObject
 {
 
     public $id_server_uri;
