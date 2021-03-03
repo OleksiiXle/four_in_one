@@ -42,6 +42,9 @@ class IitAuthClient extends OAuth2
     public $successMessage = [];
     public $result = false;
 
+    private $useSSL = true;
+
+
     public function init()
     {
         $params = Yii::$app->params;
