@@ -7,7 +7,6 @@ use app\components\iit\modules\OAuth;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\authclient\OAuthToken;
-use yii\base\BaseObject;
 use yii\httpclient\Client;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -16,8 +15,16 @@ use app\models\UserToken;
 use common\helpers\Functions;
 use TheSeer\Tokenizer\Exception;
 
-class IitAuthClient extends BaseObject
+class IitAuthClient extends OAuth2
 {
+    /**
+     * Initializes authenticated user attributes.
+     * @return array auth user attributes.
+     */
+    protected function initUserAttributes()
+    {
+
+    }
 
     public $id_server_uri;
     public $client_id;
@@ -468,5 +475,26 @@ class IitAuthClient extends BaseObject
         $this->setAccessToken($token);
         $token_ = $this->getState('token');
         */
+    }
+
+    /**
+     * Gets new auth token to replace expired one.
+     * @param OAuthToken $token expired auth token.
+     * @return OAuthToken new auth token.
+     */
+    public function refreshAccessToken(OAuthToken $token)
+    {
+
+    }
+
+    /**
+     * Applies access token to the HTTP request instance.
+     * @param \yii\httpclient\Request $request HTTP request instance.
+     * @param OAuthToken $accessToken access token instance.
+     * @since 2.1
+     */
+    public function applyAccessTokenToRequest($request, $accessToken)
+    {
+
     }
 }
